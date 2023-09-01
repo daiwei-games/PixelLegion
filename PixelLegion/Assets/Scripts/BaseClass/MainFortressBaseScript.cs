@@ -38,18 +38,32 @@ namespace Assets.Scripts.BaseClass
         /// </summary>
         [Header("玩家資料")]
         public playerDataObject _playerDataObject;
-
+        /// <summary>
+        /// 主堡自身的圖層
+        /// </summary>
+        [Header("主堡自身的圖層")]
+        public LayerMask _layerMask;
+        /// <summary>
+        /// 主堡敵人的圖層
+        /// </summary>
+        [Header("主堡敵人的圖層")]
+        public LayerMask _mfEnemyLayerMask;
         #region  主堡資料
         /// <summary>
-        /// 主堡資料庫
+        /// 玩家主堡資料庫
         /// </summary>
         [Header("主堡資料庫")]
         public mainFortressDataObject _mainFortressDataObject;
         /// <summary>
-        /// 主堡資料庫
+        /// 敵人主堡資料庫
         /// </summary>
         [Header("主堡資料庫")]
         public darkMainFortressDataObject _darkMainFortressDataObject;
+        /// <summary>
+        /// 敵人對玩家的主堡清單
+        /// </summary>
+        [Header("敵人的主堡清單")]
+        public List<Transform> enemyMainFortressList;
         #endregion
 
         /// <summary>
@@ -85,8 +99,13 @@ namespace Assets.Scripts.BaseClass
         /// <summary>
         /// 士兵生產時間
         /// </summary>
-        [Header("士兵生產時間")]
+        [Header("士兵生產時間(秒)")]
         public float soldierProduceTime;
+        /// <summary>
+        /// 目前士兵生產時間間隔
+        /// </summary>
+        [Header("目前士兵生產時間間隔(秒)")]
+        protected float soldierProduceTimeNow;
         #endregion
         /// <summary>
         /// 初始化主堡資料
@@ -94,6 +113,13 @@ namespace Assets.Scripts.BaseClass
         public virtual void MainFortressDataInitializ()
         {
             
+        }
+        /// <summary>
+        /// 取得主堡
+        /// </summary>
+        public virtual void GetEnemyMainFortress()
+        {
+
         }
         /// <summary>
         /// 主堡血量文字
@@ -117,6 +143,10 @@ namespace Assets.Scripts.BaseClass
         /// 生產士兵
         /// </summary>
         public virtual void ProduceSoldier()
+        {
+        }
+
+        public virtual void MainFortressHit(int hit)
         {
         }
     }

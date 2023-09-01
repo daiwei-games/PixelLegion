@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 484d73afaf298a6479d19a7fe357ab66, type: 3}
   m_Name: PlayerMainFortress
   m_EditorClassIdentifier: 
-  maxhp: 399
-  soldierCount: 120
+  maxhp: 2000
+  soldierCount: 0
   soldierSelectedList:
-  - {fileID: 0}
-  soldierProduceTimeMax: 5
+  - {fileID: 9208150154705962313, guid: 1954582f411329345aeefdba63978b4d, type: 3}
+  soldierProduceTimeMax: 2
+  selectedHeroList: []
+  heroProduceTimeMax: 0

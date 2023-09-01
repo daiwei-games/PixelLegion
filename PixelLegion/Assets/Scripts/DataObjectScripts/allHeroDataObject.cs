@@ -1,10 +1,10 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 1.©Ò¦³­^¶¯²M³æ
-/// 2.¤w¾Ö¦³ªº­^¶¯²M³æ
+/// 1.æ‰€æœ‰è‹±é›„æ¸…å–®
+/// 2.å·²æ“æœ‰çš„è‹±é›„æ¸…å–®
 /// </summary>
 [CreateAssetMenu(fileName = "New HeroList Data", menuName = "Data Object/All Hero Data")]
 public class allHeroDataObject : ScriptableObject

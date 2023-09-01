@@ -3,7 +3,13 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - MainFortressTag
+  - DarkMainFortressTag
+  - DarkSoldier
+  - PlayerSoldier
+  - PlayerHero
+  - DarkHero
   layers:
   - Default
   - TransparentFX
@@ -12,13 +18,13 @@ TagManager:
   - Water
   - UI
   - Player
-  - Soldier
+  - PlayerSoldier
   - Floot
-  - MainForTress
-  - 
-  - 
-  - 
-  - 
+  - MainFortress
+  - DarkMainFortress
+  - DarkSoldier
+  - Hero
+  - DarkHero
   - 
   - 
   - 

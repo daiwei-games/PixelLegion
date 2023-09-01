@@ -1,42 +1,42 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 /// <summary>
-/// 1.¥D³ùªº°_©l¸ê®Æ
-/// 2.Åª¨ú¸ê®Æªş­È
+/// 1.ä¸»å ¡çš„èµ·å§‹è³‡æ–™
+/// 2.è®€å–è³‡æ–™é™„å€¼
 /// </summary>
 [CreateAssetMenu(fileName = "New Main Fortress Data", menuName = "Data Object/Main Fortress Data")]
 public class mainFortressDataObject : ScriptableObject
 {
     /// <summary>
-    /// ³Ì¤j¦å¶q
+    /// æœ€å¤§è¡€é‡
     /// </summary>
-    [Header("³Ì¤j¦å¶q")]
+    [Header("æœ€å¤§è¡€é‡")]
     public int maxhp;
     /// <summary>
-    /// ³Ì¤j¤h§L¤H¼Æ
+    /// æœ€å¤§å£«å…µäººæ•¸
     /// </summary>
-    [Header("³Ì¤j¤h§L¤H¼Æ")]
+    [Header("æœ€å¤§å£«å…µäººæ•¸")]
     public int soldierCount;
     /// <summary>
-    /// ¤w¿ï¾Üªº¤h§L²M³æ
+    /// å·²é¸æ“‡çš„å£«å…µæ¸…å–®
     /// </summary>
-    [Header("¤w¿ï¾Üªº¤h§L²M³æ")]
+    [Header("å·²é¸æ“‡çš„å£«å…µæ¸…å–®")]
     public List<Transform> soldierSelectedList;
     /// <summary>
-    /// ¤h§L¥Í²£®É¶¡
+    /// å£«å…µç”Ÿç”¢æ™‚é–“
     /// </summary>
-    [Header("¤h§L¥Í²£®É¶¡")]
+    [Header("å£«å…µç”Ÿç”¢æ™‚é–“")]
     public float soldierProduceTimeMax;
     /// <summary>
-    /// ¥Ø«e¿ï¾Üªº­^¶¯
+    /// ç›®å‰é¸æ“‡çš„è‹±é›„
     /// </summary>
-    [Header("¥Ø«e¿ï¾Üªº­^¶¯")]
+    [Header("ç›®å‰é¸æ“‡çš„è‹±é›„")]
     public List<Transform> selectedHeroList;
     /// <summary>
-    /// ­^¶¯¥Í²£®É¶¡
-    /// ¨C¤@¦ì­^¶¯©Ò»İ­n²£¥Íªº®É¶¡¥[Á`
+    /// è‹±é›„ç”Ÿç”¢æ™‚é–“
+    /// æ¯ä¸€ä½è‹±é›„æ‰€éœ€è¦ç”¢ç”Ÿçš„æ™‚é–“åŠ ç¸½
     /// </summary>
-    [Header("­^¶¯¥Í²£®É¶¡")]
+    [Header("è‹±é›„ç”Ÿç”¢æ™‚é–“")]
     public float heroProduceTimeMax;
 }

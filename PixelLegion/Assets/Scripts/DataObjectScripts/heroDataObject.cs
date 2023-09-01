@@ -1,26 +1,26 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 /// <summary>
-/// 1.­^¶¯­Ó§O°_©l¸ê®Æ
-/// 2.Åª¨ú¸ê®Æ®w±N­^¶¯­Ó§Oªş­È
+/// 1.è‹±é›„å€‹åˆ¥èµ·å§‹è³‡æ–™
+/// 2.è®€å–è³‡æ–™åº«å°‡è‹±é›„å€‹åˆ¥é™„å€¼
 /// </summary>
 [CreateAssetMenu(fileName = "New Hero Data", menuName = "Data Object/Hero Data")]
 public class heroDataObject : ScriptableObject
 {
     /// <summary>
-    /// ¥Í²£®É¶¡
+    /// ç”Ÿç”¢æ™‚é–“
     /// </summary>
-    [Header("¥Í²£®É¶¡")]
+    [Header("ç”Ÿç”¢æ™‚é–“")]
     public float produceTime;
     /// <summary>
-    /// ­^¶¯¹w¨îª«
+    /// è‹±é›„é åˆ¶ç‰©
     /// </summary>
-    [Header("­^¶¯¹w¨îª«")]
+    [Header("è‹±é›„é åˆ¶ç‰©")]
     public Transform heroPrefab;
     /// <summary>
-    /// ­^¶¯¦WºÙ
+    /// è‹±é›„åç¨±
     /// </summary>
-    [Header("­^¶¯¦WºÙ")]
+    [Header("è‹±é›„åç¨±")]
     public string heroName;
 }

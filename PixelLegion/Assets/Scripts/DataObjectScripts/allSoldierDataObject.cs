@@ -1,10 +1,10 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 1.©Ò¦³¤h§L²M³æ
-/// 2.¤w¸g¾Ö¦³ªº¤h§L²M³æ
+/// 1.æ‰€æœ‰å£«å…µæ¸…å–®
+/// 2.å·²ç¶“æ“æœ‰çš„å£«å…µæ¸…å–®
 /// </summary>
 public class allSoldierDataObject : ScriptableObject
 {

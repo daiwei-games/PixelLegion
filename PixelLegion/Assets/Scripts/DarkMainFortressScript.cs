@@ -1,18 +1,31 @@
-using Assets.Scripts;
+ï»¿using Assets.Scripts;
 using Assets.Scripts.BaseClass;
 using Assets.Scripts.IFace;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 /// <summary>
-/// ¼Ä¤H¥D³ù
-/// ®t§O¦b¨S¦³©I¥sª±®a¸ê®Æ
-/// ¨S¦³©I¥s¥D³ù¸ê®Æ¡A¦Ó¬O©I¥sªº¬O darkMainFortressDataObject
+/// æ•µäººä¸»å ¡
+/// å·®åˆ¥åœ¨æ²’æœ‰å‘¼å«ç©å®¶è³‡æ–™
+/// æ²’æœ‰å‘¼å«ä¸»å ¡è³‡æ–™ï¼Œè€Œæ˜¯å‘¼å«çš„æ˜¯ darkMainFortressDataObject
 /// </summary>
 public class DarkMainFortressScript : MainFortressBaseScript
 {
+    /// <summary>
+    /// ä¸»å ¡è³‡æ–™ç‰©ä»¶
+    /// </summary>
+    public darkMainFortressDataObject _mainFortressObj;
+    /// <summary>
+    /// æ•µäººä¸»å ¡tag
+    /// </summary>
+    public string enemyMainFortressTag;
+    /// <summary>
+    /// å£«å…µ tag
+    /// </summary>
+    public string soldierTag;
     private void Awake()
     {
         MainFortressDataInitializ();
@@ -20,41 +33,52 @@ public class DarkMainFortressScript : MainFortressBaseScript
     }
     public override void MainFortressDataInitializ()
     {
-        _transform = transform; // ¨ú±oª«¥ótransform
-        _gameObject = gameObject; // ¨ú±oª«¥ógameobject
-        _gameManager = GameObject.Find("GameManager"); // ¨ú±o¹CÀ¸ºŞ²z¾¹
+        _transform = transform; // å–å¾—ç‰©ä»¶transform
+        _gameObject = gameObject; // å–å¾—ç‰©ä»¶gameobject
+        _mainFortressObj = _darkMainFortressDataObject;
+        enemyMainFortressTag = staticPublicObjectsStaticName.MainFortressTag; // å–å¾—æ•µäººä¸»å ¡tag
+        soldierTag = staticPublicObjectsStaticName.DARKSoldierTag; // å–å¾—å£«å…µtag
+        _gameManager = GameObject.Find("GameManager"); // å–å¾—éŠæˆ²ç®¡ç†å™¨
         if (_gameManager != null)
         {
-            _gameManagerScript = _gameManager.GetComponent<GameManager>(); // ¨ú±o¹CÀ¸ºŞ²z¾¹¸}¥»
-            _gameManagerScript._darkMainFortressScript = GetComponent<DarkMainFortressScript>();
+            _gameManagerScript = _gameManager.GetComponent<GameManager>(); // å–å¾—éŠæˆ²ç®¡ç†å™¨è…³æœ¬
+            _gameManagerScript._darkMainFortressScript.Add(GetComponent<DarkMainFortressScript>());
+            _gameManagerScript._mainFortressScriptList.Add(GetComponent<DarkMainFortressScript>());
         }
+        _gameObject.layer = LayerMask.NameToLayer(staticPublicObjectsStaticName.DarkMainFortressLayer); // è¨­å®šä¸»å ¡åœ–å±¤
+        _mfEnemyLayerMask = LayerMask.GetMask(staticPublicObjectsStaticName.PlayerSoldierLayer,
+                    staticPublicObjectsStaticName.HeroLayer,
+                    staticPublicObjectsStaticName.MainFortressLayer); // è¨­å®šä¸»å ¡æ•µäººåœ–å±¤
+        _hp = _mainFortressObj.maxhp; // å–å¾—ä¸»å ¡è¡€é‡
+        _soldierCount = _mainFortressObj.soldierCount; // å–å¾—ä¸»å ¡å…µæ•¸
 
-
-        _hp = _darkMainFortressDataObject.maxhp; // ¨ú±o¥D³ù¦å¶q
-        _soldierCount = _darkMainFortressDataObject.soldierCount; // ¨ú±o¥D³ù§L¼Æ
-
-        TextMeshPro[] TextMeshProArray = _transform.GetComponentsInChildren<TextMeshPro>(); // ¨ú±o©Ò¦³¤lª«¥óªºTextMeshPro
-        foreach (var item in TextMeshProArray)
+        TextMeshPro[] TextMeshProArray = _transform.GetComponentsInChildren<TextMeshPro>(); // å–å¾—æ‰€æœ‰å­ç‰©ä»¶çš„TextMeshPro
+        for (int i = 0; i < TextMeshProArray.Length; i++)
         {
-            switch (item.name)
+            switch (TextMeshProArray[i].name)
             {
                 case staticPublicObjectsStaticName.MainFortressHpObjectName:
-                    _hpMeshPro = item; // ¨ú±o¥D³ù¦å¶q¤å¦rª«¥ó
+                    _hpMeshPro = TextMeshProArray[i]; // å–å¾—ä¸»å ¡è¡€é‡æ–‡å­—ç‰©ä»¶
                     break;
                 case staticPublicObjectsStaticName.MainFortressSoldierObjectName:
-                    _soldierCountMeshPro = item; // ¨ú±o¥D³ù§L¼Æ¤å¦rª«¥ó
+                    _soldierCountMeshPro = TextMeshProArray[i]; // å–å¾—ä¸»å ¡å…µæ•¸æ–‡å­—ç‰©ä»¶
                     break;
             }
         }
+        MainFortressHpTextMeshPro(); // æ›´æ–°ä¸»å ¡è¡€é‡æ–‡å­—
+        MainForTressSoldierCountTextMeshPro(); // æ›´æ–°ä¸»å ¡å…µæ•¸æ–‡å­—
+        selectedSoldierList = _mainFortressObj.soldierSelectedList; // å–å¾—å·²é¸æ“‡å£«å…µæ¸…å–®
+        soldierProduceTime = _mainFortressObj.soldierProduceTimeMax; // å–å¾—å£«å…µç”¢ç”Ÿæ™‚é–“
+        soldierProduceTimeNow = soldierProduceTime;
 
-        MainFortressHpTextMeshPro(); // §ó·s¥D³ù¦å¶q¤å¦r
-        MainForTressSoldierCountTextMeshPro(); // §ó·s¥D³ù§L¼Æ¤å¦r
+
+        GetEnemyMainFortress();
     }
     public override void MainFortressHpTextMeshPro()
     {
         if (staticPublicGameStopSwitch.mainFortressStop) return;
         if (_hpMeshPro == null) return;
-        _hpMeshPro.text = $"HP: {_hp} /{_darkMainFortressDataObject.maxhp}";
+        _hpMeshPro.text = $"HP: {_hp} /{_mainFortressObj.maxhp}";
     }
 
     public override void MainForTressSoldierCountTextMeshPro()
@@ -62,5 +86,80 @@ public class DarkMainFortressScript : MainFortressBaseScript
         if (staticPublicGameStopSwitch.mainFortressStop) return;
         if (_soldierCountMeshPro == null) return;
         _soldierCountMeshPro.text = $"{_soldierCount}";
+    }
+    /// <summary>
+    /// ç”¢ç”Ÿå£«å…µ
+    /// </summary>
+    public override void ProduceSoldier()
+    {
+        if (_soldierCount <= 0) return;
+        if (_gameManagerScript._soldierList.Count >= 300) return; // å£«å…µæ•¸é‡è¶…é300ä¸ç”¢ç”Ÿ
+        if (soldierProduceTimeNow >= soldierProduceTime)
+        {
+            //ç”¢ç”Ÿå£«å…µ
+            Vector3 ParentPosition = _transform.position;
+            ParentPosition.y += 1;
+            Vector2 ParentScale;
+            Transform InstantiateTransform;
+            SoldierScript _soldierScript;
+            if (enemyMainFortressList.Count > 0)
+            {
+                for (int i = 0; i < enemyMainFortressList.Count; i++)
+                {
+                    if (enemyMainFortressList[i] == null)
+                    {
+                        enemyMainFortressList.RemoveAt(i);
+                        return;
+                    }
+                    InstantiateTransform = Instantiate(selectedSoldierList[Random.Range(0, selectedSoldierList.Count)], ParentPosition, Quaternion.identity);
+                    InstantiateTransform.tag = soldierTag;
+                    InstantiateTransform.gameObject.layer = LayerMask.NameToLayer(staticPublicObjectsStaticName.DarkSoldierLayer);
+                    ParentScale = InstantiateTransform.localScale; // å–å¾—å£«å…µçš„Scale
+                    if (enemyMainFortressList[i].position.x < _transform.position.x) ParentScale.x *= -1; // åˆ¤æ–·æ•µäººä¸»å ¡çš„ä½ç½®ï¼Œæ±ºå®šå£«å…µçš„Scale
+                    InstantiateTransform.localScale = ParentScale; // æ›´æ–°å£«å…µçš„Scale
+
+                    _soldierScript = InstantiateTransform.GetComponent<SoldierScript>();
+                    _soldierScript._enemyLayerMask = _mfEnemyLayerMask; // å–å¾—æ•µäººåœ–å±¤
+                    _soldierScript._enemyNowMainFortress = enemyMainFortressList[i];
+                    _soldierScript._gameManagerScript = _gameManagerScript;
+                    _soldierScript._soldierScript = _soldierScript;
+                    _gameManagerScript._soldierList.Add(_soldierScript);//å°‡è³‡æ–™å­˜å…¥ç©å®¶å£«å…µæ¸…å–®
+
+                    _soldierCount -= 1; // å£«å…µæ•¸é‡æ¸›å°‘
+                }
+
+            }
+            soldierProduceTimeNow = 0; // é‡ç½®å£«å…µç”¢ç”Ÿæ™‚é–“
+            MainForTressSoldierCountTextMeshPro(); // æ›´æ–°ä¸»å ¡å…µæ•¸æ–‡å­—
+        }
+        if (soldierProduceTimeNow < soldierProduceTime)
+        {
+            soldierProduceTimeNow += Time.deltaTime;
+        }
+    }
+    public override void MainFortressHit(int hit)
+    {
+        if (_hp <= 0) return;
+        _hp -= hit;
+        MainFortressHpTextMeshPro();
+        if (_hp <= 0)
+        {
+
+        }
+
+    }
+    /// <summary>
+    /// å–å¾—æ•µäººä¸»å ¡
+    /// </summary>
+    public override void GetEnemyMainFortress()
+    {
+        GameObject[] enemyMainFortressArray = GameObject.FindGameObjectsWithTag(enemyMainFortressTag); // å–å¾—æ•µäººä¸»å ¡æ¸…å–®
+        if (enemyMainFortressArray.Length > 0)
+        {
+            foreach (var item in enemyMainFortressArray)
+            {
+                enemyMainFortressList.Add(item.transform);
+            }
+        }
     }
 }

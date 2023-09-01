@@ -1,42 +1,42 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 /// <summary>
-/// 1.ª±®a°_©l¸ê®Æ
-/// 2.Åª¨ú¸ê®Æ®w­«·sªş­È
-/// 3.©Ò¿ï¾Üªº­^¶¯
+/// 1.ç©å®¶èµ·å§‹è³‡æ–™
+/// 2.è®€å–è³‡æ–™åº«é‡æ–°é™„å€¼
+/// 3.æ‰€é¸æ“‡çš„è‹±é›„
 /// </summary>
 [CreateAssetMenu(fileName = "New Player Data", menuName = "Data Object/Player Data")]
 public class playerDataObject : ScriptableObject
 {
     /// <summary>
-    /// °£¦s¸ê®Æªºª÷Æ_
+    /// é™¤å­˜è³‡æ–™çš„é‡‘é‘°
     /// </summary>
-    [Header("ª±®aª÷Æ_")]
+    [Header("ç©å®¶é‡‘é‘°")]
     public string PlayerKey;
     /// <summary>
-    /// ª±®a¦WºÙ
+    /// ç©å®¶åç¨±
     /// </summary>
-    [Header("ª±®a¦WºÙ")]
+    [Header("ç©å®¶åç¨±")]
     public string PlayerName;
     /// <summary>
-    /// ¤w¸g¿ï¾Üªº­^¶¯
+    /// å·²ç¶“é¸æ“‡çš„è‹±é›„
     /// </summary>
-    [Header("¤w¸g¿ï¾Üªº­^¶¯")]
+    [Header("å·²ç¶“é¸æ“‡çš„è‹±é›„")]
     public List<Transform> SelectedHeroList;
     ///<summary>
-    ///ª±®aª÷¹ô
+    ///ç©å®¶é‡‘å¹£
     ///</summary>
-    [Header("ª±®aª÷¹ô")]
+    [Header("ç©å®¶é‡‘å¹£")]
     public int PlayerCoin;
     ///<summary>
-    ///ª±®aÆp¥Û
+    ///ç©å®¶é‘½çŸ³
     ///</summary>
-    [Header("ª±®aÆp¥Û")]
+    [Header("ç©å®¶é‘½çŸ³")]
     public int PlayerDiamond;
     ///<summary>
-    ///ª±®aÅé¤O
+    ///ç©å®¶é«”åŠ›
     ///</summary>
-    [Header("ª±®aÅé¤O")]
+    [Header("ç©å®¶é«”åŠ›")]
     public int PlayerEnergy;
 }

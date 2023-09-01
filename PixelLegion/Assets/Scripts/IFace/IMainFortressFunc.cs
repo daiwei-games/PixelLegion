@@ -31,5 +31,9 @@ namespace Assets.Scripts.IFace
         /// 生產士兵
         /// </summary>
         public void ProduceSoldier();
+        /// <summary>
+        /// 城堡受傷
+        /// </summary>
+        public void MainFortressHit(int hit);
     }
 }
