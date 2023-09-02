@@ -72,7 +72,7 @@ public class GameManager : MonoBehaviour
             Time.timeScale = 0;
         }
 
-
+        GameOver();
     }
     private void FixedUpdate()
     {
@@ -138,6 +138,7 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         if (_mainFortressScript.Count > 0) return;
+        GameOverObject.GameOverUI();
     }
     /// <summary>
     /// 士兵的動作資訊

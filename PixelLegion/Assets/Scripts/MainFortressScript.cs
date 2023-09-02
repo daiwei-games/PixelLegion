@@ -143,7 +143,7 @@ public class MainFortressScript : MainFortressBaseScript
         MainFortressHpTextMeshPro();
         if (_hp <= 0)
         {
-            _gameManagerScript.MainFortressOver(GetComponent<DarkMainFortressScript>());
+            _gameManagerScript.MainFortressOver(GetComponent<MainFortressScript>());
             Destroy(_gameObject, 1);
         }
 

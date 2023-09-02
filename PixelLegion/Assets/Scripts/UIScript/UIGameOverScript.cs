@@ -1,20 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+
 
 public class UIGameOverScript : UIScript
 {
-
+    /// <summary>
+    /// 取得重新開始遊戲的按鈕
+    /// </summary>
     public Button _Button_GameOver;
+    /// <summary>
+    /// 只執行一次呼叫UI
+    /// 因為裡面有協呈
+    /// </summary>
+    private bool isGameOver;
     private void Awake()
     {
-
-        _Button_GameOver = transform.Find("Button_GameReset").GetComponent<Button>();
-
         GUIDataInitializ();
-
-        GameOverUI();
     }
     public override void GUIDataInitializ()
     {
@@ -41,20 +46,31 @@ public class UIGameOverScript : UIScript
                 _gameManagerScript.GameOverObject = GetComponent<UIGameOverScript>();
         }
 
-
+        isGameOver = true;
     }
 
     public void GameOverUI()
     {
+        if (!isGameOver) return;
+        isGameOver = false;
         RectTransform uiElement = GetComponent<RectTransform>();
+        StartCoroutine("GameOverUIView", uiElement);
         
-
-        uiElement.anchoredPosition = Vector2.zero;
-        Debug.Log(uiElement.anchoredPosition);
     }
+    IEnumerator GameOverUIView(RectTransform _uiElement)
+    {
+        while (_uiElement.anchoredPosition.y != 0)
+        {
+            _uiElement.anchoredPosition = Vector2.Lerp(_uiElement.anchoredPosition, Vector2.zero, 0.1f);
+            yield return new WaitForSeconds(.02f);
+        }
+        Time.timeScale = 0;
+    }
+
     public override void ReStartTheGame()
     {
-
-
+        Time.timeScale = 1;
+        Scene _scene = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(_scene.name);
     }
 }
