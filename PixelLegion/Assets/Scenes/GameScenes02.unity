@@ -11259,7 +11259,7 @@ MonoBehaviour:
   _darkMainFortressScript: []
   _mainFortressScriptList: []
   _soldierList: []
-  ProduceSoldierTimeMax: 0.1
+  ProduceSoldierTimeMax: 0.05
   uiScript: {fileID: 0}
   GameOverObject: {fileID: 0}
 --- !u!4 &1182222768
@@ -14840,6 +14840,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerDataObject: {fileID: 11400000, guid: 48f8c93f30b3f1440b78d4706258dbe5, type: 2}
+  _transform: {fileID: 0}
+  _gameManager: {fileID: 0}
+  _gmaeManagerScript: {fileID: 0}
 --- !u!4 &1481245865
 Transform:
   m_ObjectHideFlags: 0
@@ -14891,7 +14894,6 @@ MonoBehaviour:
   _gameObject: {fileID: 0}
   _gameManager: {fileID: 0}
   _gameManagerScript: {fileID: 0}
-  _playerDataObject: {fileID: 0}
   _layerMask:
     serializedVersion: 2
     m_Bits: 0
@@ -15306,7 +15308,6 @@ MonoBehaviour:
   _gameObject: {fileID: 0}
   _gameManager: {fileID: 0}
   _gameManagerScript: {fileID: 0}
-  _playerDataObject: {fileID: 0}
   _layerMask:
     serializedVersion: 2
     m_Bits: 0

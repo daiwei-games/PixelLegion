@@ -34,11 +34,6 @@ namespace Assets.Scripts.BaseClass
         [Header("取得遊戲管理器腳本"), SerializeField]
         protected GameManager _gameManagerScript;
         /// <summary>
-        /// 玩家資料
-        /// </summary>
-        [Header("玩家資料")]
-        public playerDataObject _playerDataObject;
-        /// <summary>
         /// 主堡自身的圖層
         /// </summary>
         [Header("主堡自身的圖層")]
@@ -105,7 +100,7 @@ namespace Assets.Scripts.BaseClass
         /// 目前士兵生產時間間隔
         /// </summary>
         [Header("目前士兵生產時間間隔(秒)")]
-        protected float soldierProduceTimeNow;
+        public float soldierProduceTimeNow;
         #endregion
         /// <summary>
         /// 初始化主堡資料
@@ -132,12 +127,6 @@ namespace Assets.Scripts.BaseClass
         /// </summary>
         public virtual void MainForTressSoldierCountTextMeshPro()
         {   
-        }
-        /// <summary>
-        /// 生產英雄
-        /// </summary>
-        public virtual void ProduceHero()
-        {
         }
         /// <summary>
         /// 生產士兵

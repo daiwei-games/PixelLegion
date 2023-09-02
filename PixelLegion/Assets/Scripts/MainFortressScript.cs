@@ -72,7 +72,6 @@ public class MainFortressScript : MainFortressBaseScript
 
         GetEnemyMainFortress();
 
-
     }
 
     public override void MainFortressHpTextMeshPro()
@@ -130,10 +129,10 @@ public class MainFortressScript : MainFortressBaseScript
             soldierProduceTimeNow = 0; // 重置士兵產生時間
             MainForTressSoldierCountTextMeshPro(); // 更新主堡兵數文字
         }
-        if (soldierProduceTimeNow < soldierProduceTime)
-        {
-            soldierProduceTimeNow += Time.deltaTime;
-        }
+        //if (soldierProduceTimeNow < soldierProduceTime)
+        //{
+        //    soldierProduceTimeNow += Time.deltaTime;
+        //}
     }
 
     public override void MainFortressHit(int hit)
@@ -148,8 +147,6 @@ public class MainFortressScript : MainFortressBaseScript
         }
 
     }
-
-
     /// <summary>
     /// 取得敵人主堡
     /// </summary>

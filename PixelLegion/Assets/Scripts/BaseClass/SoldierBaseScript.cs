@@ -58,6 +58,7 @@ public class SoldierBaseScript : MonoBehaviour, ISoldierFunc
     /// 取得 GameManager 腳本
     /// </summary>
     public GameManager _gameManagerScript;
+    public Vector3 _SoldierScale;
     #endregion
     #region 射線
     /// <summary>

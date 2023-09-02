@@ -24,10 +24,6 @@ namespace Assets.Scripts.IFace
         /// </summary>
         public void MainForTressSoldierCountTextMeshPro();
         /// <summary>
-        /// 生產英雄
-        /// </summary>
-        public void ProduceHero();
-        /// <summary>
         /// 生產士兵
         /// </summary>
         public void ProduceSoldier();

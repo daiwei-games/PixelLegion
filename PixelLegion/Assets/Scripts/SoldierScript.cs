@@ -144,6 +144,13 @@ public class SoldierScript : SoldierBaseScript
     }
     public override void Move()
     {
+        _SoldierScale = _transform.localScale;
+        if (_enemyNowMainFortress.position.x > _transform.position.x)
+            _SoldierScale.x = Mathf.Abs(_SoldierScale.x);
+        else
+            _SoldierScale.x = Mathf.Abs(_SoldierScale.x) * -1;
+
+        _transform.localScale = _SoldierScale;
         if ((_soldierNowState == _soldierChangeState && _soldierNowState == SoldierState.Move) || _soldierNowState == SoldierState.Move) return;
         _soldierChangeState = SoldierState.Move;
         SoldierStateAI();

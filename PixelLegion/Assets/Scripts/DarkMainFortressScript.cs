@@ -132,10 +132,10 @@ public class DarkMainFortressScript : MainFortressBaseScript
             soldierProduceTimeNow = 0; // 重置士兵產生時間
             MainForTressSoldierCountTextMeshPro(); // 更新主堡兵數文字
         }
-        if (soldierProduceTimeNow < soldierProduceTime)
-        {
-            soldierProduceTimeNow += Time.deltaTime;
-        }
+        //if (soldierProduceTimeNow < soldierProduceTime)
+        //{
+        //    soldierProduceTimeNow += Time.deltaTime;
+        //}
     }
     public override void MainFortressHit(int hit)
     {
@@ -144,7 +144,8 @@ public class DarkMainFortressScript : MainFortressBaseScript
         MainFortressHpTextMeshPro();
         if (_hp <= 0)
         {
-
+            _gameManagerScript.MainFortressOver(GetComponent<MainFortressScript>());
+            Destroy(_gameObject, 1);
         }
 
     }

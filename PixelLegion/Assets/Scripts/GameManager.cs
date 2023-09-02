@@ -1,11 +1,7 @@
 ﻿using Assets.Scripts;
 using Assets.Scripts.BaseClass;
-using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
-using static UnityEngine.GraphicsBuffer;
 
 public class GameManager : MonoBehaviour
 {
@@ -63,7 +59,8 @@ public class GameManager : MonoBehaviour
     }
     private void Start()
     {
-
+        InvokeRepeating("MainFortressBaseProduceSoldier", 0, ProduceSoldierTimeMax);
+        InvokeRepeating("SoldierState", 0, 0.02f);
     }
     private void Update()
     {
@@ -79,20 +76,18 @@ public class GameManager : MonoBehaviour
         if (staticPublicGameStopSwitch.gameStop) return;
         time = Time.deltaTime;
 
-        ProduceSoldierTime += time;
-        if (ProduceSoldierTime >= ProduceSoldierTimeMax)
-        {
-            ProduceSoldierTime = 0;
-            //_mainFortressScript.ProduceSoldier(); //玩家士兵生產
-            //_darkMainFortressScript.ProduceSoldier(); //敵人士兵生產
-            MainFortressBaseProduceSoldier(); //兩邊士兵生產
+        //ProduceSoldierTime += time;
+        //if (ProduceSoldierTime >= ProduceSoldierTimeMax)
+        //{
+        //    ProduceSoldierTime = 0;
+        //    //_mainFortressScript.ProduceSoldier(); //玩家士兵生產
+        //    //_darkMainFortressScript.ProduceSoldier(); //敵人士兵生產
+        //    MainFortressBaseProduceSoldier(); //兩邊士兵生產
 
 
-        }
-        //管理器區塊
-        SoldierState();
-
-
+        //}
+        ////管理器區塊
+        //SoldierState();
     }
     /// <summary>
     /// 兩邊士兵生產
@@ -100,10 +95,12 @@ public class GameManager : MonoBehaviour
     private void MainFortressBaseProduceSoldier()
     {
         if (!isProduceSoldier) return;
+        if (_mainFortressScriptList.Count == 0) return;
         for (int i = 0; i < _mainFortressScriptList.Count; i++)
         {
             isProduceSoldier = false;
             if (_mainFortressScriptList[i] != null)
+                _mainFortressScriptList[i].soldierProduceTimeNow += time;
                 _mainFortressScriptList[i].ProduceSoldier();
         }
         isProduceSoldier = true;
