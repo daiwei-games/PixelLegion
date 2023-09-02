@@ -42,8 +42,8 @@ public class DarkMainFortressScript : MainFortressBaseScript
         if (_gameManager != null)
         {
             _gameManagerScript = _gameManager.GetComponent<GameManager>(); // 取得遊戲管理器腳本
-            _gameManagerScript._darkMainFortressScript.Add(GetComponent<DarkMainFortressScript>());
-            _gameManagerScript._mainFortressScriptList.Add(GetComponent<DarkMainFortressScript>());
+            _gameManagerScript._darkMainFortressScript.Add(this);
+            _gameManagerScript._mainFortressScriptList.Add(this);
         }
         _gameObject.layer = LayerMask.NameToLayer(staticPublicObjectsStaticName.DarkMainFortressLayer); // 設定主堡圖層
         _mfEnemyLayerMask = LayerMask.GetMask(staticPublicObjectsStaticName.PlayerSoldierLayer,
@@ -132,10 +132,6 @@ public class DarkMainFortressScript : MainFortressBaseScript
             soldierProduceTimeNow = 0; // 重置士兵產生時間
             MainForTressSoldierCountTextMeshPro(); // 更新主堡兵數文字
         }
-        //if (soldierProduceTimeNow < soldierProduceTime)
-        //{
-        //    soldierProduceTimeNow += Time.deltaTime;
-        //}
     }
     public override void MainFortressHit(int hit)
     {
@@ -144,7 +140,7 @@ public class DarkMainFortressScript : MainFortressBaseScript
         MainFortressHpTextMeshPro();
         if (_hp <= 0)
         {
-            _gameManagerScript.MainFortressOver(GetComponent<MainFortressScript>());
+            _gameManagerScript.MainFortressOver(this);
             Destroy(_gameObject, 1);
         }
 

@@ -91,8 +91,6 @@ public class SoldierScript : SoldierBaseScript
                     switch (_collider2D[0].tag)
                     {
                         case staticPublicObjectsStaticName.MainFortressTag:
-                            
-
                             break;
                         case staticPublicObjectsStaticName.DarkMainFortressTag:
                             

@@ -1,13 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
-using Assets.Scripts.IFace;
 using Assets.Scripts;
 using Assets.Scripts.BaseClass;
-using Unity.VisualScripting;
-using System.Linq;
-using static UnityEditor.Progress;
 
 public class MainFortressScript : MainFortressBaseScript
 {
@@ -39,8 +33,9 @@ public class MainFortressScript : MainFortressBaseScript
         if (_gameManager != null)
         {
             _gameManagerScript = _gameManager.GetComponent<GameManager>(); // 取得遊戲管理器腳本
-            _gameManagerScript._mainFortressScript.Add(GetComponent<MainFortressScript>());
-            _gameManagerScript._mainFortressScriptList.Add(GetComponent<MainFortressScript>());
+
+            _gameManagerScript._mainFortressScript.Add(this);
+            _gameManagerScript._mainFortressScriptList.Add(this);
         }
         _gameObject.layer = LayerMask.NameToLayer(staticPublicObjectsStaticName.MainFortressLayer); // 設定主堡圖層
         _mfEnemyLayerMask = LayerMask.GetMask(staticPublicObjectsStaticName.DarkSoldierLayer,
@@ -129,10 +124,6 @@ public class MainFortressScript : MainFortressBaseScript
             soldierProduceTimeNow = 0; // 重置士兵產生時間
             MainForTressSoldierCountTextMeshPro(); // 更新主堡兵數文字
         }
-        //if (soldierProduceTimeNow < soldierProduceTime)
-        //{
-        //    soldierProduceTimeNow += Time.deltaTime;
-        //}
     }
 
     public override void MainFortressHit(int hit)
@@ -142,7 +133,7 @@ public class MainFortressScript : MainFortressBaseScript
         MainFortressHpTextMeshPro();
         if (_hp <= 0)
         {
-            _gameManagerScript.MainFortressOver(GetComponent<MainFortressScript>());
+            _gameManagerScript.MainFortressOver(this);
             Destroy(_gameObject, 1);
         }
 

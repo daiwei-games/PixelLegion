@@ -52,6 +52,10 @@ public class GameManager : MonoBehaviour
     /// 遊戲結束物件
     /// </summary>
     public UIGameOverScript GameOverObject;
+    /// <summary>
+    /// 玩家管理器腳本
+    /// </summary>
+    public PlayerScript playerScript;
     private void Awake()
     {
         isSoldierStateForAction = true;
@@ -59,8 +63,8 @@ public class GameManager : MonoBehaviour
     }
     private void Start()
     {
-        InvokeRepeating("MainFortressBaseProduceSoldier", 0, ProduceSoldierTimeMax);
-        InvokeRepeating("SoldierState", 0, 0.02f);
+        //InvokeRepeating("MainFortressBaseProduceSoldier", 0, ProduceSoldierTimeMax);
+        //InvokeRepeating("SoldierState", 0, 0.02f);
     }
     private void Update()
     {
@@ -76,18 +80,16 @@ public class GameManager : MonoBehaviour
         if (staticPublicGameStopSwitch.gameStop) return;
         time = Time.deltaTime;
 
-        //ProduceSoldierTime += time;
-        //if (ProduceSoldierTime >= ProduceSoldierTimeMax)
-        //{
-        //    ProduceSoldierTime = 0;
-        //    //_mainFortressScript.ProduceSoldier(); //玩家士兵生產
-        //    //_darkMainFortressScript.ProduceSoldier(); //敵人士兵生產
-        //    MainFortressBaseProduceSoldier(); //兩邊士兵生產
-
-
-        //}
-        ////管理器區塊
-        //SoldierState();
+        ProduceSoldierTime += time;
+        if (ProduceSoldierTime >= ProduceSoldierTimeMax)
+        {
+            ProduceSoldierTime = 0;
+            MainFortressBaseProduceSoldier(); //兩邊士兵生產
+            playerScript.ProduceHeroTime += time;
+            playerScript.ProduceHero();
+        }
+        //管理器區塊
+        SoldierState();
     }
     /// <summary>
     /// 兩邊士兵生產
