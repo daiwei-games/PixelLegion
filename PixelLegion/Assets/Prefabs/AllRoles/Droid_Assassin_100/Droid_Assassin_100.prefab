@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1751684450175654656}
   - component: {fileID: 3287950729036110662}
   - component: {fileID: 7700156399397922482}
+  - component: {fileID: 475609473931824665}
   m_Layer: 0
   m_Name: Droid_Assassin_100
   m_TagString: Untagged
@@ -170,3 +171,72 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &475609473931824665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4938094692226157106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72d42a1b0f0016441b65311a293bf977, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  heroDataObject: {fileID: 11400000, guid: 89926b988e2012148bac3278d8965c73, type: 2}
+  HeroID: 
+  HeroName: 
+  Hp: 0
+  Attack: 0
+  Def: 0
+  HeroAvatar: {fileID: 21300000, guid: 2e98738718c80a9468b719cf60d871d8, type: 3}
+  _gameManagerScript: {fileID: 0}
+  _transform: {fileID: 0}
+  _tfposition: {x: 0, y: 0}
+  _rg: {fileID: 0}
+  _colliders: []
+  _animator: {fileID: 0}
+  enemyTargetList: []
+  playAnimationTimeMax: 0.02
+  playAnimationTime: 0
+  _Time: 0
+  enemyLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  enemyCollider: []
+  dashDistance: 2
+  phySize: 4
+  PhyOffset: 0
+  isPlayerControl: 0
+  _target: {fileID: 0}
+  speed: 5
+  _HeroNowState: 0
+  _HeroChengState: 0
+  movAtk: []
+  isMovAtk: 0
+  jumpAtk: 
+  isJumpAtk: 0
+  dash: 
+  isDash: 0
+  hit: 
+  isHit: 0
+  def1: 
+  isDef1: 0
+  def2: 
+  isDef2: 0
+  roll: 
+  isRoll: 0
+  jump: 
+  isJump: 0
+  drop: 
+  isDrop: 0
+  land: 
+  isLand: 0
+  miss0: 
+  isMiss0: 0
+  miss1: 
+  isMiss1: 0
+  atk: []
+  run: 
+  idle: 
+  die: 

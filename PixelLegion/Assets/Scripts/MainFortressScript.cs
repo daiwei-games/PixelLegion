@@ -8,15 +8,9 @@ public class MainFortressScript : MainFortressBaseScript
     /// <summary>
     /// 主堡資料物件
     /// </summary>
+    [Header("主堡資料庫")]
     public mainFortressDataObject _mainFortressObj;
-    /// <summary>
-    /// 敵人主堡tag
-    /// </summary>
-    public string enemyMainFortressTag;
-    /// <summary>
-    /// 士兵 tag
-    /// </summary>
-    public string soldierTag;
+
     private void Awake()
     {
         MainFortressDataInitializ();
@@ -26,7 +20,6 @@ public class MainFortressScript : MainFortressBaseScript
     {
         _transform = transform; // 取得物件transform
         _gameObject = gameObject; // 取得物件gameobject
-        _mainFortressObj = _mainFortressDataObject; // 取得主堡資料物件使用統一名稱
         enemyMainFortressTag = staticPublicObjectsStaticName.DarkMainFortressTag; // 取得敵人主堡tag
         soldierTag = staticPublicObjectsStaticName.PlayerSoldierTag; // 取得士兵tag
         _gameManager = GameObject.Find("GameManager"); // 取得遊戲管理器
@@ -66,7 +59,6 @@ public class MainFortressScript : MainFortressBaseScript
         soldierProduceTimeNow = soldierProduceTime;
 
         GetEnemyMainFortress();
-
     }
 
     public override void MainFortressHpTextMeshPro()
@@ -95,25 +87,45 @@ public class MainFortressScript : MainFortressBaseScript
             Vector2 ParentScale;
             Transform InstantiateTransform;
             SoldierScript _soldierScript;
+            Transform _enemymf;
             if (enemyMainFortressList.Count > 0)
             {
                 for (int i = 0; i < enemyMainFortressList.Count; i++)
                 {
-                    if (enemyMainFortressList[i] == null)
+                    _enemymf = enemyMainFortressList[i];
+                    if (_enemymf == null)
                     {
                         enemyMainFortressList.RemoveAt(i);
-                        return;
+                        continue;
                     }
                     InstantiateTransform = Instantiate(selectedSoldierList[Random.Range(0, selectedSoldierList.Count)], ParentPosition, Quaternion.identity);
                     InstantiateTransform.tag = soldierTag;
                     InstantiateTransform.gameObject.layer = LayerMask.NameToLayer(staticPublicObjectsStaticName.PlayerSoldierLayer);
                     ParentScale = InstantiateTransform.localScale; // 取得士兵的Scale
-                    if (enemyMainFortressList[i].position.x < _transform.position.x) ParentScale.x *= -1; // 判斷敵人主堡的位置，決定士兵的Scale
+                    if (_enemymf.position.x < _transform.position.x) ParentScale.x *= -1; // 判斷敵人主堡的位置，決定士兵的Scale
                     InstantiateTransform.localScale = ParentScale; // 更新士兵的Scale
 
                     _soldierScript = InstantiateTransform.GetComponent<SoldierScript>();
                     _soldierScript._enemyLayerMask = _mfEnemyLayerMask;
-                    _soldierScript._enemyNowMainFortress = enemyMainFortressList[i];
+                    _soldierScript._enemyNowMainFortress = _enemymf;
+                    if (WhoHitMeTransform.Count > 0) // 如果有被攻擊，就將敵人變成目標
+                    {
+                        Transform _whotf;
+                        for (int whoHitMeIndex = 0; whoHitMeIndex < WhoHitMeTransform.Count; whoHitMeIndex++)
+                        {
+                            _whotf = WhoHitMeTransform[whoHitMeIndex];
+                            if (_whotf == null)
+                            {
+                                WhoHitMeTransform.RemoveAt(whoHitMeIndex);
+                                continue;
+                            }
+                            if(_whotf != null)
+                            {
+                                _soldierScript._enemyNowMainFortress = _whotf;
+                                break;
+                            }
+                        }
+                    }
                     _soldierScript._gameManagerScript = _gameManagerScript;
                     _soldierScript._soldierScript = _soldierScript;
                     _gameManagerScript._soldierList.Add(_soldierScript);//將資料存入玩家士兵清單
@@ -131,12 +143,12 @@ public class MainFortressScript : MainFortressBaseScript
         if (_hp <= 0) return;
         _hp -= hit;
         MainFortressHpTextMeshPro();
+
         if (_hp <= 0)
         {
             _gameManagerScript.MainFortressOver(this);
             Destroy(_gameObject, 1);
         }
-
     }
     /// <summary>
     /// 取得敵人主堡
@@ -146,9 +158,9 @@ public class MainFortressScript : MainFortressBaseScript
         GameObject[] enemyMainFortressArray = GameObject.FindGameObjectsWithTag(enemyMainFortressTag); // 取得敵人主堡清單
         if (enemyMainFortressArray.Length > 0)
         {
-            foreach (var item in enemyMainFortressArray)
+            for (int i = 0; i < enemyMainFortressArray.Length; i++)
             {
-                enemyMainFortressList.Add(item.transform);
+                enemyMainFortressList.Add(enemyMainFortressArray[i].transform);
             }
         }
     }

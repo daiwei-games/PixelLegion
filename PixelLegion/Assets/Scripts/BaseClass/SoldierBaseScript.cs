@@ -122,6 +122,7 @@ public class SoldierBaseScript : MonoBehaviour, ISoldierFunc
     /// </summary>
     [Header("動畫間隔限制")]
     public float animationTimerMax;
+    public float _Time;
     #region 單一動畫
     /// <summary>
     /// 等待動畫
@@ -175,50 +176,62 @@ public class SoldierBaseScript : MonoBehaviour, ISoldierFunc
     /// </summary>
     public virtual void SoldierDataInitializ()
     {
-
     }
     public virtual void GetAllAnimationClipName()
     {
-
     }
     public virtual void SoldierStateAI()
     {
-
     }
     public virtual void PhyOverlapBoxAll(Vector2 Pos, float PosSize)
     {
-
+    }
+    public virtual void PhyOverlapBoxAll(Vector2 Pos)
+    {
     }
 
     public virtual void Atk()
     {
-        
     }
 
     public virtual void Die()
     {
-        
     }
 
     public virtual void Hit()
     {
-        
+    }
+    /// <summary>
+    /// 必須受傷
+    /// </summary>
+    /// <param name="hp">傷害</param>
+    public virtual void MustBeInjured(int hp)
+    {
+
+    }
+    public virtual void GetHeroAtk_Hit(int t)
+    {
+
     }
     public virtual void SoldierHP(int hitAmount)
     {
-
     }
     public virtual void Idle()
     {
-        
     }
-
     public virtual void Move()
     {
-        
     }
-
-
+    /// <summary>
+    /// 播放動畫的函數
+    /// </summary>
+    /// <param name="AnimaName">動畫名稱</param>
+    /// <param name="Layer">動畫控制器圖層</param>
+    /// <param name="NormalTime">0~1的浮點數</param>
+    protected virtual void soldierAnimatorPlay(string AnimaName, int Layer = 0, float NormalTime = 0)
+    {
+        _animator.Play(AnimaName, Layer, NormalTime);
+    }
     public enum SoldierState
     {
         /// <summary>
@@ -237,6 +250,10 @@ public class SoldierBaseScript : MonoBehaviour, ISoldierFunc
         /// 受傷
         /// </summary>
         Hit,
+        /// <summary>
+        /// 超級受傷
+        /// </summary>
+        SoupHit,
         /// <summary>
         /// 死亡
         /// </summary>

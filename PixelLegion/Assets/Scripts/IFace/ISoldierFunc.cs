@@ -27,7 +27,9 @@ namespace Assets.Scripts.IFace
         /// HP 操作
         /// </summary>
         public void SoldierHP(int hitAmount);
-
-
+        /// <summary>
+        /// 受到英雄攻擊
+        /// </summary>
+        public void GetHeroAtk_Hit(int t);
     }
 }

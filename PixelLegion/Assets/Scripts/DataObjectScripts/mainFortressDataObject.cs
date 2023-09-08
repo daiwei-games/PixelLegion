@@ -28,15 +28,4 @@ public class mainFortressDataObject : ScriptableObject
     /// </summary>
     [Header("士兵生產時間")]
     public float soldierProduceTimeMax;
-    /// <summary>
-    /// 目前選擇的英雄
-    /// </summary>
-    [Header("目前選擇的英雄")]
-    public List<Transform> selectedHeroList;
-    /// <summary>
-    /// 英雄生產時間
-    /// 每一位英雄所需要產生的時間加總
-    /// </summary>
-    [Header("英雄生產時間")]
-    public float heroProduceTimeMax;
 }

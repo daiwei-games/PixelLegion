@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 /// <summary>
 /// 1.玩家起始資料
@@ -19,11 +18,6 @@ public class playerDataObject : ScriptableObject
     /// </summary>
     [Header("玩家名稱")]
     public string PlayerName;
-    /// <summary>
-    /// 已經選擇的英雄
-    /// </summary>
-    [Header("已經選擇的英雄")]
-    public List<Transform> SelectedHeroList;
     ///<summary>
     ///玩家金幣
     ///</summary>
@@ -39,4 +33,15 @@ public class playerDataObject : ScriptableObject
     ///</summary>
     [Header("玩家體力")]
     public int PlayerEnergy;
+    /// <summary>
+    /// 已經選擇的英雄
+    /// </summary>
+    [Header("已經選擇的英雄")]
+    public List<Transform> SelectedHeroList;
+    /// <summary>
+    /// 產生間隔
+    /// </summary>
+    [Range(0, 10), SerializeField]
+    public float ProduceHeroTimeMax;
+
 }

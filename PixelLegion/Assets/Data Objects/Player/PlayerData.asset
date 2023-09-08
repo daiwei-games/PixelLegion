@@ -14,9 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerKey: 123
   PlayerName: 123
-  SelectedHeroList:
-  - {fileID: 7727541760490572647, guid: ebee31bdf2480c749a630119bb025606, type: 3}
-  - {fileID: 5263517046825534479, guid: 2c35625b1e13fe249b9018cfd2a416c5, type: 3}
   PlayerCoin: 0
   PlayerDiamond: 0
   PlayerEnergy: 0
+  SelectedHeroList:
+  - {fileID: 5263517046825534479, guid: 2c35625b1e13fe249b9018cfd2a416c5, type: 3}
+  - {fileID: 7727541760490572647, guid: ebee31bdf2480c749a630119bb025606, type: 3}
+  ProduceHeroTimeMax: 0

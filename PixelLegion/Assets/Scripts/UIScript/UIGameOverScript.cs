@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -37,15 +35,6 @@ public class UIGameOverScript : UIScript
                 });
             }
         }
-
-        _gameManager = GameObject.Find("GameManager");
-        if (_gameManager != null)
-        {
-            _gameManagerScript = _gameManager.GetComponent<GameManager>();
-            if (_gameManagerScript != null)
-                _gameManagerScript.GameOverObject = GetComponent<UIGameOverScript>();
-        }
-
         isGameOver = true;
     }
 
@@ -67,7 +56,7 @@ public class UIGameOverScript : UIScript
         Time.timeScale = 0;
     }
 
-    public override void ReStartTheGame()
+    public void ReStartTheGame()
     {
         Time.timeScale = 1;
         Scene _scene = SceneManager.GetActiveScene();

@@ -1,9 +1,5 @@
 ﻿using Assets.Scripts.IFace;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 
@@ -33,34 +29,7 @@ namespace Assets.Scripts.BaseClass
         /// </summary>
         [Header("取得遊戲管理器腳本"), SerializeField]
         protected GameManager _gameManagerScript;
-        /// <summary>
-        /// 主堡自身的圖層
-        /// </summary>
-        [Header("主堡自身的圖層")]
-        public LayerMask _layerMask;
-        /// <summary>
-        /// 主堡敵人的圖層
-        /// </summary>
-        [Header("主堡敵人的圖層")]
-        public LayerMask _mfEnemyLayerMask;
         #region  主堡資料
-        /// <summary>
-        /// 玩家主堡資料庫
-        /// </summary>
-        [Header("主堡資料庫")]
-        public mainFortressDataObject _mainFortressDataObject;
-        /// <summary>
-        /// 敵人主堡資料庫
-        /// </summary>
-        [Header("主堡資料庫")]
-        public darkMainFortressDataObject _darkMainFortressDataObject;
-        /// <summary>
-        /// 敵人對玩家的主堡清單
-        /// </summary>
-        [Header("敵人的主堡清單")]
-        public List<Transform> enemyMainFortressList;
-        #endregion
-
         /// <summary>
         /// 主堡血量
         /// </summary>
@@ -71,6 +40,27 @@ namespace Assets.Scripts.BaseClass
         /// </summary>
         [Header("主堡血量文字")]
         public TextMeshPro _hpMeshPro;
+        /// <summary>
+        /// 敵人主堡tag
+        /// </summary>
+        [Header("敵人主堡tag")]
+        public string enemyMainFortressTag;
+        /// <summary>
+        /// 敵人對玩家的主堡清單
+        /// </summary>
+        [Header("敵人的主堡清單")]
+        public List<Transform> enemyMainFortressList;
+        /// <summary>
+        /// 主堡自身的圖層
+        /// </summary>
+        [Header("主堡自身的圖層")]
+        public LayerMask _layerMask;
+        /// <summary>
+        /// 主堡敵人的圖層
+        /// </summary>
+        [Header("主堡敵人的圖層")]
+        public LayerMask _mfEnemyLayerMask;
+        #endregion
         /// <summary>
         /// 目前剩餘兵數
         /// </summary>
@@ -92,6 +82,11 @@ namespace Assets.Scripts.BaseClass
         [Header("目前已選擇的士兵")]
         public List<Transform> selectedSoldierList;
         /// <summary>
+        /// 士兵 tag
+        /// </summary>
+        [Header("士兵 tag")]
+        public string soldierTag;
+        /// <summary>
         /// 士兵生產時間
         /// </summary>
         [Header("士兵生產時間(秒)")]
@@ -101,6 +96,10 @@ namespace Assets.Scripts.BaseClass
         /// </summary>
         [Header("目前士兵生產時間間隔(秒)")]
         public float soldierProduceTimeNow;
+        /// <summary>
+        /// 誰打我變成目標
+        /// </summary>
+        public List<Transform> WhoHitMeTransform;
         #endregion
         /// <summary>
         /// 初始化主堡資料

@@ -1,8 +1,6 @@
 ﻿using Assets.Scripts.IFace;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 public class UIScript : MonoBehaviour, IGUIFunc
 {
     public Transform _transform;
@@ -16,8 +14,11 @@ public class UIScript : MonoBehaviour, IGUIFunc
     /// </summary>
     [Header("取得遊戲管理器腳本"), SerializeField]
     protected GameManager _gameManagerScript;
-
-    public List<UIScript> UIList;
+    /// <summary>
+    /// 取得子物件
+    /// </summary>
+    [Header("取得子物件"), SerializeField]
+    private List<UIScript> UIList;
     private void Awake()
     {
         GUIDataInitializ();
@@ -32,12 +33,13 @@ public class UIScript : MonoBehaviour, IGUIFunc
                 if (_gameManagerScript != null)
                     _gameManagerScript.uiScript = GetComponent<UIScript>();
         }
-    }
-    /// <summary>
-    /// 重新開始遊戲
-    /// </summary>
-    public virtual void ReStartTheGame()
-    {
+
+        for (int i = 0; i < UIList.Count; i++)
+        {
+            UIList[i]._gameManager = _gameManager;
+            UIList[i]._gameManagerScript = _gameManagerScript;
+        }
+
         
     }
 }

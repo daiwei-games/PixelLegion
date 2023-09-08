@@ -98,7 +98,7 @@ Animator:
   m_GameObject: {fileID: 2839741205296922703}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 22100000, guid: a682dd259a3571d42854867648d19599, type: 2}
+  m_Controller: {fileID: 9100000, guid: 3f2e03d5039e9af40b693a9582c1877e, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -191,14 +191,15 @@ MonoBehaviour:
   soldierName: Mushroom
   soldierAtk: 0
   soldierDefense: 0
-  soldierHp: 10
+  soldierHp: 100
   speed: 3
   soldierLv: 0
   soldierLvMax: 50
   animPrefix: Soldier_Mushroom
   _gameManagerScript: {fileID: 0}
+  _SoldierScale: {x: 0, y: 0, z: 0}
   _collider2D: []
-  Physics2DSize: 6
+  Physics2DSize: 3
   _enemySoldierLayer: 0
   _enemyMainFortressLayer: 0
   _enemyHeroLayer: 0
@@ -209,7 +210,8 @@ MonoBehaviour:
   _animator: {fileID: 0}
   _animationClip: []
   animationTime: 0
-  animationTimerMax: 0.2
+  animationTimerMax: 0
+  _Time: 0
   idleAnimationName: 
   hitAnimationName: 
   dieAnimationName: 
@@ -218,3 +220,4 @@ MonoBehaviour:
   dashAnimationName: []
   _soldierNowState: 0
   _soldierChangeState: 0
+  PhyOffset: 1.5

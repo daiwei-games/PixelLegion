@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cffe1019085ad474ea9061438f6e485e, type: 3}
   m_Name: practise_DARK_MainFortress
   m_EditorClassIdentifier: 
-  maxhp: 2000
-  soldierCount: 100
+  maxhp: 1
+  soldierCount: 10
   soldierSelectedList:
   - {fileID: 9208150154705962313, guid: 1954582f411329345aeefdba63978b4d, type: 3}
-  soldierProduceTimeMax: 3
+  soldierProduceTimeMax: 2
   selectedHeroList: []
   heroProduceTimeMax: 0

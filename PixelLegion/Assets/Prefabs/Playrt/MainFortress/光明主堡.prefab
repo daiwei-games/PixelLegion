@@ -233,15 +233,14 @@ MonoBehaviour:
   _gameObject: {fileID: 0}
   _gameManager: {fileID: 0}
   _gameManagerScript: {fileID: 0}
-  _playerDataObject: {fileID: 11400000, guid: 48f8c93f30b3f1440b78d4706258dbe5, type: 2}
   _layerMask:
     serializedVersion: 2
     m_Bits: 0
   _mfEnemyLayerMask:
     serializedVersion: 2
     m_Bits: 0
-  _mainFortressDataObject: {fileID: 11400000, guid: 18595168fb3896146b9e60c47f80eb69, type: 2}
-  _darkMainFortressDataObject: {fileID: 0}
+  enemyMainFortressTag: 
+  soldierTag: 
   enemyMainFortressList: []
   _hp: 0
   _hpMeshPro: {fileID: 0}
@@ -252,9 +251,8 @@ MonoBehaviour:
   selectedSoldierList:
   - {fileID: 9208150154705962313, guid: 1954582f411329345aeefdba63978b4d, type: 3}
   soldierProduceTime: 0
-  _mainFortressObj: {fileID: 0}
-  enemyMainFortressTag: 
-  soldierTag: 
+  soldierProduceTimeNow: 0
+  _mainFortressObj: {fileID: 11400000, guid: 18595168fb3896146b9e60c47f80eb69, type: 2}
 --- !u!1 &5013076206298169237
 GameObject:
   m_ObjectHideFlags: 0
