@@ -32,6 +32,10 @@ public class heroDataObject : ScriptableObject
     [Header("英雄增加的防禦力百分比")]
     public float AddDef = 0.2f;
 
-
-
+    /// <summary>
+    /// 範圍百分比 當等級越高，這個數值越小，代表範圍越精準
+    /// [計算方式為，每增加一等範圍百分比減少0.005]
+    /// </summary>
+    [Header("影響攻擊、防禦範圍值")]
+    public float Percentage = 0.505f;
 }

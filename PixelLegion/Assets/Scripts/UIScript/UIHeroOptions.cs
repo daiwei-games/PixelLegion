@@ -21,6 +21,10 @@ public class UIHeroOptions : UIScript
     public List<Button> HeroButtonUI;
     public List<Image> HeroSpriteRenderer;
     /// <summary>
+    /// 英雄按鈕總數
+    /// </summary>
+    public int ButtonCount;
+    /// <summary>
     /// 英雄清單按鈕的索引
     /// </summary>
     private int HeroListIndex;
@@ -32,13 +36,6 @@ public class UIHeroOptions : UIScript
     public override void GUIDataInitializ()
     {
         _transform = transform;
-        if (HeroButtonUI.Count > 0)
-        {
-            for (int i = 0; i < HeroButtonUI.Count; i++)
-            {
-                HeroSpriteRenderer.Add(HeroButtonUI[i].GetComponent<Image>());
-            }
-        }
 
         _playerManager = GameObject.Find("PlayerManager");
         if (_playerManager != null)
@@ -47,6 +44,21 @@ public class UIHeroOptions : UIScript
             if (_playerScript != null)
             {
                 _playerScript.HeroUI = this;
+            }
+            ButtonCount = _playerScript._playerDataObject.SelectedHeroList.Count;
+        }
+
+        Button _but = HeroButtonUI[0];
+        if (ButtonCount < 3) ButtonCount = 3;
+        while (HeroButtonUI.Count < ButtonCount)
+        {
+            HeroButtonUI.Add(Instantiate(_but, _but.transform.parent));
+        }
+        if (HeroButtonUI.Count > 0)
+        {
+            for (int i = 0; i < HeroButtonUI.Count; i++)
+            {
+                HeroSpriteRenderer.Add(HeroButtonUI[i].GetComponent<Image>());
             }
         }
         HeroListIndex = 0;
@@ -60,9 +72,10 @@ public class UIHeroOptions : UIScript
     /// <param name="_hero">英雄腳本</param>
     public void ButtonAddEvent(HeroScript _hero)
     {
-        if(HeroListIndex >= HeroButtonUI.Count) return;
-        HeroButtonUI[HeroListIndex].onClick.AddListener(()=>{ // 綁定事件
-            SelectedHeroEvent(_hero); 
+        if (HeroListIndex >= HeroButtonUI.Count) return;
+        HeroButtonUI[HeroListIndex].onClick.AddListener(() =>
+        { // 綁定事件
+            SelectedHeroEvent(_hero);
         });
         HeroSpriteRenderer[HeroListIndex].sprite = _hero.HeroAvatar; // 將按鈕圖片變成英雄
         HeroListIndex++;
@@ -72,7 +85,7 @@ public class UIHeroOptions : UIScript
     /// </summary>
     public void SelectedHeroEvent(HeroScript _hero)
     {
-        if(_gameManagerScript.HeroList.Count == 0) return;
+        if (_gameManagerScript.HeroList.Count == 0) return;
         _gameManagerScript.SelectedHeroFunc(_hero);
     }
 }

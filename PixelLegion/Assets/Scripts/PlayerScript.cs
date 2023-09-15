@@ -50,6 +50,9 @@ public class PlayerScript : MonoBehaviour, IPlayerFunc, IProduceHeroFunc
     {
         PlayerDataInitializ();
     }
+    /// <summary>
+    /// 初始化腳本
+    /// </summary>
     public void PlayerDataInitializ()
     {
         _transform = transform;
@@ -61,19 +64,25 @@ public class PlayerScript : MonoBehaviour, IPlayerFunc, IProduceHeroFunc
             _gameManagerScript = _gameManager.GetComponent<GameManager>();
             _gameManagerScript.playerScript = this;
         }
-        ProduceHeroTime = 0;
 
         _enemyLayerMask = LayerMask.GetMask(staticPublicObjectsStaticName.DarkHeroLayer,
             staticPublicObjectsStaticName.DarkSoldierLayer,
             staticPublicObjectsStaticName.DarkMainFortressLayer); //取得敵人圖層
 
         ProduceHeroTimeMax = _playerDataObject.ProduceHeroTimeMax; //取得產生間隔
+        //ProduceHeroTime = ProduceHeroTimeMax;
     }
+    /// <summary>
+    /// 創建英雄
+    /// </summary>
+    /// <param name="_time">計算產生英雄的時間</param>
     public void ProduceHero(float _time)
     {
+        _transform.position = _gameManagerScript._mainFortressScript[0]._transform.position; //設定玩家位置
         if (GetHeroList.Count == 0) return; //如果沒有英雄就不執行
         ProduceHeroTime += _time; //計算時間
         if (ProduceHeroTime < ProduceHeroTimeMax) return; //如果時間沒有到就不執行
+        ProduceHeroTime = 0; //重置時間
 
         int HeroListIndex = Random.Range(0, GetHeroList.Count); //隨機選擇英雄
         GameObject _hero = Instantiate(GetHeroList[HeroListIndex], _transform).gameObject; //產生英雄
@@ -83,10 +92,6 @@ public class PlayerScript : MonoBehaviour, IPlayerFunc, IProduceHeroFunc
         HeroScript _heroScript = _hero.GetComponent<HeroScript>(); //取得英雄腳本
         _heroScript.enemyLayerMask = _enemyLayerMask; //設定敵人圖層
         _heroScript._gameManagerScript = _gameManagerScript; //設定遊戲管理器
-
-        
-
-        
 
         _gameManagerScript.HeroList.Add(_heroScript); //將英雄加入遊戲管理器
         HeroUI.ButtonAddEvent(_heroScript); //將英雄加入選擇介面
@@ -124,7 +129,7 @@ public class PlayerScript : MonoBehaviour, IPlayerFunc, IProduceHeroFunc
         _heroScript._target = _dmfList[targetIndex]._transform; //設定目標
 
         GetHeroList.RemoveAt(HeroListIndex); //將英雄從清單中移除
-        ProduceHeroTime = 0; //重置時間
+        
     }
 
 

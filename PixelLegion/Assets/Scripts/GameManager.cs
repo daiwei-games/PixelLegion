@@ -2,7 +2,7 @@
 using Assets.Scripts.BaseClass;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
+using UnityEngine.EventSystems;
 
 public class GameManager : MonoBehaviour
 {
@@ -44,7 +44,6 @@ public class GameManager : MonoBehaviour
     /// 是否再次執行迴圈
     /// </summary>
     bool isSoldierStateForAction;
-
     /// <summary>
     /// UI腳本
     /// </summary>
@@ -63,26 +62,73 @@ public class GameManager : MonoBehaviour
     [Header("已經產生的英雄清單")]
     public List<HeroScript> HeroList;
     /// <summary>
+    /// 是否再次執行英雄動作迴圈的判斷
+    /// </summary>
+    public bool isHeroStateForAction;
+    /// <summary>
     /// 產生英雄計算間隔
     /// </summary>
     [Header("產生英雄計算間隔"), SerializeField, Range(0.01f, 10)]
     private float ProduceHeroTimeMax;
     private float ProduceHeroTime;
     /// <summary>
-    /// 可以操控的英雄
-    /// </summary>
-    [Header("可以操控的英雄"), SerializeField]
-    private HeroScript SelectedHero;
-    /// <summary>
     /// 選擇的英雄頭上出現指標
     /// </summary>
     [Header("選擇的英雄頭上出現指標"), SerializeField]
     private Transform SelectedHeroTargetPrefab;
     private Transform SelectedHeroTarget;
+    /// <summary>
+    /// 存放產生英雄的腳本
+    /// </summary>
+    public List<DarkProduceHeroScript> DarkHeroScript;
+
+    private float MissOrDashStartTimr;
+
+    #region 決鬥
+    /// <summary>
+    /// 是否決鬥
+    /// </summary>
+    [Header("是否決鬥")]
+    public bool isDuel;
+    /// <summary>
+    /// 決鬥腳本
+    /// </summary>
+    public DuelScript duelScript;
+    /// <summary>
+    /// 可以操控的英雄
+    /// </summary>
+    [Header("可以操控的英雄"), SerializeField]
+    private HeroScript SelectedHero;
+    /// <summary>
+    /// 搖桿腳本
+    /// </summary>
+    [Header("搖桿")]
+    public VariableJoystick _Joystick;
+    /// <summary>
+    /// 搖桿方向
+    /// </summary>
+    Vector2 _JoystickDirection;
+    /// <summary>
+    /// 玩家英雄操作的操控介面
+    /// </summary>
+    public HeroController heroControl;
+
+
+    #region 攝影機
+    /// <summary>
+    /// 監視器中心點
+    /// </summary>
+    public CameraCenterScript CameraCenterScript;
+    #endregion
+    #endregion
     private void Awake()
     {
         isSoldierStateForAction = true;
+        isHeroStateForAction = true;
         isProduceSoldier = true;
+        _Joystick = FindObjectOfType<VariableJoystick>();
+
+        isDuel = false;
     }
     private void Update()
     {
@@ -93,32 +139,276 @@ public class GameManager : MonoBehaviour
 
         GameOver();
         SelectedHeroControl();
+
+        // 取得搖桿位移
+        _JoystickDirection = Vector2.right * _Joystick.Horizontal;
+
+        MissOrDashStartTimr = Time.time;
+        //當玩家按下衝刺
+        PlayGMHeroDash(MissOrDashStartTimr);
+        //當玩家按下閃現
+        PlayGMHeroMiss(MissOrDashStartTimr);
+
     }
     private void FixedUpdate()
     {
         if (staticPublicGameStopSwitch.gameStop) return;
         time = Time.deltaTime;
-
-        ProduceSoldierTime += time;
-        if (ProduceSoldierTime >= ProduceSoldierTimeMax)
+        if (!isDuel)
         {
-            ProduceSoldierTime = 0;
-            MainFortressBaseProduceSoldier(); //兩邊士兵生產
-
-        }
-        ProduceHeroTime += time;
-        if (ProduceHeroTime >= ProduceHeroTimeMax)
-        {
-            ProduceHeroTime = 0;
-            PlayerProduceHero(); //產生英雄
+            ProduceSoldierTime += time;
+            if (ProduceSoldierTime >= ProduceSoldierTimeMax)
+            {
+                ProduceSoldierTime = 0;
+                MainFortressBaseProduceSoldier(); //兩邊士兵生產
+            }
+            ProduceHeroTime += time;
+            if (ProduceHeroTime >= ProduceHeroTimeMax)
+            {
+                ProduceHeroTime = 0;
+                PlayerProduceHero(); //產生英雄
+            }
+            if (SelectedHero != null)
+            {
+                //英雄的移動
+                SelectedHero.HeroDuelStateFunc(HeroState.Run, _JoystickDirection);
+            }
         }
         //管理器區塊
         SoldierState();
-
         HeroAI();
+        if (isDuel)
+        {
+            duelScript.MoveAction();
+        }
+        CameraToPlayerPosition();
     }
 
     #region 英雄相關操作
+    #region 決鬥相關操作
+    /// <summary>
+    /// 按下決鬥
+    /// </summary>
+    public void Duel()
+    {
+        if (SelectedHero == null) return;
+        isDuel = !isDuel;
+        SoldierState();
+        HeroAI();
+        if (isDuel)
+        {
+            OpenDuelUI();
+            ClosePlayerMoveUI();
+        }
+        if (!isDuel)
+        {
+            CloseDuelUI();
+            OpenPlayerMoveUI();
+            return;
+        }
+        HeroScript _hscript;
+        int _hsIndex = 0;
+        bool _isDarkHero = false;
+        float _distanceStart = 0;
+        float _distanceEnd = 0;
+        for (int i = 0; i < HeroList.Count; i++)
+        {
+            _hscript = HeroList[i];
+            if (_hscript == null) continue;
+            if (_hscript.CompareTag(staticPublicObjectsStaticName.HeroTag)) continue;
+            if (_hscript.CompareTag(staticPublicObjectsStaticName.DarkHeroTag))
+            {
+                _isDarkHero = true;
+                if (_distanceStart == 0)
+                {
+                    _hsIndex = i;
+                    _distanceStart = Vector3.Distance(SelectedHero._transform.position, _hscript._transform.position);
+                }
+                _distanceEnd = Vector3.Distance(SelectedHero._transform.position, _hscript._transform.position);
+                if (_distanceStart > _distanceEnd)
+                {
+                    _hsIndex = i;
+                    _distanceStart = _distanceEnd;
+                }
+            }
+        }
+        if (!_isDarkHero) //沒有敵方英雄
+        {
+            CloseDuelUI(); //關閉決鬥介面
+            OpenPlayerMoveUI(); //開啟英雄移動介面
+            if (isDuel) Duel();
+            return;
+        }
+        _hscript = HeroList[_hsIndex]; //取得最近的敵方英雄
+        if (_hscript != null)
+        {
+            _hscript.IsItPossibleToDuel = true;
+            SelectedHero.IsItPossibleToDuel = true;
+        }
+        if (duelScript != null) // 如果決鬥腳本不是空的
+            duelScript.HeroData(SelectedHero, _hscript); //設定決鬥資料
+    }
+
+    /// <summary>
+    /// 取消
+    /// </summary>
+    public void DuelEnd()
+    {
+        duelScript.DuelFormat();
+    }
+    /// <summary>
+    /// 自動選擇動作
+    /// </summary>
+    public void OnHeroMoveAuto()
+    {
+        duelScript.PlayerMoveClick();
+    }
+    /// <summary>
+    /// 增加一個攻擊動作
+    /// </summary>
+    public void OnDuelAttack()
+    {
+        duelScript.PlayerMoveClick(HeroState.Attack);
+    }
+    /// <summary>
+    /// 增加一個防禦動作
+    /// </summary>
+    public void OnDuelDef()
+    {
+        duelScript.PlayerMoveClick(HeroState.Def);
+    }
+    /// <summary>
+    /// 打開決鬥介面
+    /// </summary>
+    public void OpenDuelUI()
+    {
+        uiScript.OpenDuelUI();
+    }
+    /// <summary>
+    /// 關閉決鬥介面
+    /// </summary>
+    public void CloseDuelUI()
+    {
+        uiScript.CloseDuelUI();
+    }
+    /// <summary>
+    /// 開啟英雄移動介面
+    /// </summary>
+    public void OpenPlayerMoveUI()
+    {
+        uiScript.OpenPlayerMoveUI();
+    }
+    /// <summary>
+    /// 關閉英雄移動介面
+    /// </summary>
+    public void ClosePlayerMoveUI()
+    {
+        uiScript.ClosePlayerMoveUI();
+    }
+    #endregion
+    #region 玩家操作英雄
+    /// <summary>
+    /// 取得玩家選擇的英雄 Transform
+    /// </summary>
+    public void CameraGetPlayerTransform(Transform HeroTf)
+    {
+        if (SelectedHero == null) return;
+        if (CameraCenterScript == null) return;
+        CameraCenterScript.PlayerTf = HeroTf;
+
+    }
+    /// <summary>
+    /// 捨影機跟隨玩家選擇的英雄
+    /// </summary>
+    public void CameraToPlayerPosition()
+    {
+        if (CameraCenterScript == null) return;
+        CameraCenterScript.GotoPlyer();
+    }
+    #region 玩家手動操作
+    /// <summary>
+    /// 玩家操做攻擊
+    /// </summary>
+    public void gmHeroAttack()
+    {
+        if (isDuel) return;
+        if (SelectedHero == null) return;
+        SelectedHero.HeroDuelStateFunc(HeroState.Attack, SelectedHero._colliders, null);
+    }
+    /// <summary>
+    /// 閃現
+    /// </summary>
+    public void gmHeroMiss(float time)
+    {
+        if (isDuel) return;
+        if (SelectedHero == null) return;
+        SelectedHero.HeroDuelStateFunc(HeroState.Miss,Vector2.zero, time, null);
+
+    }
+    private void PlayGMHeroMiss(float time)
+    {
+        if (isDuel) return;
+        if (SelectedHero == null) return;
+        if (!SelectedHero.IsItPossibleMiss) return;
+        SelectedHero.Miss1(time);
+    }
+    /// <summary>
+    /// 手動衝刺決鬥不使用
+    /// </summary>
+    public void gmHeroDash(float time)
+    {
+        if (isDuel) return;
+        if (SelectedHero == null) return;
+        SelectedHero.HeroDuelStateFunc(HeroState.Dash, Vector2.zero, time, null);
+    }
+    /// <summary>
+    /// 持續判斷是否衝刺 決鬥不使用
+    /// </summary>
+    private void PlayGMHeroDash(float time)
+    {
+        if (isDuel) return;
+        if (SelectedHero == null) return;
+        if (!SelectedHero.IsItPossibleToDash) return;
+        SelectedHero.FastForward(SelectedHero._transform, time);
+        
+    }
+    #endregion
+    #region 決鬥或是AI操作時
+    /// <summary>
+    /// 閃現
+    /// </summary>
+    /// <param name="heroScript"></param>
+    /// <param name="EnemyTf"></param>
+    public void gmHeroMiss(HeroScript heroScript, Transform EnemyTf)
+    {
+        if (heroScript == null) return;
+    }
+    private void PlayGMHeroMiss(HeroScript heroScript, Transform EnemyTf)
+    {
+        if (heroScript == null) return;
+        if (!heroScript.IsItPossibleMiss) return;
+        heroScript.HeroDuelStateFunc(HeroState.Miss1);
+    }
+
+    /// <summary>
+    /// 玩家操作衝刺
+    /// </summary>
+    public void gmHeroDash(HeroScript heroScript)
+    {
+        if (SelectedHero == null) return;
+        heroScript.HeroDuelStateFunc(HeroState.Dash, Vector2.zero, Time.time);
+    }
+    /// <summary>
+    /// 持續判斷是否衝刺
+    /// </summary>
+    private void PlayGMHeroDash(HeroScript heroScript)
+    {
+        if(heroScript == null) return;
+        if (!heroScript.IsItPossibleToDash) return;
+        heroScript.FastForward(heroScript._transform, Time.time);
+    }
+    #endregion
+    #endregion
     /// <summary>
     /// 產生英雄
     /// </summary>
@@ -126,6 +416,22 @@ public class GameManager : MonoBehaviour
     private void PlayerProduceHero()
     {
         playerScript.ProduceHero(time);
+
+        //敵人英雄產生
+        if (DarkHeroScript.Count > 0)
+        {
+            DarkProduceHeroScript _dark;
+            for (int i = 0; i < DarkHeroScript.Count; i++)
+            {
+                _dark = DarkHeroScript[i];
+                if (_dark == null)
+                {
+                    DarkHeroScript.RemoveAt(i);
+                    continue;
+                }
+                _dark.ProduceHero(time);
+            }
+        }
     }
 
     /// <summary>
@@ -134,6 +440,8 @@ public class GameManager : MonoBehaviour
     /// <param name="_hs">英雄腳本</param>
     public void SelectedHeroFunc(HeroScript _hs)
     {
+        if (isDuel) return; // 如果是決鬥模式不能換人物
+
         int _index = HeroList.IndexOf(_hs);
         if (_hs == null) return;
         if (_index == -1) return;
@@ -142,6 +450,7 @@ public class GameManager : MonoBehaviour
             HeroList[i].isPlayerControl = false;
         }
         _hs.isPlayerControl = true; //選擇的英雄可以操控
+        _hs.heroController = heroControl; //設定玩家控制介面
         _hs.playAnimationTime += 10;
         _hs._tfposition = _hs._transform.position;
         Transform HeroTf = _hs._transform;
@@ -157,26 +466,43 @@ public class GameManager : MonoBehaviour
             SelectedHeroTarget.parent = HeroTf;
         }
         SelectedHero.Idle();
+        CameraGetPlayerTransform(HeroTf);
+        heroControl.DashOpenOrClose(_hs.isDash); //設定英雄控制器
     }
+    /// <summary>
+    /// 總英雄AI控制
+    /// </summary>
     private void HeroAI()
     {
-        if (HeroList.Count == 0) return;
+        if (HeroList.Count == 0) return; //如果沒有英雄就不執行
+        if (!isHeroStateForAction) return; //如果英雄還在執行動作就不執行
         HeroScript _hero;
         HeroDataController _hdc = new HeroDataController();
         for (int i = 0; i < HeroList.Count; i++)
         {
+            isHeroStateForAction = false;
             _hero = HeroList[i];
+            if (_hero == null) continue;
+            if (_hero.IsItPossibleToDuel) continue;
+            if (_hero.isPlayerControl) continue;
             _hero._Time = time;
-            if (!_hero.isPlayerControl)
-            {
-                _hdc._hs = _hero;
-                _hdc._tf = _hero._transform;
-                _hdc._rd = _hero._rg;
-                _hdc.Move();
-            }
-        }
-    }
+            _hero._animator.speed = 1;
+            if (isDuel)
+                _hero._animator.speed = 0.2f;
 
+            _hdc._hs = _hero;
+            _hdc._tf = _hero._transform;
+            _hdc._rd = _hero._rg;
+            _hdc._enemyTarget = _hero._target;
+            _hdc._MoveDirection = CorrectionDirection(_hdc._tf, _hdc._enemyTarget);
+            _hdc.Move(_hdc._MoveDirection);
+
+        }
+        isHeroStateForAction = true; //英雄動作執行完畢
+    }
+    /// <summary>
+    /// 取得角色控制
+    /// </summary>
     private void SelectedHeroControl()
     {
         if (SelectedHero == null) return;
@@ -206,19 +532,29 @@ public class GameManager : MonoBehaviour
         /// 英雄Rigidbody2D
         /// </summary>
         public Rigidbody2D _rd;
+        /// <summary>
+        /// 敵人目標
+        /// </summary>
+        public Transform _enemyTarget;
+        /// <summary>
+        /// 移動方向
+        /// </summary>
+        public Vector2 _MoveDirection;
 
         public HeroDataController(HeroScript hs)
         {
             _hs = hs;
             _tf = _hs._transform;
             _rd = _hs._rg;
+            _enemyTarget = _hs._target;
+            _MoveDirection = Vector2.zero;
         }
         public void Phy2D()
         {
             Vector2 pos = _hs._tfposition;
             _hs.PhyOverlapBoxAll(pos);
         }
-        public void Move()
+        public void Move(Vector2 _dir)
         {
             _hs._tfposition = _tf.position;
             #region 重新尋找目標
@@ -262,18 +598,20 @@ public class GameManager : MonoBehaviour
             }
             _tf.localScale = Scale;
             Phy2D();
+            #region 衝刺攻擊 (未完成)
+
+            #endregion
             if (_hs.enemyCollider.Length > 0)
             {
-                _hs.Atk();
+                _hs.HeroDuelStateFunc(HeroState.Attack, _hs._colliders, null);
                 return;
             }
-            _hs.Move();
-            _tf.position = Vector2.MoveTowards(Pos, enemyPos, _hs.speed * Time.deltaTime);
-
+            _hs.HeroDuelStateFunc(HeroState.Run, _dir);
         }
     }
 
     #endregion
+
     #region 士兵相關動作
     /// <summary>
     /// 兩邊士兵生產
@@ -307,10 +645,19 @@ public class GameManager : MonoBehaviour
         {
             isSoldierStateForAction = false;
             _soldierScript = _soldierList[i];
+            if (_soldierScript == null) continue;
             _soldierScript._Time = time;
             isGameOver = _mainFortressScript.Count == 0; // 如果光明主堡清單為0，則遊戲結束
             if (isGameOver) //如果遊戲結束，則全體士兵都進入等待
                 _soldierScript.Idle();
+
+            _soldierScript._animator.speed = 1;
+            if (isDuel)
+            {
+                _soldierScript.Idle();
+                _soldierScript._animator.speed = 0.2f;
+                continue;
+            }
             _ssd._soldierScript = _soldierScript;
             _ssd._transform = _soldierScript._transform;
             _ssd._gameObject = _soldierScript._gameObject;
@@ -420,12 +767,43 @@ public class GameManager : MonoBehaviour
 
     #region 功能型方法
     /// <summary>
+    ///矯正方向
+    /// </summary>
+    /// <param name="_tf">玩家 Transform</param>
+    /// <param name="_EnemyTf">敵人 Transform</param>
+    public void CorrectionDirection(Transform _tf, Transform _EnemyTf, out Vector2 _Direction )
+    {
+        int _direction = 1;
+        Vector2 _scale = _tf.localScale;
+        _scale.x = Mathf.Abs(_scale.x);
+        if (_tf.position.x > _EnemyTf.position.x)
+        {
+            _scale.x *= -1;
+            _direction = -1;
+        }
+        _tf.localScale = _scale;
+        _Direction = Vector2.right * _direction;
+    }
+    public Vector2 CorrectionDirection(Transform _tf, Transform _EnemyTf)
+    {
+        int _direction = 1;
+        Vector2 _scale = _tf.localScale;
+        _scale.x = Mathf.Abs(_scale.x);
+        if (_tf.position.x > _EnemyTf.position.x)
+        {
+            _scale.x *= -1;
+            _direction = -1;
+        }
+        _tf.localScale = _scale;
+        return Vector2.right * _direction;
+    }
+    /// <summary>
     /// 本場遊戲結束
     /// </summary>
     public void GameOver()
     {
         if (_mainFortressScript.Count > 0) return;
-        GameOverObject.GameOverUI();
+        uiScript.GameOverUI();
     }
 
     /// <summary>

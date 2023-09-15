@@ -7,7 +7,7 @@ public class HeroBaseScript : MonoBehaviour
     /// <summary>
     /// 英雄資料庫
     /// </summary>
-    public heroDataObject heroDataObject;
+    public heroDataObject _heroDataObject;
     /// <summary>
     /// 英雄ID (系統判斷的ID)
     /// </summary>
@@ -22,17 +22,17 @@ public class HeroBaseScript : MonoBehaviour
     /// 英雄血量
     /// </summary>
     [Header("英雄血量")]
-    public float Hp;
+    public int Hp;
     /// <summary>
     /// 攻擊力
     /// </summary>
     [Header("攻擊力")]
-    public float Attack;
+    public int Attack;
     /// <summary>
     /// 攻擊力抵銷
     /// </summary>
     [Header("攻擊力抵銷")]
-    public float Def;
+    public int Def;
     /// <summary>
     /// 英雄頭像
     /// </summary>
@@ -45,6 +45,11 @@ public class HeroBaseScript : MonoBehaviour
     /// </summary>
     [Header("GM管理器腳本")]
     public GameManager _gameManagerScript;
+    /// <summary>
+    /// 英雄操作介面
+    /// </summary>
+    [Header("英雄操作介面")]
+    public HeroController heroController;
     #endregion
     #region 英雄預先取得資料
     /// <summary>
@@ -120,5 +125,13 @@ public class HeroBaseScript : MonoBehaviour
     /// 射線偏移
     /// </summary>
     public float PhyOffset;
+    /// <summary>
+    /// 地板圖層
+    /// </summary>
+    public LayerMask flootLayer;
+    /// <summary>
+    /// 是否碰到地板
+    /// </summary>
+    public bool isfloot;
     #endregion
 }

@@ -1,8 +1,5 @@
-﻿using Assets.Scripts;
-using Assets.Scripts.BaseClass;
-using UnityEditor.Experimental.GraphView;
+﻿using Assets.Scripts.BaseClass;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
 
 public class SoldierScript : SoldierBaseScript
 {
@@ -198,11 +195,6 @@ public class SoldierScript : SoldierBaseScript
     {
         PhySize = Vector2.one * Physics2DSize;
         PhySize.y *= 2;
-
-        if (_transform.localScale.x > 0)
-            Pos.x += PhyOffset;
-        else
-            Pos.x -= PhyOffset;
         _collider2D = Physics2D.OverlapBoxAll(Pos, PhySize, 0, _enemyLayerMask);
     }
     void OnDrawGizmos()
@@ -211,10 +203,6 @@ public class SoldierScript : SoldierBaseScript
         PhySize.y *= 2;
 
         Vector2 Pos = _transform.position;
-        if (_transform.localScale.x > 0)
-            Pos.x += PhyOffset;
-        else
-            Pos.x -= PhyOffset;
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireCube(Pos, PhySize);
     }

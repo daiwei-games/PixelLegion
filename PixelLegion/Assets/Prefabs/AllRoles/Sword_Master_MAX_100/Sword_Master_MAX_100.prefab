@@ -111,7 +111,7 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 2
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
@@ -183,14 +183,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72d42a1b0f0016441b65311a293bf977, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  heroDataObject: {fileID: 11400000, guid: 89926b988e2012148bac3278d8965c73, type: 2}
+  _heroDataObject: {fileID: 11400000, guid: 89926b988e2012148bac3278d8965c73, type: 2}
   HeroID: 
   HeroName: 
-  Hp: 0
+  Hp: 1000
   Attack: 0
   Def: 0
   HeroAvatar: {fileID: 21300000, guid: 9b133bd0a9bd42c45b0872aa5c1bdfae, type: 3}
   _gameManagerScript: {fileID: 0}
+  heroController: {fileID: 0}
   _transform: {fileID: 0}
   _tfposition: {x: 0, y: 0}
   _rg: {fileID: 0}
@@ -205,11 +206,16 @@ MonoBehaviour:
     m_Bits: 0
   enemyCollider: []
   dashDistance: 3
-  phySize: 6
+  phySize: 13
   PhyOffset: 0
+  flootLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  isfloot: 0
   isPlayerControl: 0
+  IsItPossibleToDuel: 0
   _target: {fileID: 0}
-  speed: 7
+  speed: 15
   _HeroNowState: 0
   _HeroChengState: 0
   movAtk: []
@@ -234,8 +240,11 @@ MonoBehaviour:
   isLand: 0
   miss0: 
   isMiss0: 0
+  missTimeStart: 0
   miss1: 
   isMiss1: 0
+  duel: 
+  isDuel: 0
   atk: []
   run: 
   idle: 

@@ -67,5 +67,11 @@
         /// </summary>
         public const string DarkHeroLayer = "DarkHero";
         #endregion
+        #region 攝影機、其他
+        /// <summary>
+        /// 主要攝影機圖層
+        /// </summary>
+        public const string MainCameraLayer = "MainCamera";
+        #endregion
     }
 }

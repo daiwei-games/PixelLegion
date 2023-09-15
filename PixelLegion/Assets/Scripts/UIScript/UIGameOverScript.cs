@@ -10,11 +10,7 @@ public class UIGameOverScript : UIScript
     /// 取得重新開始遊戲的按鈕
     /// </summary>
     public Button _Button_GameOver;
-    /// <summary>
-    /// 只執行一次呼叫UI
-    /// 因為裡面有協呈
-    /// </summary>
-    private bool isGameOver;
+
     private void Awake()
     {
         GUIDataInitializ();
@@ -35,27 +31,7 @@ public class UIGameOverScript : UIScript
                 });
             }
         }
-        isGameOver = true;
     }
-
-    public void GameOverUI()
-    {
-        if (!isGameOver) return;
-        isGameOver = false;
-        RectTransform uiElement = GetComponent<RectTransform>();
-        StartCoroutine("GameOverUIView", uiElement);
-        
-    }
-    IEnumerator GameOverUIView(RectTransform _uiElement)
-    {
-        while (_uiElement.anchoredPosition.y != 0)
-        {
-            _uiElement.anchoredPosition = Vector2.Lerp(_uiElement.anchoredPosition, Vector2.zero, 0.1f);
-            yield return new WaitForSeconds(.02f);
-        }
-        Time.timeScale = 0;
-    }
-
     public void ReStartTheGame()
     {
         Time.timeScale = 1;

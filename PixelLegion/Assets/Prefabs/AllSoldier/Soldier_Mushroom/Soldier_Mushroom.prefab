@@ -191,7 +191,7 @@ MonoBehaviour:
   soldierName: Mushroom
   soldierAtk: 0
   soldierDefense: 0
-  soldierHp: 100
+  soldierHp: 500
   speed: 3
   soldierLv: 0
   soldierLvMax: 50
