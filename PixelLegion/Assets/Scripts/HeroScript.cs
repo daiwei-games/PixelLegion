@@ -2,8 +2,11 @@
 using Assets.Scripts.BaseClass;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using static UnityEditor.Experimental.GraphView.GraphView;
+using static UnityEditor.PlayerSettings;
 
 public class HeroScript : HeroBaseScript
 {
@@ -162,8 +165,10 @@ public class HeroScript : HeroBaseScript
     #endregion
     public virtual void HeroInitializ()
     {
-        _transform = transform;
-        _tfposition = _transform.position;
+        _Tf = transform;
+        _Go = gameObject;
+
+        _tfposition = _Tf.position;
         _rg = GetComponent<Rigidbody2D>(); // 取得剛體
         IsItPossibleToDuel = false; // 是否正在決鬥
 
@@ -291,8 +296,8 @@ public class HeroScript : HeroBaseScript
 
         IsItPossibleMiss = false;
         IsItPossibleToDash = false;
+        MissTargetTf = null;
     }
-
     #region 狀態機
     /// <summary>
     /// 移動
@@ -341,6 +346,7 @@ public class HeroScript : HeroBaseScript
         {
             case HeroState.Attack:
                 if (!AnimationPlayOver(_HeroNowState)) return;
+
                 if (_Collider2D.Length > 0)
                     HeroAttack(_Collider2D);
                 if (_heroScript != null)
@@ -361,7 +367,7 @@ public class HeroScript : HeroBaseScript
     public virtual void HeroDuelStateFunc(HeroState _heroChengState = HeroState.Idle)
     {
 
-        _tfposition = _transform.position; // 更新位置
+        _tfposition = _Tf.position; // 更新位置
 
         if (!isPlayerControl && !IsItPossibleToDuel)
         {
@@ -392,37 +398,25 @@ public class HeroScript : HeroBaseScript
     /// </summary>
     public virtual void HeroMove(Vector2 Direction)
     {
-        if (!isPlayerControl && !IsItPossibleToDuel) return;
         if (Direction == Vector2.zero)
         {
             Idle();
         }
         else
         {
-            Vector2 PlayerScale = _transform.localScale;
+            Vector2 PlayerScale = _Tf.localScale;
             if (Direction.x != 1 && Direction.x != -1) Direction = Vector2.zero;
             if (Direction.x != 0) PlayerScale.x = Mathf.Abs(PlayerScale.x);
             if (Direction.x < 0) PlayerScale.x *= -1;
             Direction.x *= speed;
             _rg.MovePosition(_rg.position + Direction * Time.fixedDeltaTime);
-            _transform.localScale = PlayerScale;
-            _tfposition = _transform.position;
+            _Tf.localScale = PlayerScale;
+            _tfposition = _Tf.position;
             _animator.Play(run);
         }
     }
 
-    /// <summary>
-    /// 決鬥時的受傷
-    /// </summary>
-    /// <param name="t"></param>
-    public virtual void HeroHit(int t)
-    {
-        Hp -= t;
-        if (Hp <= 0)
-        {
-            //Die();
-        }
-    }
+
     /// <summary>
     /// 有兩段防禦的英雄
     ///</summary>
@@ -470,28 +464,15 @@ public class HeroScript : HeroBaseScript
         if (_HeroNowState == _HeroChengState && _HeroNowState == HeroState.Run) return;
         _animator.Play(run);
     }
+
     /// <summary>
-    /// 一般受傷
+    /// 決鬥時的受傷
     /// </summary>
-    /// <param name="hitAmount">執行受傷動畫</param>
-    public virtual void HeroHP(int hitAmount)
+    /// <param name="t"></param>
+    public virtual void HeroHit(int t)
     {
-        if (_gameManagerScript.isDuel)
-        {
-            HeroHit(hitAmount);
-            return;
-        }
-        Hp -= hitAmount;
-        Hit();
-    }
-    /// <summary>
-    /// 一般受傷 會傳入碰撞器
-    /// </summary>
-    /// <param name="hitAmount"></param>
-    /// <param name="_Tf">攻擊者的 Transform</param>
-    public virtual void HeroHP(int hitAmount, Transform _Tf)
-    {
-        HeroHP(hitAmount);
+        Hp -= t;
+        HeroDuelStateFunc(HeroState.Hit);
     }
     public virtual void Idle()
     {
@@ -500,6 +481,9 @@ public class HeroScript : HeroBaseScript
     public virtual void Die()
     {
         _animator.Play(die);
+        _rg.gravityScale = 0;
+        ColliderClose(false);
+
     }
 
     public virtual void Hit()
@@ -577,25 +561,6 @@ public class HeroScript : HeroBaseScript
     /// 判斷目前動畫是否執行結束，未結束，判斷是否為不可切換的動畫
     /// </summary>
     /// <returns>反為布林值，只要為true就代表有不可切換的動畫正在播放</returns>
-    public bool AnimationPlayOver()
-    {
-        bool IsOver = false;
-        float s = AnimatorStateInfoNormalizedTime();
-        //if (s < 0.9f)
-        //{
-        //    if (_HeroNowState == HeroState.Attack) IsOver = true;
-        //    else if (_HeroNowState == HeroState.Dash) IsOver = true;
-        //    else if (_HeroNowState == HeroState.MovAtk) IsOver = true;
-        //    else if (_HeroNowState == HeroState.Dash) IsOver = true;
-        //    else if (_HeroNowState == HeroState.Miss) IsOver = true;
-        //    else if (_HeroNowState == HeroState.Miss1) IsOver = true;
-        //}
-
-
-
-        return IsOver;
-    }
-
     public bool AnimationPlayOver(HeroState heroNowState)
     {
         float s = AnimatorStateInfoNormalizedTime();
@@ -629,6 +594,9 @@ public class HeroScript : HeroBaseScript
                         if (s > 0.99f) PlayOkay = true;
                     }
                     break;
+                case HeroState.Die:
+                    PlayOkay = false;
+                    break;
                 default:
                     PlayOkay = true;
                     break;
@@ -661,8 +629,6 @@ public class HeroScript : HeroBaseScript
         for (int i = 0; i < _colliders.Length; i++)
         {
             _colliders[i].enabled = oc;
-
-            Debug.Log(_colliders[i].enabled);
         }
     }
 
@@ -679,65 +645,34 @@ public class HeroScript : HeroBaseScript
         HeroScript _hs; // 敵方英雄
         SoldierScript _ss; // 敵方士兵
         MainFortressBaseScript _mf; // 敵方主堡
-        if (AnimationPlayOver()) return;
         if (enemyCollider.Length > 0)
         {
-            //如果是黑暗英雄
-            if (this.CompareTag(staticPublicObjectsStaticName.DarkHeroTag))
+            for (int i = 0; i < _Collider2D.Length; i++)
             {
-                for (int i = 0; i < _Collider2D.Length; i++)
-                {
-                    _col = _Collider2D[i];
-                    if (_col == null) continue;
-                    _colTag = _col.tag;
+                _col = _Collider2D[i];
+                if (_col == null) continue;
+                _colTag = _col.tag;
 
-                    if (_colTag == staticPublicObjectsStaticName.HeroTag)
-                    {
-                        _hs = _col.GetComponent<HeroScript>();
-                        if (_hs != null)
-                            _hs.HeroHP(Hit);
-                    }
-                    else if (_colTag == staticPublicObjectsStaticName.PlayerSoldierTag)
-                    {
-                        _ss = _col.GetComponent<SoldierScript>();
-                        if (_ss != null)
-                            _ss.MustBeInjured(Hit);
-                    }
-                    else if (_colTag == staticPublicObjectsStaticName.MainFortressTag)
-                    {
-                        _mf = _col.GetComponent<MainFortressBaseScript>();
-                        if (_mf != null)
-                            _mf.MainFortressHit(Hit);
-                    }
+                if (_colTag == staticPublicObjectsStaticName.HeroTag ||
+                    _colTag == staticPublicObjectsStaticName.DarkHeroTag)
+                {
+                    _hs = _col.GetComponent<HeroScript>();
+                    if (_hs != null)
+                        _hs.HeroHit(Hit);
                 }
-            }
-            // 如果是光明英雄
-            if (this.CompareTag(staticPublicObjectsStaticName.HeroTag))
-            {
-                for (int i = 0; i < _Collider2D.Length; i++)
+                else if (_colTag == staticPublicObjectsStaticName.PlayerSoldierTag ||
+                    _colTag == staticPublicObjectsStaticName.DARKSoldierTag)
                 {
-                    _col = _Collider2D[i];
-                    if (_col == null) continue;
-                    _colTag = _col.tag;
-
-                    if (_colTag == staticPublicObjectsStaticName.DarkHeroTag)
-                    {
-                        _hs = _col.GetComponent<HeroScript>();
-                        if (_hs != null)
-                            _hs.HeroHP(Hit);
-                    }
-                    else if (_colTag == staticPublicObjectsStaticName.DARKSoldierTag)
-                    {
-                        _ss = _col.GetComponent<SoldierScript>();
-                        if (_ss != null)
-                            _ss.MustBeInjured(Hit);
-                    }
-                    else if (_colTag == staticPublicObjectsStaticName.DarkMainFortressTag)
-                    {
-                        _mf = _col.GetComponent<MainFortressBaseScript>();
-                        if (_mf != null)
-                            _mf.MainFortressHit(Hit);
-                    }
+                    _ss = _col.GetComponent<SoldierScript>();
+                    if (_ss != null)
+                        _ss.MustBeInjured(Hit);
+                }
+                else if (_colTag == staticPublicObjectsStaticName.MainFortressTag ||
+                    _colTag == staticPublicObjectsStaticName.DarkMainFortressTag)
+                {
+                    _mf = _col.GetComponent<MainFortressBaseScript>();
+                    if (_mf != null)
+                        _mf.MainFortressHit(Hit);
                 }
             }
         }
@@ -756,67 +691,36 @@ public class HeroScript : HeroBaseScript
         HeroScript _hs; // 敵方英雄
         SoldierScript _ss; // 敵方士兵
         MainFortressBaseScript _mf; // 敵方主堡
-        if (AnimationPlayOver()) return;
         if (enemyCollider.Length > 0)
         {
-            if (this.CompareTag(staticPublicObjectsStaticName.DarkHeroTag))
+            for (int i = 0; i < _RaycastHit2D.Length; i++)
             {
-
-                for (int i = 0; i < _RaycastHit2D.Length; i++)
+                _col = _RaycastHit2D[i];
+                if (!_col) continue;
+                _Tf = _col.transform;
+                _colTag = _Tf.tag;
+                if (_colTag == staticPublicObjectsStaticName.HeroTag ||
+                    _colTag == staticPublicObjectsStaticName.DarkHeroTag)
                 {
-                    _col = _RaycastHit2D[i];
-                    if (!_col) continue;
-                    _Tf = _col.transform;
-                    _colTag = _Tf.tag;
-                    if (_colTag == staticPublicObjectsStaticName.HeroTag)
-                    {
-                        _hs = _Tf.GetComponent<HeroScript>();
-                        if (_hs != null)
-                            _hs.HeroHP(Hit);
-                    }
-                    else if (_colTag == staticPublicObjectsStaticName.PlayerSoldierTag)
-                    {
-                        _ss = _Tf.GetComponent<SoldierScript>();
-                        if (_ss != null)
-                            _ss.MustBeInjured(Hit);
-                    }
-                    else if (_colTag == staticPublicObjectsStaticName.MainFortressTag)
-                    {
-                        _mf = _Tf.GetComponent<MainFortressBaseScript>();
-                        if (_mf != null)
-                            _mf.MainFortressHit(Hit);
-                    }
+                    _hs = _Tf.GetComponent<HeroScript>();
+                    if (_hs != null)
+                        _hs.HeroHit(Hit);
+                }
+                else if (_colTag == staticPublicObjectsStaticName.PlayerSoldierTag ||
+                    _colTag == staticPublicObjectsStaticName.DARKSoldierTag)
+                {
+                    _ss = _Tf.GetComponent<SoldierScript>();
+                    if (_ss != null)
+                        _ss.MustBeInjured(Hit);
+                }
+                else if (_colTag == staticPublicObjectsStaticName.MainFortressTag ||
+                    _colTag == staticPublicObjectsStaticName.DarkMainFortressTag)
+                {
+                    _mf = _Tf.GetComponent<MainFortressBaseScript>();
+                    if (_mf != null)
+                        _mf.MainFortressHit(Hit);
                 }
             }
-            if (this.CompareTag(staticPublicObjectsStaticName.HeroTag))
-            {
-                for (int i = 0; i < _RaycastHit2D.Length; i++)
-                {
-                    _col = _RaycastHit2D[i];
-                    if (!_col) continue;
-                    _Tf = _col.transform;
-                    _colTag = _Tf.tag;
-                    if (_colTag == staticPublicObjectsStaticName.DarkHeroTag)
-                    {
-                        _hs = _Tf.GetComponent<HeroScript>();
-                        if (_hs != null)
-                            _hs.HeroHP(Hit);
-                    }
-                    else if (_colTag == staticPublicObjectsStaticName.DARKSoldierTag)
-                    {
-                        _ss = _Tf.GetComponent<SoldierScript>();
-                        if (_ss != null)
-                            _ss.MustBeInjured(Hit);
-                    }
-                    else if (_colTag == staticPublicObjectsStaticName.DarkMainFortressTag)
-                    {
-                        _mf = _Tf.GetComponent<MainFortressBaseScript>();
-                        if (_mf != null)
-                            _mf.MainFortressHit(Hit);
-                    }
-                }
-            }
-
         }
     }
     /// <summary>
@@ -844,7 +748,7 @@ public class HeroScript : HeroBaseScript
         IsItPossibleMiss = true; // 正在閃現
         // 先飛起來
         Vector2 Pos = Vector2.up;
-        _transform.Translate(Pos);
+        _Tf.Translate(Pos);
         // 重力歸零、碰撞關閉
         _rg.gravityScale = 0;
         ColliderClose(false);
@@ -855,11 +759,16 @@ public class HeroScript : HeroBaseScript
         Vector2 Pos = Vector2.right;
 
         if (MissTargetTf == null)
-            if (_transform.localScale.x < 0) Pos = Vector2.left;
+        {
+            if (_Tf.localScale.x < 0) Pos = Vector2.left;
+        }
         else
-            if (_transform.localScale.x < MissTargetTf.localScale.x) Pos = Vector2.left;
+        {
 
-        if (missTimeStart > time) _transform.Translate(Pos * .35f); // 移動中
+            if (_Tf.localScale.x < MissTargetTf.localScale.x) Pos = Vector2.left;
+        }
+
+        if (missTimeStart > time) _Tf.Translate(Pos * .35f); // 移動中
         if (missTimeStart <= time)
         {
             HeroDuelStateFunc(HeroState.Miss1, Vector2.zero, time, null);
@@ -869,7 +778,6 @@ public class HeroScript : HeroBaseScript
             _rg.gravityScale = 1;
             //目前沒有閃現
             MissTargetTf = null;
-
             if (missTimeStart + 0.3f <= time) IsItPossibleMiss = false; // 更長時之後才可以再度閃現
         }
 
@@ -890,7 +798,7 @@ public class HeroScript : HeroBaseScript
         _animator.Play(dash);
 
         Vector2 Pos = Vector2.up;
-        _transform.Translate(Pos);
+        _Tf.Translate(Pos);
     }
     public void FastForward(Transform _Tf, float time)
     {
@@ -901,32 +809,48 @@ public class HeroScript : HeroBaseScript
         if (DashTimeStart + 0.1f <= time) IsItPossibleToDash = false;
     }
     #endregion
+
+    /// <summary>
+    /// 計算射線偏移量
+    /// </summary>
+    /// <param name="tf"></param>
+    /// <param name="offset"></param>
+    /// <param name="Pos"></param>
+    /// <returns></returns>
+    private Vector2 Physics2DOffset(Transform tf, float offset, Vector2 Pos)
+    {
+        Vector2 _Pos = Pos;
+        float _PhyOffset = offset;
+        if (tf.localScale.x < 0) _PhyOffset *= -1;
+        _Pos.x += _PhyOffset;
+        return _Pos;
+    }
     public virtual void PhyOverlapBoxAll(Vector2 Pos)
     {
         PhySizeVector2 = Vector2.one * phySize;
         PhySizeVector2.y *= 1.5f;
-        enemyCollider = Physics2D.OverlapBoxAll(Pos, PhySizeVector2, 0, enemyLayerMask);
+        enemyCollider = Physics2D.OverlapBoxAll(Physics2DOffset(_Tf, PhyOffset,Pos), PhySizeVector2, 0, enemyLayerMask);
 
         Vector2 direction;
         direction = Vector2.right.normalized; //向右
-        if (_transform.localScale.x < 0)
+        if (_Tf.localScale.x < 0)
             direction = Vector2.left.normalized; //向左
 
         //射線取得RaycastHit2D
-        enemyRayRaycastAll = Physics2D.RaycastAll(_transform.position, direction, phySize * dashDistance, enemyLayerMask);
+        enemyRayRaycastAll = Physics2D.RaycastAll(_Tf.position, direction, phySize * dashDistance, enemyLayerMask);
     }
 
     void OnDrawGizmos()
     {
-        if (_transform == null) return;
-
+        if (_Tf == null) return;
+        Vector2 _tfposition_ = Physics2DOffset(_Tf, PhyOffset, _tfposition);
         Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(_tfposition, PhySizeVector2);
+        Gizmos.DrawWireCube(_tfposition_, PhySizeVector2);
 
         Vector2 PosSizeEnd = _tfposition;
         Vector2 direction;
         direction = Vector2.right.normalized;
-        if (_transform.localScale.x < 0)
+        if (_Tf.localScale.x < 0)
             direction = Vector2.left.normalized;
 
         PosSizeEnd += dashDistance * phySize * direction;

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class HeroBaseScript : MonoBehaviour
+public class HeroBaseScript : LeadToSurviveGameBaseClass
 {
     #region 英雄基本資料
     /// <summary>
@@ -53,10 +53,6 @@ public class HeroBaseScript : MonoBehaviour
     #endregion
     #region 英雄預先取得資料
     /// <summary>
-    /// 取得座標物件
-    /// </summary>
-    public Transform _transform;
-    /// <summary>
     /// 取得物件座標
     /// </summary>
     public Vector2 _tfposition;
@@ -77,11 +73,6 @@ public class HeroBaseScript : MonoBehaviour
     /// 取得動畫狀態
     /// </summary>
     public AnimatorStateInfo _animatorStateInfo;
-    /// <summary>
-    /// 攻擊目標清單
-    /// </summary>
-    [Header("攻擊目標清單")]
-    public List<Transform> enemyTargetList;
     /// <summary>
     /// 攻擊間隔計時
     /// </summary>

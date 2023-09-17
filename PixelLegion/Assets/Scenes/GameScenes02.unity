@@ -296,8 +296,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7634364d41467be47971b0249d5ab106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GameManagerScript: {fileID: 0}
   _Tf: {fileID: 0}
+  _Go: {fileID: 0}
+  GameManagerScript: {fileID: 0}
   DuelAttack: {fileID: 0}
   DuelDef: {fileID: 0}
   DuelAUTO: {fileID: 0}
@@ -847,10 +848,10 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1203884968}
   - {fileID: 114735785}
   - {fileID: 692065394}
   - {fileID: 1078675093}
+  - {fileID: 1203884968}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -870,7 +871,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce0b2aa2581226246a4ea46a5168ab6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _transform: {fileID: 0}
+  _Tf: {fileID: 0}
+  _Go: {fileID: 0}
   _gameManager: {fileID: 0}
   _gameManagerScript: {fileID: 0}
   UIList:
@@ -995,7 +997,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d04be3a1686fbf04fa11b0579d7cd03f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _tf: {fileID: 0}
+  _Tf: {fileID: 0}
+  _Go: {fileID: 0}
   _camera: {fileID: 0}
   _cameraTf: {fileID: 0}
   GameManagerScript: {fileID: 0}
@@ -8735,7 +8738,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b6895e2eefefef4492cbb06fa3b95fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _tf: {fileID: 0}
+  _Tf: {fileID: 0}
+  _Go: {fileID: 0}
   GameManagerScript: {fileID: 0}
   Attakc: {fileID: 0}
   Dash: {fileID: 0}
@@ -19335,7 +19339,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52c661d072f0add4e8b0f9ce72cd77ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _transform: {fileID: 0}
+  _Tf: {fileID: 0}
+  _Go: {fileID: 0}
   _gameManager: {fileID: 0}
   _gameManagerScript: {fileID: 0}
   UIList: []
@@ -26192,7 +26197,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7bdd00c0c280d2749984e7a898caf54a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _transform: {fileID: 0}
+  _Tf: {fileID: 0}
+  _Go: {fileID: 0}
   _gameManager: {fileID: 0}
   _gameManagerScript: {fileID: 0}
   UIList: []
@@ -34222,8 +34228,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameStop: 0
-  _transform: {fileID: 0}
-  _gameObject: {fileID: 0}
+  _Tf: {fileID: 0}
+  _Go: {fileID: 0}
   _gameManager: {fileID: 0}
   _gameManagerScript: {fileID: 0}
   _hp: 0
@@ -34257,9 +34263,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58601ca8b87105848a033abc1c481cef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _transform: {fileID: 0}
+  _Tf: {fileID: 0}
+  _Go: {fileID: 0}
   SelectedHeroList:
   - {fileID: 1388186653708853605, guid: 68dc7233b28931e499b18c1d99cf9ca8, type: 3}
+  - {fileID: 7823722802455322532, guid: 177edc7e6491b0f49a1ef7191e7dec4c, type: 3}
+  - {fileID: 7792997706031249548, guid: cbb6aef24f0971c4696d020754c259d4, type: 3}
+  - {fileID: 5263517046825534479, guid: 2c35625b1e13fe249b9018cfd2a416c5, type: 3}
   GetHeroList: []
   ProduceHeroTime: 0
   ProduceHeroTimeMax: 0

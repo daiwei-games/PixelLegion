@@ -4,10 +4,10 @@ using UnityEngine.UI;
 /// <summary>
 /// 決鬥的介面操作
 /// </summary>
-public class UIDuel : MonoBehaviour
+public class UIDuel : LeadToSurviveGameBaseClass
 {
     public GameManager GameManagerScript;
-    public Transform _Tf;
+    
     /// <summary>
     /// 攻擊按鈕
     /// </summary>
@@ -23,6 +23,8 @@ public class UIDuel : MonoBehaviour
     private void Awake()
     {
         _Tf = transform;
+        _Go = gameObject;
+
         GameManagerScript = FindObjectOfType<GameManager>();
 
 

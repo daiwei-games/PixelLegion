@@ -13,12 +13,12 @@ namespace Assets.Scripts.BaseClass
         /// 取得 Transform
         /// </summary>
         [Header("取得 Transform"), SerializeField]
-        public Transform _transform;
+        public Transform _Tf;
         /// <summary>
         /// 取得 GameObject
         /// </summary>
         [Header("取得 GameObject"), SerializeField]
-        public GameObject _gameObject;
+        public GameObject _Go;
         /// <summary>
         /// 取得遊戲管理器
         /// </summary>

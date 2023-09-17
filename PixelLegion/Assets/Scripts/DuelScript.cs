@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class DuelScript : MonoBehaviour
+public class DuelScript : LeadToSurviveGameBaseClass
 {
     /// <summary>
     /// 取得GM script
@@ -108,6 +108,9 @@ public class DuelScript : MonoBehaviour
 
     private void Awake()
     {
+        _Tf = transform;
+        _Go = gameObject;
+
         _CountdownTextObj = CountdownText.gameObject;
         _CountdownTextObj.SetActive(false);
 
@@ -131,7 +134,7 @@ public class DuelScript : MonoBehaviour
         PlayerHero.IsItPossibleToDuel = true;
         PlayerAnimator = PlayerHero._animator;
         PlayerAnimator.speed = 1f; // 玩家動畫速度
-        PlayerHeroTf = PlayerHero._transform;
+        PlayerHeroTf = PlayerHero._Tf;
         PlayerHeroRb = PlayerHero._rg;
         PlayerMoveList = new List<HeroState>();
         PlayerMoveIsOK = true;
@@ -144,7 +147,7 @@ public class DuelScript : MonoBehaviour
         PlayerHero.IsItPossibleToDuel = true;
         EnemyAnimator = EnemyHero._animator;
         EnemyAnimator.speed = 1f; // 敵人動畫速度
-        EnemyHeroTf = EnemyHero._transform;
+        EnemyHeroTf = EnemyHero._Tf;
         EnemyHeroRb = EnemyHero._rg;
         EnemyMoveIsOK = true;
 
@@ -406,7 +409,7 @@ public class DuelScript : MonoBehaviour
     private void DuelEnd(HeroScript Player, HeroScript Enemy)
     {
         if (!IsEndDuelFunc) return; //顯示不再可以進入決鬥結束的函數
-        StartCoroutine(RetreatOrDie(Player, Enemy, Player._transform, Enemy._transform)); //開始退場或死亡
+        StartCoroutine(RetreatOrDie(Player, Enemy, Player._Tf, Enemy._Tf)); //開始退場或死亡
         IsEndDuelFunc = false; //false 不再可以進入決鬥結束的函數
     }
     /// <summary>

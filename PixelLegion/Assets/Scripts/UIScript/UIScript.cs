@@ -2,9 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public class UIScript : MonoBehaviour, IGUIFunc
+public class UIScript : LeadToSurviveGameBaseClass, IGUIFunc
 {
-    public Transform _transform;
     /// <summary>
     /// 取得遊戲管理器
     /// </summary>
@@ -43,7 +42,9 @@ public class UIScript : MonoBehaviour, IGUIFunc
     }
     public virtual void GUIDataInitializ()
     {
-        _transform = transform;
+        _Tf = transform;
+        _Go = gameObject;
+
         _gameManager = GameObject.Find("GameManager");
         if (_gameManager != null)
         {
@@ -57,15 +58,15 @@ public class UIScript : MonoBehaviour, IGUIFunc
             UIList[i]._gameManager = _gameManager;
             UIList[i]._gameManagerScript = _gameManagerScript;
         }
-        Transform GameOverTf = _transform.Find("UI_GameOver");
+        Transform GameOverTf = _Tf.Find("UI_GameOver");
         if (GameOverTf != null)
             uiElement = GameOverTf.GetComponent<RectTransform>();
         isGameOver = true;
-        Transform PlayerMoveUITf = _transform.Find("英雄操作");
+        Transform PlayerMoveUITf = _Tf.Find("英雄操作");
         if (PlayerMoveUITf != null)
             PlayerMoveUI = PlayerMoveUITf.GetComponent<RectTransform>();
 
-        Transform durlTf = _transform.Find("決鬥 Duel");
+        Transform durlTf = _Tf.Find("決鬥 Duel");
         if(durlTf != null)
         {
             DuelUI = durlTf.GetComponent<RectTransform>();

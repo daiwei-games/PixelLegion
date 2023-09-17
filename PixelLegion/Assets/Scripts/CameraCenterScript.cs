@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
 
-public class CameraCenterScript : MonoBehaviour
+public class CameraCenterScript : LeadToSurviveGameBaseClass
 {
 
-    public Transform _tf;
     /// <summary>
     /// 攝影機
     /// </summary>
@@ -17,7 +16,9 @@ public class CameraCenterScript : MonoBehaviour
     public LayerMask playerLayerMask;
     private void Awake()
     {
-        _tf = transform;
+        _Tf = transform;
+        _Go = gameObject;
+
         _camera = Camera.main;
         _cameraTf = _camera.transform;
         GameManagerScript = FindObjectOfType<GameManager>();
@@ -29,15 +30,15 @@ public class CameraCenterScript : MonoBehaviour
 
     public void GotoPlyer()
     {
-        Vector3 CamreaPos = _tf.position;
+        Vector3 CamreaPos = _Tf.position;
         if (PlayerTf == null) return;
         if (_camera == null) return;
-        if (Vector3.Distance(PlayerTf.position, _tf.position) > 1)
+        if (Vector3.Distance(PlayerTf.position, _Tf.position) > 1)
         {
-            CamreaPos = Vector3.MoveTowards(_tf.position, PlayerTf.position, .8f);
+            CamreaPos = Vector3.MoveTowards(_Tf.position, PlayerTf.position, .8f);
             CamreaPos.y = 0;
             CamreaPos.z = -10;
-            _tf.position = CamreaPos;
+            _Tf.position = CamreaPos;
             _cameraTf.position = CamreaPos;
         }
     }

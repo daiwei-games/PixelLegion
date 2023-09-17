@@ -2,9 +2,8 @@
 using Assets.Scripts.BaseClass;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
-public class GameManager : MonoBehaviour
+public class GameManager : LeadToSurviveGameBaseClass
 {
     /// <summary>
     /// 光明主堡腳本
@@ -16,6 +15,10 @@ public class GameManager : MonoBehaviour
     /// </summary>
     [Header("黑暗主堡腳本")]
     public List<DarkMainFortressScript> _darkMainFortressScript;
+    /// <summary>
+    /// 存放敵人產生英雄的腳本
+    /// </summary>
+    public List<DarkProduceHeroScript> DarkHeroScript;
     /// <summary>
     /// 融合兩個主堡清單
     /// </summary>
@@ -77,10 +80,7 @@ public class GameManager : MonoBehaviour
     [Header("選擇的英雄頭上出現指標"), SerializeField]
     private Transform SelectedHeroTargetPrefab;
     private Transform SelectedHeroTarget;
-    /// <summary>
-    /// 存放產生英雄的腳本
-    /// </summary>
-    public List<DarkProduceHeroScript> DarkHeroScript;
+
 
     private float MissOrDashStartTimr;
 
@@ -123,6 +123,9 @@ public class GameManager : MonoBehaviour
     #endregion
     private void Awake()
     {
+        _Tf = transform;
+        _Go = gameObject;
+
         isSoldierStateForAction = true;
         isHeroStateForAction = true;
         isProduceSoldier = true;
@@ -222,9 +225,9 @@ public class GameManager : MonoBehaviour
                 if (_distanceStart == 0)
                 {
                     _hsIndex = i;
-                    _distanceStart = Vector3.Distance(SelectedHero._transform.position, _hscript._transform.position);
+                    _distanceStart = Vector3.Distance(SelectedHero._Tf.position, _hscript._Tf.position);
                 }
-                _distanceEnd = Vector3.Distance(SelectedHero._transform.position, _hscript._transform.position);
+                _distanceEnd = Vector3.Distance(SelectedHero._Tf.position, _hscript._Tf.position);
                 if (_distanceStart > _distanceEnd)
                 {
                     _hsIndex = i;
@@ -342,7 +345,7 @@ public class GameManager : MonoBehaviour
     {
         if (isDuel) return;
         if (SelectedHero == null) return;
-        SelectedHero.HeroDuelStateFunc(HeroState.Miss,Vector2.zero, time, null);
+        SelectedHero.HeroDuelStateFunc(HeroState.Miss, Vector2.zero, time, null);
 
     }
     private void PlayGMHeroMiss(float time)
@@ -369,8 +372,8 @@ public class GameManager : MonoBehaviour
         if (isDuel) return;
         if (SelectedHero == null) return;
         if (!SelectedHero.IsItPossibleToDash) return;
-        SelectedHero.FastForward(SelectedHero._transform, time);
-        
+        SelectedHero.FastForward(SelectedHero._Tf, time);
+
     }
     #endregion
     #region 決鬥或是AI操作時
@@ -403,18 +406,20 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void PlayGMHeroDash(HeroScript heroScript)
     {
-        if(heroScript == null) return;
+        if (heroScript == null) return;
         if (!heroScript.IsItPossibleToDash) return;
-        heroScript.FastForward(heroScript._transform, Time.time);
+        heroScript.FastForward(heroScript._Tf, Time.time);
     }
     #endregion
     #endregion
     /// <summary>
     /// 產生英雄
     /// </summary>
-    /// <param name="t"></param>
     private void PlayerProduceHero()
     {
+        if (_mainFortressScript.Count == 0 || DarkHeroScript.Count == 0) return;
+        if (_mainFortressScriptList.Count < 2) return;
+
         playerScript.ProduceHero(time);
 
         //敵人英雄產生
@@ -452,8 +457,8 @@ public class GameManager : MonoBehaviour
         _hs.isPlayerControl = true; //選擇的英雄可以操控
         _hs.heroController = heroControl; //設定玩家控制介面
         _hs.playAnimationTime += 10;
-        _hs._tfposition = _hs._transform.position;
-        Transform HeroTf = _hs._transform;
+        _hs._tfposition = _hs._Tf.position;
+        Transform HeroTf = _hs._Tf;
         Vector3 HeroV3 = _hs._tfposition;
         HeroV3.y += 3f;
         SelectedHero = _hs;
@@ -470,43 +475,80 @@ public class GameManager : MonoBehaviour
         heroControl.DashOpenOrClose(_hs.isDash); //設定英雄控制器
     }
     /// <summary>
-    /// 總英雄AI控制
+    /// 英雄AI
     /// </summary>
     private void HeroAI()
     {
         if (HeroList.Count == 0) return; //如果沒有英雄就不執行
-        if (!isHeroStateForAction) return; //如果英雄還在執行動作就不執行
+        if (!isHeroStateForAction) return; //如果迴圈還在執行動作就不執行
         HeroScript _hero;
-        HeroDataController _hdc = new HeroDataController();
+        Vector2 _MoveDirection;
         for (int i = 0; i < HeroList.Count; i++)
         {
             isHeroStateForAction = false;
             _hero = HeroList[i];
             if (_hero == null) continue;
-            if (_hero.IsItPossibleToDuel) continue;
-            if (_hero.isPlayerControl) continue;
+            _hero._tfposition = _hero._Tf.position;
+            if(_hero.Hp <= 0)
+            {
+                _hero.HeroDuelStateFunc(HeroState.Die);
+                continue;
+            }
+            if (_hero.IsItPossibleToDuel || _hero.isPlayerControl) continue;
+            if (_mainFortressScript.Count == 0 || _darkMainFortressScript.Count == 0)
+            {
+                _hero.HeroDuelStateFunc();
+                continue;
+            }
+
             _hero._Time = time;
             _hero._animator.speed = 1;
-            if (isDuel)
-                _hero._animator.speed = 0.2f;
+            if (isDuel) _hero._animator.speed = 0.2f;
 
-            _hdc._hs = _hero;
-            _hdc._tf = _hero._transform;
-            _hdc._rd = _hero._rg;
-            _hdc._enemyTarget = _hero._target;
-            _hdc._MoveDirection = CorrectionDirection(_hdc._tf, _hdc._enemyTarget);
-            _hdc.Move(_hdc._MoveDirection);
-
+            _hero.PhyOverlapBoxAll(_hero._tfposition);
+            if (_hero._target == null)
+            {
+                MainFortressBaseScript _mfbs;
+                switch (_hero.tag)
+                {
+                    case staticPublicObjectsStaticName.HeroTag:
+                        for (int drakMfItem = 0; drakMfItem < _darkMainFortressScript.Count; drakMfItem++)
+                        {
+                            _mfbs = _darkMainFortressScript[drakMfItem];
+                            if (_mfbs != null) _hero._target = _mfbs._Tf;
+                        }
+                        break;
+                    case staticPublicObjectsStaticName.DarkHeroTag:
+                        for (int drakMfItem = 0; drakMfItem < _mainFortressScript.Count; drakMfItem++)
+                        {
+                            _mfbs = _mainFortressScript[drakMfItem];
+                            if (_mfbs != null) _hero._target = _mfbs._Tf;
+                        }
+                        break;
+                }
+            }
+            else
+            {
+                _MoveDirection = CorrectionDirection(_hero._Tf, _hero._target);
+                Collider2D[] ColliderArray = _hero.enemyCollider;
+                if (ColliderArray.Length > 0)
+                {
+                    _hero.HeroDuelStateFunc(HeroState.Attack, ColliderArray, null);
+                    continue;
+                }
+                _hero.HeroDuelStateFunc(HeroState.Run, _MoveDirection);
+            }
         }
-        isHeroStateForAction = true; //英雄動作執行完畢
+        isHeroStateForAction = true;
     }
+
     /// <summary>
     /// 取得角色控制
     /// </summary>
     private void SelectedHeroControl()
     {
         if (SelectedHero == null) return;
-        SelectedHero._tfposition = SelectedHero._transform.position; //更新位置
+        SelectedHero._tfposition = SelectedHero._Tf.position; //更新位置
         Vector2 Pos = SelectedHero._tfposition; //取得位置
         SelectedHero.PhyOverlapBoxAll(SelectedHero._tfposition);
 
@@ -544,7 +586,7 @@ public class GameManager : MonoBehaviour
         public HeroDataController(HeroScript hs)
         {
             _hs = hs;
-            _tf = _hs._transform;
+            _tf = _hs._Tf;
             _rd = _hs._rg;
             _enemyTarget = _hs._target;
             _MoveDirection = Vector2.zero;
@@ -561,9 +603,9 @@ public class GameManager : MonoBehaviour
             if (_hs._target == null)
             {
 
-                List<Transform> _etfList = _hs.enemyTargetList; //取得敵人清單
+                List<Transform> _etfList = new List<Transform>(); //取得敵人清單
                 Transform _tf; //暫存敵人
-                Transform _thisTf = _hs._transform; //暫存自己
+                Transform _thisTf = _hs._Tf; //暫存自己
                 float targetDistance = 0; //目標距離
                 float nextDistance = 0; //下一個距離
                 int targetIndex = 0; //目標索引
@@ -572,7 +614,7 @@ public class GameManager : MonoBehaviour
                     _tf = _etfList[i];
                     if (_tf == null)
                     {
-                        _hs.enemyTargetList.RemoveAt(i);
+
                         continue;
                     }
                     if (i == 0) targetDistance = Vector2.Distance(_thisTf.position, _tf.position); //取得距離
@@ -659,8 +701,8 @@ public class GameManager : MonoBehaviour
                 continue;
             }
             _ssd._soldierScript = _soldierScript;
-            _ssd._transform = _soldierScript._transform;
-            _ssd._gameObject = _soldierScript._gameObject;
+            _ssd._Tf = _soldierScript._Tf;
+            _ssd._Go = _soldierScript._Go;
             _ssd._targetTransform = _soldierScript._enemyNowMainFortress;
             _ssd._Rigidbody2 = _soldierScript._body2D;
             _ssd.dT = time;
@@ -691,8 +733,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private struct SoldierStateData
     {
-        public Transform _transform;
-        public GameObject _gameObject;
+        public Transform _Tf;
+        public GameObject _Go;
         public Transform _targetTransform;
         public Rigidbody2D _Rigidbody2;
         public SoldierScript _soldierScript;
@@ -702,8 +744,8 @@ public class GameManager : MonoBehaviour
 
         public SoldierStateData(SoldierScript _sscript, float time, List<MainFortressBaseScript> _enemy)
         {
-            _transform = _sscript._transform;
-            _gameObject = _sscript.gameObject;
+            _Tf = _sscript._Tf;
+            _Go = _sscript.gameObject;
             _targetTransform = _sscript._enemyNowMainFortress;
             _Rigidbody2 = _sscript._body2D;
             _soldierScript = _sscript;
@@ -725,12 +767,12 @@ public class GameManager : MonoBehaviour
                 for (int i = 0; i < enemyTarget.Count; i++)
                 {
                     if (enemyTarget[i] == null) continue;
-                    enemyTargetTransform = enemyTarget[i]._transform;
+                    enemyTargetTransform = enemyTarget[i]._Tf;
                     if (_targetDistance == 0 && _nextDistance == 0)
-                        _targetDistance = Vector3.Distance(_transform.position, enemyTargetTransform.position);
+                        _targetDistance = Vector3.Distance(_Tf.position, enemyTargetTransform.position);
                     else
                     {
-                        _nextDistance = Vector3.Distance(_transform.position, enemyTargetTransform.position);
+                        _nextDistance = Vector3.Distance(_Tf.position, enemyTargetTransform.position);
                         if (_targetDistance > _nextDistance)
                         {
                             _targetDistance = _nextDistance;
@@ -738,11 +780,11 @@ public class GameManager : MonoBehaviour
                         }
                     }
                 }
-                enemyTargetTransform = enemyTarget[enemyTargetIndex]._transform;
+                enemyTargetTransform = enemyTarget[enemyTargetIndex]._Tf;
                 _soldierScript._enemyNowMainFortress = enemyTargetTransform;
                 return;
             }
-            Vector2 pos = _transform.position;
+            Vector2 pos = _Tf.position;
             _soldierScript.PhyOverlapBoxAll(pos);
             if (_soldierScript._collider2D.Length > 0)
             {
@@ -750,7 +792,7 @@ public class GameManager : MonoBehaviour
                 return;
             }
             _soldierScript.Move();
-            _transform.position = Vector3.MoveTowards(_transform.position, _targetTransform.position, _soldierScript.speed * dT);
+            _Tf.position = Vector3.MoveTowards(_Tf.position, _targetTransform.position, _soldierScript.speed * dT);
         }
         /// <summary>
         /// 是否已經死亡
@@ -771,7 +813,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     /// <param name="_tf">玩家 Transform</param>
     /// <param name="_EnemyTf">敵人 Transform</param>
-    public void CorrectionDirection(Transform _tf, Transform _EnemyTf, out Vector2 _Direction )
+    public void CorrectionDirection(Transform _tf, Transform _EnemyTf, out Vector2 _Direction)
     {
         int _direction = 1;
         Vector2 _scale = _tf.localScale;
@@ -786,6 +828,7 @@ public class GameManager : MonoBehaviour
     }
     public Vector2 CorrectionDirection(Transform _tf, Transform _EnemyTf)
     {
+        if (_EnemyTf == null) return Vector2.zero;
         int _direction = 1;
         Vector2 _scale = _tf.localScale;
         _scale.x = Mathf.Abs(_scale.x);

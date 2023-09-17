@@ -18,8 +18,8 @@ public class MainFortressScript : MainFortressBaseScript
     }
     public override void MainFortressDataInitializ()
     {
-        _transform = transform; // 取得物件transform
-        _gameObject = gameObject; // 取得物件gameobject
+        _Tf = transform; // 取得物件transform
+        _Go = gameObject; // 取得物件gameobject
         enemyMainFortressTag = staticPublicObjectsStaticName.DarkMainFortressTag; // 取得敵人主堡tag
         soldierTag = staticPublicObjectsStaticName.PlayerSoldierTag; // 取得士兵tag
         _gameManager = GameObject.Find("GameManager"); // 取得遊戲管理器
@@ -30,14 +30,14 @@ public class MainFortressScript : MainFortressBaseScript
             _gameManagerScript._mainFortressScript.Add(this);
             _gameManagerScript._mainFortressScriptList.Add(this);
         }
-        _gameObject.layer = LayerMask.NameToLayer(staticPublicObjectsStaticName.MainFortressLayer); // 設定主堡圖層
+        _Go.layer = LayerMask.NameToLayer(staticPublicObjectsStaticName.MainFortressLayer); // 設定主堡圖層
         _mfEnemyLayerMask = LayerMask.GetMask(staticPublicObjectsStaticName.DarkSoldierLayer,
                         staticPublicObjectsStaticName.DarkHeroLayer,
                         staticPublicObjectsStaticName.DarkMainFortressLayer); // 取得主堡敵人圖層
         _hp = _mainFortressObj.maxhp; // 取得主堡血量
         _soldierCount = _mainFortressObj.soldierCount; // 取得主堡兵數
 
-        TextMeshPro[] TextMeshProArray = _transform.GetComponentsInChildren<TextMeshPro>(); // 取得所有子物件的TextMeshPro
+        TextMeshPro[] TextMeshProArray = _Tf.GetComponentsInChildren<TextMeshPro>(); // 取得所有子物件的TextMeshPro
         for (int i = 0; i < TextMeshProArray.Length; i++)
         {
             switch (TextMeshProArray[i].name)
@@ -82,7 +82,7 @@ public class MainFortressScript : MainFortressBaseScript
         if (soldierProduceTimeNow >= soldierProduceTime)
         {
             //產生士兵
-            Vector3 ParentPosition = _transform.position; // 取得主堡位置
+            Vector3 ParentPosition = _Tf.position; // 取得主堡位置
             ParentPosition.y += 1;
             Vector2 ParentScale;
             Transform InstantiateTransform;
@@ -102,7 +102,7 @@ public class MainFortressScript : MainFortressBaseScript
                     InstantiateTransform.tag = soldierTag;
                     InstantiateTransform.gameObject.layer = LayerMask.NameToLayer(staticPublicObjectsStaticName.PlayerSoldierLayer);
                     ParentScale = InstantiateTransform.localScale; // 取得士兵的Scale
-                    if (_enemymf.position.x < _transform.position.x) ParentScale.x *= -1; // 判斷敵人主堡的位置，決定士兵的Scale
+                    if (_enemymf.position.x < _Tf.position.x) ParentScale.x *= -1; // 判斷敵人主堡的位置，決定士兵的Scale
                     InstantiateTransform.localScale = ParentScale; // 更新士兵的Scale
 
                     _soldierScript = InstantiateTransform.GetComponent<SoldierScript>();
@@ -147,7 +147,7 @@ public class MainFortressScript : MainFortressBaseScript
         if (_hp <= 0)
         {
             _gameManagerScript.MainFortressOver(this);
-            Destroy(_gameObject, 1);
+            Destroy(_Go, 1);
         }
     }
     /// <summary>

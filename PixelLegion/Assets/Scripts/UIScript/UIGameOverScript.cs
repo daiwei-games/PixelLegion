@@ -18,7 +18,8 @@ public class UIGameOverScript : UIScript
     public override void GUIDataInitializ()
     {
 
-        _transform = transform;
+        _Tf = transform;
+        _Go = gameObject;
         Transform _Button_GameOverTransform = transform.Find("Button_GameReset");
         if (_Button_GameOverTransform != null)
         {

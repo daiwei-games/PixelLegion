@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SoldierBaseScript : MonoBehaviour, ISoldierFunc
+public class SoldierBaseScript : LeadToSurviveGameBaseClass, ISoldierFunc
 {
     #region 基本資料
     /// <summary>
@@ -10,8 +10,6 @@ public class SoldierBaseScript : MonoBehaviour, ISoldierFunc
     /// </summary>
     [Header("士兵的資料庫")]
     public soldierDataObject _soldierDataObject;
-    public Transform _transform;
-    public GameObject _gameObject;
     public Rigidbody2D _body2D;
     public SoldierScript _soldierScript;
     /// <summary>

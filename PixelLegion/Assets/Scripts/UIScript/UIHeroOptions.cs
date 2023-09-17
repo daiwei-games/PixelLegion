@@ -35,7 +35,8 @@ public class UIHeroOptions : UIScript
 
     public override void GUIDataInitializ()
     {
-        _transform = transform;
+        _Tf = transform;
+        _Go = gameObject;
 
         _playerManager = GameObject.Find("PlayerManager");
         if (_playerManager != null)

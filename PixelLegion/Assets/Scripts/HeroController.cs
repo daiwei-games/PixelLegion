@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class HeroController : MonoBehaviour
+public class HeroController : LeadToSurviveGameBaseClass
 {
-    public Transform _tf;
     /// <summary>
     /// 取得 GameManager 腳本
     /// </summary>
@@ -18,10 +17,11 @@ public class HeroController : MonoBehaviour
     public Button Dash;
     private void Awake()
     {
-        _tf = transform;
+        _Tf = transform;
+        _Go = gameObject;
         GameManagerScript = FindObjectOfType<GameManager>();
         GameManagerScript.heroControl = this;
-        Transform _tfbutton = _tf.Find("Attack");
+        Transform _tfbutton = _Tf.Find("Attack");
         if (_tfbutton != null)
         {
             Attakc = _tfbutton.GetComponent<Button>();
@@ -31,7 +31,7 @@ public class HeroController : MonoBehaviour
             });
         }
 
-        _tfbutton = _tf.Find("Dash");
+        _tfbutton = _Tf.Find("Dash");
         if (_tfbutton != null)
         {
             Dash = _tfbutton.GetComponent<Button>();
@@ -46,7 +46,7 @@ public class HeroController : MonoBehaviour
             }
         }
 
-        _tfbutton = _tf.Find("Duel");
+        _tfbutton = _Tf.Find("Duel");
         if (_tfbutton != null)
         {
             Button Duel = _tfbutton.GetComponent<Button>();

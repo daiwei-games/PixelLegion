@@ -183,6 +183,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72d42a1b0f0016441b65311a293bf977, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _Tf: {fileID: 0}
+  _Go: {fileID: 0}
   _heroDataObject: {fileID: 11400000, guid: 89926b988e2012148bac3278d8965c73, type: 2}
   HeroID: 
   HeroName: 
@@ -192,12 +194,10 @@ MonoBehaviour:
   HeroAvatar: {fileID: 21300000, guid: 2e98738718c80a9468b719cf60d871d8, type: 3}
   _gameManagerScript: {fileID: 0}
   heroController: {fileID: 0}
-  _transform: {fileID: 0}
   _tfposition: {x: 0, y: 0}
   _rg: {fileID: 0}
   _colliders: []
   _animator: {fileID: 0}
-  enemyTargetList: []
   playAnimationTimeMax: 0.02
   playAnimationTime: 0
   _Time: 0
@@ -207,7 +207,7 @@ MonoBehaviour:
   enemyCollider: []
   dashDistance: 2
   phySize: 4
-  PhyOffset: 0
+  PhyOffset: 2.5
   flootLayer:
     serializedVersion: 2
     m_Bits: 0
@@ -224,6 +224,7 @@ MonoBehaviour:
   isJumpAtk: 0
   dash: 
   isDash: 0
+  IsItPossibleToDash: 0
   hit: 
   isHit: 0
   def1: 
@@ -240,8 +241,10 @@ MonoBehaviour:
   isLand: 0
   miss0: 
   isMiss0: 0
+  missTimeStart: 0
   miss1: 
   isMiss1: 0
+  IsItPossibleMiss: 0
   duel: 
   isDuel: 0
   atk: []

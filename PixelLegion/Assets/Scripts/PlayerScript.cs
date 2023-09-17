@@ -3,11 +3,10 @@ using Assets.Scripts.IFace;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerScript : MonoBehaviour, IPlayerFunc, IProduceHeroFunc
+public class PlayerScript : LeadToSurviveGameBaseClass, IPlayerFunc, IProduceHeroFunc
 {
     [Header("玩家資料")]
     public playerDataObject _playerDataObject;
-    public Transform _transform;
     /// <summary>
     /// 英雄清單
     /// </summary>
@@ -55,7 +54,9 @@ public class PlayerScript : MonoBehaviour, IPlayerFunc, IProduceHeroFunc
     /// </summary>
     public void PlayerDataInitializ()
     {
-        _transform = transform;
+        _Tf = transform;
+        _Go = gameObject;
+
         GetHeroList = new List<Transform>();
         GetHeroList.AddRange(_playerDataObject.SelectedHeroList);
         _gameManager = GameObject.Find("GameManager");
@@ -78,14 +79,14 @@ public class PlayerScript : MonoBehaviour, IPlayerFunc, IProduceHeroFunc
     /// <param name="_time">計算產生英雄的時間</param>
     public void ProduceHero(float _time)
     {
-        _transform.position = _gameManagerScript._mainFortressScript[0]._transform.position; //設定玩家位置
+        _Tf.position = _gameManagerScript._mainFortressScript[0]._Tf.position; //設定玩家位置
         if (GetHeroList.Count == 0) return; //如果沒有英雄就不執行
         ProduceHeroTime += _time; //計算時間
         if (ProduceHeroTime < ProduceHeroTimeMax) return; //如果時間沒有到就不執行
         ProduceHeroTime = 0; //重置時間
 
         int HeroListIndex = Random.Range(0, GetHeroList.Count); //隨機選擇英雄
-        GameObject _hero = Instantiate(GetHeroList[HeroListIndex], _transform).gameObject; //產生英雄
+        GameObject _hero = Instantiate(GetHeroList[HeroListIndex], _Tf).gameObject; //產生英雄
         _hero.tag = staticPublicObjectsStaticName.HeroTag; //設定英雄tag
         _hero.layer = LayerMask.NameToLayer(staticPublicObjectsStaticName.HeroLayer); //設定英雄圖層
 
@@ -102,16 +103,15 @@ public class PlayerScript : MonoBehaviour, IPlayerFunc, IProduceHeroFunc
         _dmfList.AddRange(_gameManagerScript._darkMainFortressScript); //取得所有敵方主堡
         DarkMainFortressScript _dmf;
         Transform _tf;
-        Transform _thisTf = _heroScript._transform;
+        Transform _thisTf = _heroScript._Tf;
         float targetDistance = 0;
         float nextDistance = 0;
         int targetIndex = 0;
         for (int i = 0; i < _dmfList.Count; i++)
         {
             _dmf = _dmfList[i];
-            _tf = _dmf._transform;
+            _tf = _dmf._Tf;
             if (_dmf == null) continue;
-            _heroScript.enemyTargetList.Add(_tf);
             if (targetDistance != 0 && nextDistance != 0)
             {
                 nextDistance = Vector2.Distance(_thisTf.position, _tf.position); //取得距離
@@ -126,7 +126,7 @@ public class PlayerScript : MonoBehaviour, IPlayerFunc, IProduceHeroFunc
                 targetDistance = Vector2.Distance(_thisTf.position, _tf.position); //取得距離
             }
         }
-        _heroScript._target = _dmfList[targetIndex]._transform; //設定目標
+        _heroScript._target = _dmfList[targetIndex]._Tf; //設定目標
 
         GetHeroList.RemoveAt(HeroListIndex); //將英雄從清單中移除
         

@@ -16,8 +16,8 @@ public class SoldierScript : SoldierBaseScript
     }
     public override void SoldierDataInitializ()
     {
-        _transform = transform; // 取得物件transform
-        _gameObject = gameObject; // 取得物件gameobject
+        _Tf = transform; // 取得物件transform
+        _Go = gameObject; // 取得物件gameobject
         _body2D = GetComponent<Rigidbody2D>(); // 取得物件rigidbody2D
         _animator = GetComponent<Animator>(); // 取得動畫控制器
 
@@ -81,7 +81,7 @@ public class SoldierScript : SoldierBaseScript
                 _body2D.bodyType = RigidbodyType2D.Static; // 將剛體設定為靜態
                 soldierAnimatorPlay(dieAnimationName);
                 _gameManagerScript._soldierList.Remove(_soldierScript); // 從清單中移除
-                Destroy(_gameObject, 2); // 1秒後刪除物件
+                Destroy(_Go, 2); // 1秒後刪除物件
                 break;
             default:
                 switch (_soldierChangeState)
@@ -97,7 +97,7 @@ public class SoldierScript : SoldierBaseScript
                             _tag = _col.tag;
                             if (_tag.IndexOf("Hero") != -1)
                             {
-                                _col.GetComponent<HeroScript>().HeroHP(1);
+                                _col.GetComponent<HeroScript>().HeroHit(soldierAtk);
                                 _enemyNowMainFortress = _col.transform;
                             }
                             else if (_tag.IndexOf("Soldier") != -1)
@@ -109,7 +109,7 @@ public class SoldierScript : SoldierBaseScript
                             {
                                 MainFortressBaseScript _mainFortressScript = _col.GetComponent<MainFortressBaseScript>();
                                 _mainFortressScript.MainFortressHit(1);
-                                _mainFortressScript.WhoHitMeTransform.Add(_transform); // 將攻擊主堡者加入清單
+                                _mainFortressScript.WhoHitMeTransform.Add(_Tf); // 將攻擊主堡者加入清單
                                 _enemyNowMainFortress = _col.transform;
                             }
                         }
@@ -158,7 +158,7 @@ public class SoldierScript : SoldierBaseScript
         {
             _soldierChangeState = SoldierState.Die;
             DieOffset = Vector2.left;
-            if (_transform.localScale.x > 0)
+            if (_Tf.localScale.x > 0)
                 DieOffset = Vector3.right;
 
             _body2D.velocity = DieOffset * 5;
@@ -180,12 +180,12 @@ public class SoldierScript : SoldierBaseScript
     }
     public override void Move()
     {
-        _SoldierScale = _transform.localScale;
+        _SoldierScale = _Tf.localScale;
         _SoldierScale.x = Mathf.Abs(_SoldierScale.x);
-        if (_enemyNowMainFortress.position.x < _transform.position.x)
+        if (_enemyNowMainFortress.position.x < _Tf.position.x)
             _SoldierScale.x = Mathf.Abs(_SoldierScale.x) * -1;
 
-        _transform.localScale = _SoldierScale;
+        _Tf.localScale = _SoldierScale;
         if ((_soldierNowState == _soldierChangeState && _soldierNowState == SoldierState.Move) || _soldierNowState == SoldierState.Move) return;
         _soldierChangeState = SoldierState.Move;
         SoldierStateAI();
@@ -202,7 +202,7 @@ public class SoldierScript : SoldierBaseScript
         PhySize = Vector2.one * Physics2DSize;
         PhySize.y *= 2;
 
-        Vector2 Pos = _transform.position;
+        Vector2 Pos = _Tf.position;
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireCube(Pos, PhySize);
     }
