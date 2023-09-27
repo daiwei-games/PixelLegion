@@ -168,8 +168,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.4302286, y: -2.373729}
-  m_Size: {x: 2.2666602, y: 6.7356095}
+  m_Offset: {x: 0.4302286, y: -1.642494}
+  m_Size: {x: 2.2666602, y: 5.2731395}
   m_Direction: 0
 --- !u!114 &8428870900922309320
 MonoBehaviour:
@@ -183,30 +183,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 914d8801271b9a44fbf8daee377cee1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _soldierDataObject: {fileID: 0}
-  _transform: {fileID: 0}
-  _gameObject: {fileID: 0}
+  _Tf: {fileID: 0}
+  _Go: {fileID: 0}
   _body2D: {fileID: 0}
-  _soldierScript: {fileID: 0}
+  BasicQuality: 0.13
+  BasicConstitution: 15
+  BasicHp: 250
   soldierName: 
   soldierAtk: 0
   soldierDefense: 0
-  soldierHp: 500
+  soldierHp: 0
   speed: 3
-  soldierLv: 0
-  soldierLvMax: 0
-  animPrefix: 
   _gameManagerScript: {fileID: 0}
   _SoldierScale: {x: 0, y: 0, z: 0}
+  PhyOffset: 2
   _collider2D: []
-  Physics2DSize: 3
-  _enemySoldierLayer: 0
-  _enemyMainFortressLayer: 0
-  _enemyHeroLayer: 0
+  Physics2DSize: 4
   _enemyLayerMask:
     serializedVersion: 2
     m_Bits: 0
   _enemyNowMainFortress: {fileID: 0}
+  IsCloseRigidbody: 0
   _animator: {fileID: 0}
   _animationClip: []
   animationTime: 0
@@ -220,4 +217,4 @@ MonoBehaviour:
   dashAnimationName: []
   _soldierNowState: 0
   _soldierChangeState: 0
-  PhyOffset: 0
+  AtkVfx_2: {fileID: 0}

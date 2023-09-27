@@ -159,7 +159,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 31
   m_Sprite: {fileID: -516288601, guid: c7023733df1469f4da8b1d994d0f1ba2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -228,31 +228,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18d62501c53df68469894d708020bd49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameStop: 1
-  _transform: {fileID: 0}
-  _gameObject: {fileID: 0}
-  _gameManager: {fileID: 0}
-  _gameManagerScript: {fileID: 0}
-  _layerMask:
-    serializedVersion: 2
-    m_Bits: 0
-  _mfEnemyLayerMask:
-    serializedVersion: 2
-    m_Bits: 0
-  enemyMainFortressTag: 
-  soldierTag: 
-  enemyMainFortressList: []
+  _Tf: {fileID: 0}
+  _Go: {fileID: 0}
   _hp: 0
+  _MaxHp: 0
   _hpMeshPro: {fileID: 0}
+  enemyMainFortressTag: 
+  enemyMainFortressList: []
+  _gameManagerScript: {fileID: 0}
   _soldierCount: 0
   _soldierCountMeshPro: {fileID: 0}
+  selectedSoldierList: []
+  soldierTag: 
+  soldierProduceTimeMax: 0
+  soldierProduceTime: 0
+  WhoHitMeTransform: []
   selectedHeroList:
   - {fileID: 7727541760490572647, guid: ebee31bdf2480c749a630119bb025606, type: 3}
-  selectedSoldierList:
-  - {fileID: 9208150154705962313, guid: 1954582f411329345aeefdba63978b4d, type: 3}
-  soldierProduceTime: 0
-  soldierProduceTimeNow: 0
-  _mainFortressObj: {fileID: 11400000, guid: 18595168fb3896146b9e60c47f80eb69, type: 2}
+  GetHeroList: []
+  ProduceHeroTime: 0
+  ProduceHeroTimeMax: 0
+  HeroUI: {fileID: 0}
 --- !u!1 &5013076206298169237
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,33 +1,32 @@
 ﻿using Assets.Scripts;
-using Assets.Scripts.BaseClass;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : LeadToSurviveGameBaseClass
+public class GameManager : MonoBehaviour
 {
     /// <summary>
-    /// 光明主堡腳本
+    /// 玩家資料管理器
     /// </summary>
-    [Header("光明主堡腳本")]
-    public List<MainFortressScript> _mainFortressScript;
+    [Header("玩家資料管理器")]
+    public PlayerScript _Ps;
     /// <summary>
-    /// 黑暗主堡腳本
+    /// 玩家資料物件
     /// </summary>
-    [Header("黑暗主堡腳本")]
-    public List<DarkMainFortressScript> _darkMainFortressScript;
+    public playerDataObject _Pdo;
     /// <summary>
-    /// 存放敵人產生英雄的腳本
+    /// 關卡管理器
     /// </summary>
-    public List<DarkProduceHeroScript> DarkHeroScript;
+    public GameLevelManager _Glm;
+
     /// <summary>
-    /// 融合兩個主堡清單
+    /// 主堡清單
     /// </summary>
-    [Header("融合兩個主堡清單")]
-    public List<MainFortressBaseScript> _mainFortressScriptList;
+    [Header("主堡清單")]
+    public List<MainFortressScript> _MainFortressScriptList;
     /// <summary>
     /// 是否執行生產士兵的函數，還是正在執行
     /// </summary>
-    private bool isProduceSoldier;
+    public bool isProduceSoldier;
     /// <summary>
     /// 所有士兵清單
     /// </summary>
@@ -37,33 +36,26 @@ public class GameManager : LeadToSurviveGameBaseClass
     /// 士兵計算生產間隔
     /// </summary>
     [Header("士兵計算生產間隔"), SerializeField, Range(0.01f, 10)]
-    private float ProduceSoldierTimeMax;
-    private float ProduceSoldierTime;
-    /// <summary>
-    /// 毫秒
-    /// </summary>
-    float time;
-    /// <summary>
-    /// 是否再次執行迴圈
-    /// </summary>
-    bool isSoldierStateForAction;
-    /// <summary>
-    /// UI腳本
-    /// </summary>
-    public UIScript uiScript;
-    /// <summary>
-    /// 遊戲結束物件
-    /// </summary>
-    public UIGameOverScript GameOverObject;
-    /// <summary>
-    /// 玩家管理器腳本
-    /// </summary>
-    public PlayerScript playerScript;
+    public float ProduceSoldierTimeMax;
+    public float ProduceSoldierTime;
     /// <summary>
     /// 已經產生的英雄清單
     /// </summary>
     [Header("已經產生的英雄清單")]
     public List<HeroScript> HeroList;
+    /// <summary>
+    /// 是否再次執行士兵動作迴圈
+    /// </summary>
+    bool isSoldierStateForAction;
+    /// <summary>
+    /// 毫秒
+    /// </summary>
+    float time;
+    /// <summary>
+    /// UI腳本
+    /// </summary>
+    public UIScript uiScript;
+
     /// <summary>
     /// 是否再次執行英雄動作迴圈的判斷
     /// </summary>
@@ -71,67 +63,99 @@ public class GameManager : LeadToSurviveGameBaseClass
     /// <summary>
     /// 產生英雄計算間隔
     /// </summary>
-    [Header("產生英雄計算間隔"), SerializeField, Range(0.01f, 10)]
-    private float ProduceHeroTimeMax;
-    private float ProduceHeroTime;
+    [Header("產生英雄計算間隔"), Range(0.01f, 10)]
+    public float ProduceHeroTimeMax;
+    public float ProduceHeroTime;
     /// <summary>
     /// 選擇的英雄頭上出現指標
     /// </summary>
-    [Header("選擇的英雄頭上出現指標"), SerializeField]
-    private Transform SelectedHeroTargetPrefab;
-    private Transform SelectedHeroTarget;
-
-
-    private float MissOrDashStartTimr;
-
-    #region 決鬥
+    [Header("選擇的英雄頭上出現指標")]
+    public Transform SelectedHeroTarget;
     /// <summary>
-    /// 是否決鬥
+    /// 是否遊戲結束
     /// </summary>
-    [Header("是否決鬥")]
-    public bool isDuel;
-    /// <summary>
-    /// 決鬥腳本
-    /// </summary>
-    public DuelScript duelScript;
-    /// <summary>
-    /// 可以操控的英雄
-    /// </summary>
-    [Header("可以操控的英雄"), SerializeField]
-    private HeroScript SelectedHero;
+    public bool isGameOver;
     /// <summary>
     /// 搖桿腳本
     /// </summary>
     [Header("搖桿")]
     public VariableJoystick _Joystick;
     /// <summary>
-    /// 搖桿方向
+    /// 可以操控的英雄
     /// </summary>
-    Vector2 _JoystickDirection;
+    [Header("可以操控的英雄")]
+    public HeroScript SelectedHero;
+
     /// <summary>
     /// 玩家英雄操作的操控介面
     /// </summary>
-    public HeroController heroControl;
+    public UIHeroController _UIHc;
 
-
+    #region 圖層
+    /// <summary>
+    /// 取得光明圖層
+    /// </summary>
+    public LayerMask _LayerMask;
+    /// <summary>
+    /// 取得黑暗圖層
+    /// </summary>
+    public LayerMask _DarkLayerMask;
+    #endregion
     #region 攝影機
     /// <summary>
     /// 監視器中心點
     /// </summary>
     public CameraCenterScript CameraCenterScript;
     #endregion
+
+    #region VFX、SFX 管理器
+    /// <summary>
+    /// VFX 管理器
+    /// </summary>
+    [Header("VFX 管理器")]
+    public ParticleListManagerScript ParticleManager;
+    /// <summary>
+    /// SFX 管理器
+    /// </summary>
+    [Header("SFX 管理器")]
+    public SFXListScript SFXList;
     #endregion
-    private void Awake()
+
+    #region 預置物件
+    [Header("英雄頭上指標預置物")]
+    public Transform SelectedHeroTargetPrefab;
+    /// <summary>
+    /// 血條物件
+    /// </summary>
+    [Header("血條物件")]
+    public HpScript _HpPrefabs;
+    #endregion
+
+    /// <summary>
+    /// 遊戲管理資料格式化
+    /// </summary>
+    private void GameManagerDataInitializ()
     {
-        _Tf = transform;
-        _Go = gameObject;
+
+        _Ps = FindFirstObjectByType<PlayerScript>();
+        _Glm = FindFirstObjectByType<GameLevelManager>();
+        _Pdo = _Ps.PlayerDataObject;
+
+        ParticleManager = FindFirstObjectByType<ParticleListManagerScript>();
+        SFXList = FindFirstObjectByType<SFXListScript>();
+        _Joystick = FindFirstObjectByType<VariableJoystick>();
 
         isSoldierStateForAction = true;
         isHeroStateForAction = true;
         isProduceSoldier = true;
-        _Joystick = FindObjectOfType<VariableJoystick>();
+        isGameOver = false;
 
-        isDuel = false;
+        _LayerMask = LayerMask.GetMask(staticPublicObjectsStaticName.PlayerSoldierLayer, staticPublicObjectsStaticName.HeroLayer, staticPublicObjectsStaticName.MainFortressLayer);
+        _DarkLayerMask = LayerMask.GetMask(staticPublicObjectsStaticName.DarkSoldierLayer, staticPublicObjectsStaticName.DarkHeroLayer, staticPublicObjectsStaticName.DarkMainFortressLayer);
+    }
+    private void Awake()
+    {
+        GameManagerDataInitializ();
     }
     private void Update()
     {
@@ -140,52 +164,44 @@ public class GameManager : LeadToSurviveGameBaseClass
             Time.timeScale = 0;
         }
 
-        GameOver();
-        SelectedHeroControl();
+        if (!isGameOver)
+        {
+            if (SelectedHero == null)
+            {
+                SelectedHeroFunc();
+            }
 
-        // 取得搖桿位移
-        _JoystickDirection = Vector2.right * _Joystick.Horizontal;
+            SelectedHeroControl();
 
-        MissOrDashStartTimr = Time.time;
-        //當玩家按下衝刺
-        PlayGMHeroDash(MissOrDashStartTimr);
-        //當玩家按下閃現
-        PlayGMHeroMiss(MissOrDashStartTimr);
-
+        }
     }
     private void FixedUpdate()
     {
         if (staticPublicGameStopSwitch.gameStop) return;
         time = Time.deltaTime;
-        if (!isDuel)
+        ProduceSoldierTime += time;
+        if (!isGameOver)
         {
-            ProduceSoldierTime += time;
+
             if (ProduceSoldierTime >= ProduceSoldierTimeMax)
             {
                 ProduceSoldierTime = 0;
-                MainFortressBaseProduceSoldier(); //兩邊士兵生產
+                ProduceSoldier(); //兩邊士兵生產
             }
             ProduceHeroTime += time;
             if (ProduceHeroTime >= ProduceHeroTimeMax)
             {
                 ProduceHeroTime = 0;
-                PlayerProduceHero(); //產生英雄
+                ProduceHero(); //產生英雄
             }
-            if (SelectedHero != null)
-            {
-                //英雄的移動
-                SelectedHero.HeroDuelStateFunc(HeroState.Run, _JoystickDirection);
-            }
-        }
-        //管理器區塊
-        SoldierState();
-        HeroAI();
-        if (isDuel)
-        {
-            duelScript.MoveAction();
+            //管理器區塊
+            SoldierState(time);
+            HeroAI(time);
+
         }
         CameraToPlayerPosition();
     }
+
 
     #region 英雄相關操作
     #region 決鬥相關操作
@@ -194,62 +210,7 @@ public class GameManager : LeadToSurviveGameBaseClass
     /// </summary>
     public void Duel()
     {
-        if (SelectedHero == null) return;
-        isDuel = !isDuel;
-        SoldierState();
-        HeroAI();
-        if (isDuel)
-        {
-            OpenDuelUI();
-            ClosePlayerMoveUI();
-        }
-        if (!isDuel)
-        {
-            CloseDuelUI();
-            OpenPlayerMoveUI();
-            return;
-        }
-        HeroScript _hscript;
-        int _hsIndex = 0;
-        bool _isDarkHero = false;
-        float _distanceStart = 0;
-        float _distanceEnd = 0;
-        for (int i = 0; i < HeroList.Count; i++)
-        {
-            _hscript = HeroList[i];
-            if (_hscript == null) continue;
-            if (_hscript.CompareTag(staticPublicObjectsStaticName.HeroTag)) continue;
-            if (_hscript.CompareTag(staticPublicObjectsStaticName.DarkHeroTag))
-            {
-                _isDarkHero = true;
-                if (_distanceStart == 0)
-                {
-                    _hsIndex = i;
-                    _distanceStart = Vector3.Distance(SelectedHero._Tf.position, _hscript._Tf.position);
-                }
-                _distanceEnd = Vector3.Distance(SelectedHero._Tf.position, _hscript._Tf.position);
-                if (_distanceStart > _distanceEnd)
-                {
-                    _hsIndex = i;
-                    _distanceStart = _distanceEnd;
-                }
-            }
-        }
-        if (!_isDarkHero) //沒有敵方英雄
-        {
-            CloseDuelUI(); //關閉決鬥介面
-            OpenPlayerMoveUI(); //開啟英雄移動介面
-            if (isDuel) Duel();
-            return;
-        }
-        _hscript = HeroList[_hsIndex]; //取得最近的敵方英雄
-        if (_hscript != null)
-        {
-            _hscript.IsItPossibleToDuel = true;
-            SelectedHero.IsItPossibleToDuel = true;
-        }
-        if (duelScript != null) // 如果決鬥腳本不是空的
-            duelScript.HeroData(SelectedHero, _hscript); //設定決鬥資料
+
     }
 
     /// <summary>
@@ -257,28 +218,14 @@ public class GameManager : LeadToSurviveGameBaseClass
     /// </summary>
     public void DuelEnd()
     {
-        duelScript.DuelFormat();
+
     }
     /// <summary>
     /// 自動選擇動作
     /// </summary>
     public void OnHeroMoveAuto()
     {
-        duelScript.PlayerMoveClick();
-    }
-    /// <summary>
-    /// 增加一個攻擊動作
-    /// </summary>
-    public void OnDuelAttack()
-    {
-        duelScript.PlayerMoveClick(HeroState.Attack);
-    }
-    /// <summary>
-    /// 增加一個防禦動作
-    /// </summary>
-    public void OnDuelDef()
-    {
-        duelScript.PlayerMoveClick(HeroState.Def);
+
     }
     /// <summary>
     /// 打開決鬥介面
@@ -309,7 +256,7 @@ public class GameManager : LeadToSurviveGameBaseClass
         uiScript.ClosePlayerMoveUI();
     }
     #endregion
-    #region 玩家操作英雄
+    #region 操控英雄
     /// <summary>
     /// 取得玩家選擇的英雄 Transform
     /// </summary>
@@ -318,7 +265,6 @@ public class GameManager : LeadToSurviveGameBaseClass
         if (SelectedHero == null) return;
         if (CameraCenterScript == null) return;
         CameraCenterScript.PlayerTf = HeroTf;
-
     }
     /// <summary>
     /// 捨影機跟隨玩家選擇的英雄
@@ -328,113 +274,48 @@ public class GameManager : LeadToSurviveGameBaseClass
         if (CameraCenterScript == null) return;
         CameraCenterScript.GotoPlyer();
     }
-    #region 玩家手動操作
-    /// <summary>
-    /// 玩家操做攻擊
-    /// </summary>
-    public void gmHeroAttack()
-    {
-        if (isDuel) return;
-        if (SelectedHero == null) return;
-        SelectedHero.HeroDuelStateFunc(HeroState.Attack, SelectedHero._colliders, null);
-    }
-    /// <summary>
-    /// 閃現
-    /// </summary>
-    public void gmHeroMiss(float time)
-    {
-        if (isDuel) return;
-        if (SelectedHero == null) return;
-        SelectedHero.HeroDuelStateFunc(HeroState.Miss, Vector2.zero, time, null);
 
-    }
-    private void PlayGMHeroMiss(float time)
-    {
-        if (isDuel) return;
-        if (SelectedHero == null) return;
-        if (!SelectedHero.IsItPossibleMiss) return;
-        SelectedHero.Miss1(time);
-    }
-    /// <summary>
-    /// 手動衝刺決鬥不使用
-    /// </summary>
-    public void gmHeroDash(float time)
-    {
-        if (isDuel) return;
-        if (SelectedHero == null) return;
-        SelectedHero.HeroDuelStateFunc(HeroState.Dash, Vector2.zero, time, null);
-    }
-    /// <summary>
-    /// 持續判斷是否衝刺 決鬥不使用
-    /// </summary>
-    private void PlayGMHeroDash(float time)
-    {
-        if (isDuel) return;
-        if (SelectedHero == null) return;
-        if (!SelectedHero.IsItPossibleToDash) return;
-        SelectedHero.FastForward(SelectedHero._Tf, time);
-
-    }
-    #endregion
     #region 決鬥或是AI操作時
-    /// <summary>
-    /// 閃現
-    /// </summary>
-    /// <param name="heroScript"></param>
-    /// <param name="EnemyTf"></param>
-    public void gmHeroMiss(HeroScript heroScript, Transform EnemyTf)
-    {
-        if (heroScript == null) return;
-    }
-    private void PlayGMHeroMiss(HeroScript heroScript, Transform EnemyTf)
-    {
-        if (heroScript == null) return;
-        if (!heroScript.IsItPossibleMiss) return;
-        heroScript.HeroDuelStateFunc(HeroState.Miss1);
-    }
 
-    /// <summary>
-    /// 玩家操作衝刺
-    /// </summary>
-    public void gmHeroDash(HeroScript heroScript)
-    {
-        if (SelectedHero == null) return;
-        heroScript.HeroDuelStateFunc(HeroState.Dash, Vector2.zero, Time.time);
-    }
-    /// <summary>
-    /// 持續判斷是否衝刺
-    /// </summary>
-    private void PlayGMHeroDash(HeroScript heroScript)
-    {
-        if (heroScript == null) return;
-        if (!heroScript.IsItPossibleToDash) return;
-        heroScript.FastForward(heroScript._Tf, Time.time);
-    }
     #endregion
     #endregion
     /// <summary>
     /// 產生英雄
     /// </summary>
-    private void PlayerProduceHero()
+    private void ProduceHero()
     {
-        if (_mainFortressScript.Count == 0 || DarkHeroScript.Count == 0) return;
-        if (_mainFortressScriptList.Count < 2) return;
-
-        playerScript.ProduceHero(time);
-
-        //敵人英雄產生
-        if (DarkHeroScript.Count > 0)
+        for (int i = 0; i < _MainFortressScriptList.Count; i++)
         {
-            DarkProduceHeroScript _dark;
-            for (int i = 0; i < DarkHeroScript.Count; i++)
+            if (_MainFortressScriptList[i] == null)
             {
-                _dark = DarkHeroScript[i];
-                if (_dark == null)
-                {
-                    DarkHeroScript.RemoveAt(i);
-                    continue;
-                }
-                _dark.ProduceHero(time);
+                _MainFortressScriptList.RemoveAt(i);
+                continue;
+            }
+            else
+            {
+                _MainFortressScriptList[i].ProduceHero(time);
+            }
+        }
+
+    }
+
+    /// <summary>
+    /// 當可操控角色為null時，就查找符合可操作的角色
+    /// </summary>
+    private void SelectedHeroFunc()
+    {
+        HeroScript _hero;
+        if (SelectedHero != null) return;
+        if (HeroList.Count == 0) return;
+
+        for (int i = 0; i < HeroList.Count; i++)
+        {
+            _hero = HeroList[i];
+            if (_hero == null) continue;
+            if (_hero.CompareTag(staticPublicObjectsStaticName.HeroTag)) // 如果是光明英雄
+            {
+                SelectedHeroFunc(_hero);
+                return;
             }
         }
     }
@@ -445,21 +326,21 @@ public class GameManager : LeadToSurviveGameBaseClass
     /// <param name="_hs">英雄腳本</param>
     public void SelectedHeroFunc(HeroScript _hs)
     {
-        if (isDuel) return; // 如果是決鬥模式不能換人物
-
         int _index = HeroList.IndexOf(_hs);
         if (_hs == null) return;
         if (_index == -1) return;
+        if (_hs.Hp <= 0) return;
+        HeroScript _Hs;
         for (int i = 0; i < HeroList.Count; i++) //所有英雄不可操控
         {
-            HeroList[i].isPlayerControl = false;
+            _Hs = HeroList[i];
+            if (_Hs == null) continue;
+            _Hs._Hc.enabled = false;
         }
-        _hs.isPlayerControl = true; //選擇的英雄可以操控
-        _hs.heroController = heroControl; //設定玩家控制介面
-        _hs.playAnimationTime += 10;
-        _hs._tfposition = _hs._Tf.position;
+        _hs._Hc.enabled = true;
+
         Transform HeroTf = _hs._Tf;
-        Vector3 HeroV3 = _hs._tfposition;
+        Vector3 HeroV3 = _hs._Tf.position;
         HeroV3.y += 3f;
         SelectedHero = _hs;
         if (SelectedHeroTarget == null)
@@ -470,14 +351,12 @@ public class GameManager : LeadToSurviveGameBaseClass
             SelectedHeroTarget.position = HeroV3;
             SelectedHeroTarget.parent = HeroTf;
         }
-        SelectedHero.Idle();
         CameraGetPlayerTransform(HeroTf);
-        heroControl.DashOpenOrClose(_hs.isDash); //設定英雄控制器
     }
     /// <summary>
     /// 英雄AI
     /// </summary>
-    private void HeroAI()
+    private void HeroAI(float _time)
     {
         if (HeroList.Count == 0) return; //如果沒有英雄就不執行
         if (!isHeroStateForAction) return; //如果迴圈還在執行動作就不執行
@@ -488,54 +367,51 @@ public class GameManager : LeadToSurviveGameBaseClass
             isHeroStateForAction = false;
             _hero = HeroList[i];
             if (_hero == null) continue;
-            _hero._tfposition = _hero._Tf.position;
-            if(_hero.Hp <= 0)
+            if (!_hero.isfloot) continue;
+
+            if (_hero.Hp <= 0)
             {
                 _hero.HeroDuelStateFunc(HeroState.Die);
                 continue;
             }
             if (_hero.IsItPossibleToDuel || _hero.isPlayerControl) continue;
-            if (_mainFortressScript.Count == 0 || _darkMainFortressScript.Count == 0)
+            if (_MainFortressScriptList.Count == 1)
             {
                 _hero.HeroDuelStateFunc();
                 continue;
             }
 
-            _hero._Time = time;
-            _hero._animator.speed = 1;
-            if (isDuel) _hero._animator.speed = 0.2f;
-
-            _hero.PhyOverlapBoxAll(_hero._tfposition);
-            if (_hero._target == null)
+            _hero._Time = _time;
+            _hero.AtkTime += _time;
+            if (_hero.isAnimationFrameStorp)
             {
-                MainFortressBaseScript _mfbs;
-                switch (_hero.tag)
+                _hero.AnimationFrameStorpTime += _time;
+                if (_hero.AnimationFrameStorpTime >= _hero.AnimationFrameStorpTimeMax)
                 {
-                    case staticPublicObjectsStaticName.HeroTag:
-                        for (int drakMfItem = 0; drakMfItem < _darkMainFortressScript.Count; drakMfItem++)
-                        {
-                            _mfbs = _darkMainFortressScript[drakMfItem];
-                            if (_mfbs != null) _hero._target = _mfbs._Tf;
-                        }
-                        break;
-                    case staticPublicObjectsStaticName.DarkHeroTag:
-                        for (int drakMfItem = 0; drakMfItem < _mainFortressScript.Count; drakMfItem++)
-                        {
-                            _mfbs = _mainFortressScript[drakMfItem];
-                            if (_mfbs != null) _hero._target = _mfbs._Tf;
-                        }
-                        break;
+                    _hero.AnimationFrameStorpTime = 0;
+                    _hero.isAnimationFrameStorp = false;
+                }
+                if (_hero.AnimationFrameStorpTime > (_hero.AnimationFrameStorpTimeMax / 2) || !_hero.isAnimationFrameStorp)
+                {
+                    _hero._animator.speed = Mathf.Lerp(_hero._animator.speed, 1, 0.2f); ;
                 }
             }
-            else
+            _hero.PhyOverlapBoxAll(_hero._Tf.position);
+            if (_hero._target == null) _hero.GetEmenyTarget(_MainFortressScriptList); // 取得敵人目標
+
+            Collider2D[] ColliderArray = _hero.enemyCollider; // 取得敵人碰撞器
+            if (ColliderArray.Length > 0)
             {
-                _MoveDirection = CorrectionDirection(_hero._Tf, _hero._target);
-                Collider2D[] ColliderArray = _hero.enemyCollider;
-                if (ColliderArray.Length > 0)
-                {
-                    _hero.HeroDuelStateFunc(HeroState.Attack, ColliderArray, null);
-                    continue;
-                }
+                if (_hero.IsAtkLimit())
+                    _hero.HeroDuelStateFunc();
+                else
+                    _hero.HeroDuelStateFunc(HeroState.Attack, ColliderArray);
+
+                continue;
+            }
+            if (_hero._target != null)
+            {
+                _MoveDirection = CorrectionDirection(_hero._Tf, _hero._target, false);
                 _hero.HeroDuelStateFunc(HeroState.Run, _MoveDirection);
             }
         }
@@ -548,108 +424,48 @@ public class GameManager : LeadToSurviveGameBaseClass
     private void SelectedHeroControl()
     {
         if (SelectedHero == null) return;
-        SelectedHero._tfposition = SelectedHero._Tf.position; //更新位置
-        Vector2 Pos = SelectedHero._tfposition; //取得位置
-        SelectedHero.PhyOverlapBoxAll(SelectedHero._tfposition);
+
+        Vector2 Pos = SelectedHero._Tf.position; //取得位置
+        SelectedHero.PhyOverlapBoxAll(Pos);
 
         Vector2 Pos2 = Pos; //取得位置
         Pos2.y += 4;
         Pos2.y += Mathf.PingPong(.5f + Time.time, 1f);
         SelectedHeroTarget.position = Pos2;
     }
-    /// <summary>
-    /// 英雄資料應用與操作
-    /// </summary>
-    private struct HeroDataController
+
+    public void HeroDataFormat(HeroScript _Hs, bool isDark = true)
     {
-        /// <summary>
-        /// 英雄腳本
-        /// </summary>
-        public HeroScript _hs;
-        /// <summary>
-        /// 英雄Transform
-        /// </summary>
-        public Transform _tf;
-        /// <summary>
-        /// 英雄Rigidbody2D
-        /// </summary>
-        public Rigidbody2D _rd;
-        /// <summary>
-        /// 敵人目標
-        /// </summary>
-        public Transform _enemyTarget;
-        /// <summary>
-        /// 移動方向
-        /// </summary>
-        public Vector2 _MoveDirection;
-
-        public HeroDataController(HeroScript hs)
+        int _HeroLv = _Pdo.PlayerHeroLv;
+        float _Hp = _HeroLv * _Pdo.AddHp;
+        float _Attack = _HeroLv * _Pdo.AddAtk;
+        float _Def = _HeroLv * _Pdo.AddDef;
+        LayerMask _Lm = _DarkLayerMask;
+        if (!isDark) //如果是黑暗陣營
         {
-            _hs = hs;
-            _tf = _hs._Tf;
-            _rd = _hs._rg;
-            _enemyTarget = _hs._target;
-            _MoveDirection = Vector2.zero;
+            _HeroLv = _Glm.HeroLv;
+            _Hp = _HeroLv * _Glm.AddHp;
+            _Attack = _HeroLv * _Glm.AddAtk;
+            _Def = _HeroLv * _Glm.AddDef;
+            _Lm = _LayerMask;
         }
-        public void Phy2D()
-        {
-            Vector2 pos = _hs._tfposition;
-            _hs.PhyOverlapBoxAll(pos);
-        }
-        public void Move(Vector2 _dir)
-        {
-            _hs._tfposition = _tf.position;
-            #region 重新尋找目標
-            if (_hs._target == null)
-            {
-
-                List<Transform> _etfList = new List<Transform>(); //取得敵人清單
-                Transform _tf; //暫存敵人
-                Transform _thisTf = _hs._Tf; //暫存自己
-                float targetDistance = 0; //目標距離
-                float nextDistance = 0; //下一個距離
-                int targetIndex = 0; //目標索引
-                for (int i = 0; i < _etfList.Count; i++)
-                {
-                    _tf = _etfList[i];
-                    if (_tf == null)
-                    {
-
-                        continue;
-                    }
-                    if (i == 0) targetDistance = Vector2.Distance(_thisTf.position, _tf.position); //取得距離
-                    nextDistance = Vector2.Distance(_thisTf.position, _tf.position); //取得距離
-                    targetIndex = i;
-                    if (targetDistance > nextDistance) //如果距離比較小
-                    {
-                        targetDistance = nextDistance; //設定距離
-                        targetIndex = i; //設定目標索引
-                    }
-                }
-                _hs._target = _etfList[targetIndex]; //設定目標
-                return;
-            }
-            #endregion
-            Vector2 Pos = _hs._tfposition;
-            Vector2 Scale = _tf.localScale;
-            Vector2 enemyPos = _hs._target.position;
-            Scale.x = Mathf.Abs(Scale.x);
-            if (Pos.x > enemyPos.x)
-            {
-                Scale.x *= -1;
-            }
-            _tf.localScale = Scale;
-            Phy2D();
-            #region 衝刺攻擊 (未完成)
-
-            #endregion
-            if (_hs.enemyCollider.Length > 0)
-            {
-                _hs.HeroDuelStateFunc(HeroState.Attack, _hs._colliders, null);
-                return;
-            }
-            _hs.HeroDuelStateFunc(HeroState.Run, _dir);
-        }
+        _Hs._Tf = _Hs.transform;
+        _Hs._Go = _Hs.gameObject;
+        _Hs.Hp = (int)Mathf.Ceil(1000 * _Hp) + _Hs.BasicHp;
+        _Hs.HpMax = _Hs.Hp;
+        _Hs.Attack = (int)Mathf.Ceil(151 * _Attack) + (int)(_Hs.BasicConstitution * _Hs.BasicQuality);
+        _Hs.Def = (int)Mathf.Ceil(76 * _Def) + (int)(_Hs.BasicConstitution * _Hs.BasicQuality);
+        _Hs._gameManagerScript = this;
+        _Hs._UIHc = _UIHc;
+        _Hs._Joystick = _Joystick;
+        _Hs.enemyLayerMask = _Lm;
+        _Hs._Pdo = _Pdo;
+        Transform _tf = _Hs._Tf;
+        Vector2 _pos = _tf.position;
+        _pos.y += 2;
+        _Hs._Hps = Instantiate(_HpPrefabs, _pos, Quaternion.identity, _tf).HpDataInitializ();
+        _Hs.HeroInitializ();
+        HeroList.Add(_Hs);
     }
 
     #endregion
@@ -658,17 +474,16 @@ public class GameManager : LeadToSurviveGameBaseClass
     /// <summary>
     /// 兩邊士兵生產
     /// </summary>
-    private void MainFortressBaseProduceSoldier()
+    private void ProduceSoldier()
     {
         if (!isProduceSoldier) return;
-        if (_mainFortressScriptList.Count == 0) return;
-        MainFortressBaseScript _mfbs;
-        for (int i = 0; i < _mainFortressScriptList.Count; i++)
+        MainFortressScript _mfbs;
+        for (int i = 0; i < _MainFortressScriptList.Count; i++)
         {
-            _mfbs = _mainFortressScriptList[i];
+            _mfbs = _MainFortressScriptList[i];
             isProduceSoldier = false;
             if (_mfbs != null)
-                _mfbs.soldierProduceTimeNow += time;
+                _mfbs.soldierProduceTime += time;
             _mfbs.ProduceSoldier();
         }
         isProduceSoldier = true;
@@ -676,49 +491,45 @@ public class GameManager : LeadToSurviveGameBaseClass
     /// <summary>
     /// 士兵的動作資訊
     /// </summary>
-    public void SoldierState()
+    public void SoldierState(float _time)
     {
-        bool isGameOver = false;
-        if (_soldierList.Count < 0) return;
-        SoldierStateData _ssd = new SoldierStateData();
-        if (!isSoldierStateForAction) return;
+        if (_soldierList.Count == 0 || !isSoldierStateForAction) return;//如果士兵清單為0，或主堡清單為1，或執行迴圈狀態為false (上一輪還再執行)，則不執行
+
+
         SoldierScript _soldierScript;
+        Transform _tf;
+        Vector2 Pos;
         for (int i = 0; i < _soldierList.Count; i++)
         {
             isSoldierStateForAction = false;
             _soldierScript = _soldierList[i];
             if (_soldierScript == null) continue;
-            _soldierScript._Time = time;
-            isGameOver = _mainFortressScript.Count == 0; // 如果光明主堡清單為0，則遊戲結束
-            if (isGameOver) //如果遊戲結束，則全體士兵都進入等待
-                _soldierScript.Idle();
-
-            _soldierScript._animator.speed = 1;
-            if (isDuel)
+            if (_MainFortressScriptList.Count == 1 || isGameOver)  //如果遊戲結束，則全體士兵都進入等待
             {
                 _soldierScript.Idle();
-                _soldierScript._animator.speed = 0.2f;
                 continue;
             }
-            _ssd._soldierScript = _soldierScript;
-            _ssd._Tf = _soldierScript._Tf;
-            _ssd._Go = _soldierScript._Go;
-            _ssd._targetTransform = _soldierScript._enemyNowMainFortress;
-            _ssd._Rigidbody2 = _soldierScript._body2D;
-            _ssd.dT = time;
-            _ssd.enemyTarget = new List<MainFortressBaseScript>(); ;
-            if (_soldierScript.tag == staticPublicObjectsStaticName.DARKSoldierTag)
+            if (_soldierScript.soldierHp <= 0)
             {
-                if (_mainFortressScript.Count > 0)
-                    _ssd.enemyTarget.AddRange(_mainFortressScript);
+                _soldierScript.Die();
+                continue;
             }
-            else if (_soldierScript.tag == staticPublicObjectsStaticName.PlayerSoldierTag)
-            {
-                if (_darkMainFortressScript.Count > 0)
-                    _ssd.enemyTarget.AddRange(_darkMainFortressScript);
-            }
+            _soldierScript._Time = _time;
+            _tf = _soldierScript._Tf;
+            if (_tf == null) continue;
+            Pos = _tf.position;
 
-            _ssd.isMoveOrDie();
+            _soldierScript._animator.speed = 1;
+
+            _soldierScript.GetEmenyMainFortress(_MainFortressScriptList);
+            _soldierScript.PhyOverlapBoxAll(Pos);
+            if (_soldierScript._collider2D.Length > 0)
+            {
+                _soldierScript.Atk();
+                continue;
+            }
+            _soldierScript.Move();
+            _tf.position = Vector3.MoveTowards(Pos, _soldierScript._enemyNowMainFortress.position, _soldierScript.speed * _time);
         }
         if (isGameOver)
         {
@@ -729,82 +540,40 @@ public class GameManager : LeadToSurviveGameBaseClass
     }
 
     /// <summary>
-    /// 士兵的動作資訊
+    /// 附值
     /// </summary>
-    private struct SoldierStateData
+    /// <param name="_Ss">士兵腳本</param>
+    public void SoldierDataFormat(SoldierScript _Ss, bool isDark = true)
     {
-        public Transform _Tf;
-        public GameObject _Go;
-        public Transform _targetTransform;
-        public Rigidbody2D _Rigidbody2;
-        public SoldierScript _soldierScript;
-        public List<MainFortressBaseScript> enemyTarget;
-        public float dT;
-
-
-        public SoldierStateData(SoldierScript _sscript, float time, List<MainFortressBaseScript> _enemy)
+        int _soldierLv = _Pdo.soldierLv;
+        float _soldierHp = _soldierLv * _Pdo.soldierHp;
+        float _soldierAtk = _soldierLv * _Pdo.soldierAtk;
+        float _soldierDefense = _soldierLv * _Pdo.soldierDefense;
+        int BasicInt = (int)Mathf.Ceil(_Ss.BasicConstitution * _Ss.BasicQuality);
+        LayerMask _Lm = _DarkLayerMask;
+        if (!isDark) //如果是黑暗士兵
         {
-            _Tf = _sscript._Tf;
-            _Go = _sscript.gameObject;
-            _targetTransform = _sscript._enemyNowMainFortress;
-            _Rigidbody2 = _sscript._body2D;
-            _soldierScript = _sscript;
-            enemyTarget = _enemy;
-            dT = time;
+            _soldierLv = _Glm.soldierLv;
+            _soldierHp = _soldierLv * _Glm.soldierHp;
+            _soldierAtk = _soldierLv * _Glm.soldierAtk;
+            _soldierDefense = _soldierLv * _Glm.soldierDefense;
+            _Lm = _LayerMask;
         }
-        /// <summary>
-        /// 士兵的射線跟行動
-        /// </summary>
-        public void SoldierTarget()
-        {
-            if (_targetTransform == null)
-            {
-                _soldierScript.Idle();
-                float _targetDistance = 0;
-                float _nextDistance = 0;
-                Transform enemyTargetTransform;
-                int enemyTargetIndex = 0;
-                for (int i = 0; i < enemyTarget.Count; i++)
-                {
-                    if (enemyTarget[i] == null) continue;
-                    enemyTargetTransform = enemyTarget[i]._Tf;
-                    if (_targetDistance == 0 && _nextDistance == 0)
-                        _targetDistance = Vector3.Distance(_Tf.position, enemyTargetTransform.position);
-                    else
-                    {
-                        _nextDistance = Vector3.Distance(_Tf.position, enemyTargetTransform.position);
-                        if (_targetDistance > _nextDistance)
-                        {
-                            _targetDistance = _nextDistance;
-                            enemyTargetIndex = i;
-                        }
-                    }
-                }
-                enemyTargetTransform = enemyTarget[enemyTargetIndex]._Tf;
-                _soldierScript._enemyNowMainFortress = enemyTargetTransform;
-                return;
-            }
-            Vector2 pos = _Tf.position;
-            _soldierScript.PhyOverlapBoxAll(pos);
-            if (_soldierScript._collider2D.Length > 0)
-            {
-                _soldierScript.Atk();
-                return;
-            }
-            _soldierScript.Move();
-            _Tf.position = Vector3.MoveTowards(_Tf.position, _targetTransform.position, _soldierScript.speed * dT);
-        }
-        /// <summary>
-        /// 是否已經死亡
-        /// </summary>
-        public void isMoveOrDie()
-        {
-            if (_soldierScript.soldierHp > 0)
-                SoldierTarget();
-            else
-                _soldierScript.Die();
-        }
+        _Ss._Tf = _Ss.transform;
+        _Ss._Go = _Ss.gameObject;
+        _Ss.soldierHp = (int)Mathf.Ceil(500 * _soldierHp) + _Ss.BasicHp;
+        _Ss.soldierHpMax = _Ss.soldierHp;
+        _Ss.soldierAtk = (int)Mathf.Ceil(102 * _soldierAtk) + BasicInt;
+        _Ss.soldierDefense = (int)Mathf.Ceil(51 * _soldierDefense) + BasicInt;
+        Vector2 _pos = _Ss._Tf.position;
+        _pos.y += 2;
+        _Ss._Hps = Instantiate(_HpPrefabs, _pos, Quaternion.identity, _Ss._Tf).HpDataInitializ();
+        _Ss._gameManagerScript = this;
+        _Ss._enemyLayerMask = _Lm;
+        _Ss.SoldierDataInitializ();
+        _soldierList.Add(_Ss);
     }
+
     #endregion
 
     #region 功能型方法
@@ -826,26 +595,52 @@ public class GameManager : LeadToSurviveGameBaseClass
         _tf.localScale = _scale;
         _Direction = Vector2.right * _direction;
     }
-    public Vector2 CorrectionDirection(Transform _tf, Transform _EnemyTf)
+    /// <summary>
+    /// 會同時調整兩個目標的方向
+    /// </summary>
+    /// <param name="_tf">主要角色</param>
+    /// <param name="_EnemyTf">對手角色</param>
+    /// <returns>返回方向X軸1或-1的Vector2</returns>
+    public Vector2 CorrectionDirection(Transform _tf, Transform _EnemyTf, bool SettingEnemyDirection = true)
     {
         if (_EnemyTf == null) return Vector2.zero;
         int _direction = 1;
-        Vector2 _scale = _tf.localScale;
+        Vector2 _scale = _tf.localScale;  // _tf的 scale
         _scale.x = Mathf.Abs(_scale.x);
         if (_tf.position.x > _EnemyTf.position.x)
         {
             _scale.x *= -1;
             _direction = -1;
         }
-        _tf.localScale = _scale;
-        return Vector2.right * _direction;
+        _tf.localScale = _scale; // 設定 _tf 的 scale
+
+        if (SettingEnemyDirection) // 如果需要設定 _EnemyTf 的 scales
+        {
+            _scale = _EnemyTf.localScale;
+            _scale.x = Mathf.Abs(_scale.x);
+            if (_tf.position.x < _EnemyTf.position.x)
+            {
+                _scale.x *= -1;
+            }
+            _EnemyTf.localScale = _scale; // 設定 _EnemyTf 的 scales
+        }
+
+        return Vector2.right * _direction; // 只返回 _tf 的方向
     }
     /// <summary>
     /// 本場遊戲結束
     /// </summary>
     public void GameOver()
     {
-        if (_mainFortressScript.Count > 0) return;
+        if (_MainFortressScriptList.Count > 1 && isGameOver) return;
+        for (int i = 0; i < _MainFortressScriptList.Count; i++)
+        {
+            if (_MainFortressScriptList[i].CompareTag(staticPublicObjectsStaticName.MainFortressTag))
+            {
+                return;
+            }
+        }
+        isGameOver = true;
         uiScript.GameOverUI();
     }
 
@@ -863,14 +658,65 @@ public class GameManager : LeadToSurviveGameBaseClass
     /// <summary>
     /// 主堡爆了
     /// </summary>
-    public void MainFortressOver(MainFortressBaseScript _mfb)
+    public void MainFortressOver(MainFortressScript _mfb)
     {
         if (_mfb == null) return;
-        RemoveFromList(_mainFortressScriptList, _mfb);
-        if (_mfb is MainFortressScript)
-            RemoveFromList(_mainFortressScript, _mfb as MainFortressScript);
-        else if (_mfb is DarkMainFortressScript)
-            RemoveFromList(_darkMainFortressScript, _mfb as DarkMainFortressScript);
+        RemoveFromList(_MainFortressScriptList, _mfb);
+        GameOver();
+    }
+    /// <summary>
+    /// 光明主堡資料重置
+    /// </summary>
+    /// <param name="_mfb">主堡腳本</param>
+    public void MainFortressDataFormat(MainFortressScript _mfb)
+    {
+        if (_Pdo == null)
+        {
+            MainFortressDataFormat(_mfb);
+            return;
+        }
+        if (_mfb == null) return;
+
+        _mfb._hp = _Pdo.maxhp;
+        _mfb._MaxHp = _Pdo.maxhp;
+        _mfb.soldierProduceTimeMax = _Pdo.soldierProduceTimeMax;
+        _mfb._soldierCount = _Pdo.soldierCount;
+        _mfb.ProduceHeroTimeMax = _Pdo.ProduceHeroTimeMax;
+
+        _mfb.selectedSoldierList.AddRange(_Pdo.soldierSelectedList); // 把士兵加入士兵清單
+        _mfb.GetHeroList.AddRange(_Pdo.SelectedHeroList); // 把英雄加入英雄清單
+        _mfb.selectedHeroList.AddRange(_Pdo.SelectedHeroList); // 把英雄加入英雄清單
+        _MainFortressScriptList.Add(_mfb);
+        _mfb.MainFortressHpTextMeshPro(); // 更新主堡血量文字
+        _mfb.MainForTressSoldierCountTextMeshPro(); // 更新主堡兵數文字
+    }
+    /// <summary>
+    /// 黑暗主堡資料重置
+    /// </summary>
+    /// <param name="_mfb">主堡腳本</param>
+    public void MainFortressDataFormat(DarkMainFortressScript _mfb)
+    {
+        if (_Glm == null)
+        {
+            _Glm = FindObjectOfType<GameLevelManager>();
+            MainFortressDataFormat(_mfb);
+            return;
+        }
+        if (_mfb == null) return;
+        _mfb._hp = _Glm.maxhp;
+        _mfb._MaxHp = _Glm.maxhp;
+
+        _mfb.soldierProduceTimeMax = _Glm.soldierProduceTimeMax;
+        _mfb._soldierCount = _Glm.soldierCount;
+        _mfb.ProduceHeroTimeMax = _Glm.ProduceHeroTimeMax;
+
+        _mfb.selectedSoldierList.AddRange(_Glm.soldierSelectedList); // 把士兵加入士兵清單
+        _mfb.GetHeroList.AddRange(_Glm.SelectedHeroList); // 把英雄加入英雄清單
+        _mfb.selectedHeroList.AddRange(_Glm.SelectedHeroList); // 把英雄加入英雄清單
+        _MainFortressScriptList.Add(_mfb);
+        _mfb.MainFortressHpTextMeshPro(); // 更新主堡血量文字
+        _mfb.MainForTressSoldierCountTextMeshPro(); // 更新主堡兵數文字
+
     }
     #endregion
 }

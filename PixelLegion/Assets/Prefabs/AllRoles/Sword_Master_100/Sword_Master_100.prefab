@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8786818326334388748}
   - component: {fileID: 2264714189186204308}
   - component: {fileID: 2171926007529818246}
+  - component: {fileID: -161056982274312508}
   m_Layer: 0
   m_Name: Sword_Master_100
   m_TagString: Untagged
@@ -185,43 +186,44 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Tf: {fileID: 0}
   _Go: {fileID: 0}
-  _heroDataObject: {fileID: 11400000, guid: 89926b988e2012148bac3278d8965c73, type: 2}
+  _Pdo: {fileID: 0}
+  BasicQuality: 0.385
+  BasicConstitution: 70
+  BasicHp: 2000
   HeroID: 
   HeroName: 
+  HeroAvatar: {fileID: 21300000, guid: 44ac49a24d7fc2d40840e0febc482b43, type: 3}
   Hp: 1000
   Attack: 0
   Def: 0
-  HeroAvatar: {fileID: 21300000, guid: 44ac49a24d7fc2d40840e0febc482b43, type: 3}
+  Percentage: 0
   _gameManagerScript: {fileID: 0}
   heroController: {fileID: 0}
-  _tfposition: {x: 0, y: 0}
   _rg: {fileID: 0}
   _colliders: []
   _animator: {fileID: 0}
-  playAnimationTimeMax: 0.02
-  playAnimationTime: 0
   _Time: 0
   enemyLayerMask:
     serializedVersion: 2
     m_Bits: 0
   enemyCollider: []
-  dashDistance: 3
   phySize: 6
   PhyOffset: 3.2
   flootLayer:
     serializedVersion: 2
     m_Bits: 0
   isfloot: 0
+  _target: {fileID: 0}
   isPlayerControl: 0
   IsItPossibleToDuel: 0
-  _target: {fileID: 0}
   speed: 14
   _HeroNowState: 0
-  _HeroChengState: 0
   movAtk: []
   isMovAtk: 0
   jumpAtk: 
   isJumpAtk: 0
+  heavyAttack: 
+  isHeavyAttack: 0
   dash: 
   isDash: 0
   IsItPossibleToDash: 0
@@ -245,9 +247,41 @@ MonoBehaviour:
   miss1: 
   isMiss1: 0
   IsItPossibleMiss: 0
-  duel: 
-  isDuel: 0
   atk: []
   run: 
   idle: 
   die: 
+  _AudioSource: {fileID: 0}
+  _AudioSourceHit: {fileID: 0}
+  _Joystick: {fileID: 0}
+  _Hc: {fileID: 0}
+  _UIHc: {fileID: 0}
+  AtkCount: 0
+  AtkTime: 0
+  AtkTimeMax: 0.9
+  MissTime: 0
+  DashTime: 0.3
+  RollTime: 0.5
+  DefTimeMax: 2
+  DefTime: 0
+  isNowDef: 0
+  isAnimationFrameStorp: 0
+  AnimationFrameStorpTime: 0
+  AnimationFrameStorpTimeMax: 0.2
+  DefParticle: {fileID: 0}
+  HitParticle: {fileID: 0}
+--- !u!114 &-161056982274312508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7742706241643761767}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3b16670b02646140844a59373535cec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _UIHc: {fileID: 0}
+  _Joystick: {fileID: 0}
+  _Hs: {fileID: 0}

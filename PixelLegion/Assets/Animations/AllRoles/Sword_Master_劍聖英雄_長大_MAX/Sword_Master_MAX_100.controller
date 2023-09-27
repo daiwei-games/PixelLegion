@@ -319,7 +319,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Sword_Master_MAX_100_Defense1
+  m_Name: Sword_Master_MAX_100_Defense2
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -464,10 +464,10 @@ AnimatorStateMachine:
     m_Position: {x: 570, y: 280, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -259843513015129528}
-    m_Position: {x: 90, y: 280, z: 0}
+    m_Position: {x: 90, y: 360, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 6428219110597920400}
-    m_Position: {x: 90, y: 360, z: 0}
+    m_Position: {x: 90, y: 280, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1682832452032548100}
     m_Position: {x: 90, y: 520, z: 0}
@@ -573,7 +573,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Sword_Master_MAX_100_Defense2
+  m_Name: Sword_Master_MAX_100_Defense1
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []

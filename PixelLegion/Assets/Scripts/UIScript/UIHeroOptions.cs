@@ -1,18 +1,13 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
-public class UIHeroOptions : UIScript
+using TMPro;
+public class UIHeroOptions : LeadToSurviveGameBaseClass
 {
-    /// <summary>
-    /// 取得玩家管理器
-    /// </summary>
-    [Header("取得玩家管理器、腳本"), SerializeField]
-    private GameObject _playerManager;
+    private GameManager _Gm;
     /// <summary>
     /// 取得玩家管理器腳本
     /// </summary>
-    [SerializeField]
     private PlayerScript _playerScript;
     /// <summary>
     /// 英雄按鈕清單
@@ -23,44 +18,36 @@ public class UIHeroOptions : UIScript
     /// <summary>
     /// 英雄按鈕總數
     /// </summary>
+    [HideInInspector]
     public int ButtonCount;
     /// <summary>
     /// 英雄清單按鈕的索引
     /// </summary>
-    private int HeroListIndex;
-    private void Awake()
+    [HideInInspector]
+    public int HeroListIndex;
+    private void Start()
     {
         GUIDataInitializ();
     }
 
-    public override void GUIDataInitializ()
+    public void GUIDataInitializ()
     {
         _Tf = transform;
         _Go = gameObject;
+        _Gm = FindFirstObjectByType<GameManager>();
+        _playerScript = FindFirstObjectByType<PlayerScript>();
+        if (_playerScript != null) _playerScript.HeroUI = this;
 
-        _playerManager = GameObject.Find("PlayerManager");
-        if (_playerManager != null)
-        {
-            _playerScript = _playerManager.GetComponent<PlayerScript>();
-            if (_playerScript != null)
-            {
-                _playerScript.HeroUI = this;
-            }
-            ButtonCount = _playerScript._playerDataObject.SelectedHeroList.Count;
-        }
-
+        ButtonCount = _playerScript.HeroCount;
         Button _but = HeroButtonUI[0];
-        if (ButtonCount < 3) ButtonCount = 3;
+        if (ButtonCount < 1) ButtonCount = 1;
         while (HeroButtonUI.Count < ButtonCount)
         {
             HeroButtonUI.Add(Instantiate(_but, _but.transform.parent));
         }
-        if (HeroButtonUI.Count > 0)
+        for (int e = 0; e < ButtonCount; e++)
         {
-            for (int i = 0; i < HeroButtonUI.Count; i++)
-            {
-                HeroSpriteRenderer.Add(HeroButtonUI[i].GetComponent<Image>());
-            }
+            HeroSpriteRenderer.Add(HeroButtonUI[e].GetComponent<Image>());
         }
         HeroListIndex = 0;
     }
@@ -86,7 +73,9 @@ public class UIHeroOptions : UIScript
     /// </summary>
     public void SelectedHeroEvent(HeroScript _hero)
     {
-        if (_gameManagerScript.HeroList.Count == 0) return;
-        _gameManagerScript.SelectedHeroFunc(_hero);
+        if (_Gm.HeroList.Count == 0) return;
+        _Gm.SelectedHeroFunc(_hero);
     }
+
+
 }

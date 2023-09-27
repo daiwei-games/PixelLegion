@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 
-public class UIGameOverScript : UIScript
+public class UIGameOverScript : LeadToSurviveGameBaseClass
 {
     /// <summary>
     /// 取得重新開始遊戲的按鈕
@@ -15,7 +15,7 @@ public class UIGameOverScript : UIScript
     {
         GUIDataInitializ();
     }
-    public override void GUIDataInitializ()
+    public void GUIDataInitializ()
     {
 
         _Tf = transform;

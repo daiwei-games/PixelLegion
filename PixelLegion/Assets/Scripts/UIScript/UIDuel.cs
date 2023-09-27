@@ -29,34 +29,6 @@ public class UIDuel : LeadToSurviveGameBaseClass
 
 
         Transform ButtonTf;
-        ButtonTf = _Tf.Find("Duel-Attack");
-        if(ButtonTf != null)
-        {
-            DuelAttack = ButtonTf.GetComponent<Button>();
-            if(DuelAttack != null)
-            {
-                DuelAttack.onClick.AddListener(() =>
-                {
-                    GameManagerScript.OnDuelAttack();
-                });
-            }
-        }
-
-        ButtonTf = null;
-        ButtonTf = _Tf.Find("Duel-Def");
-        if (ButtonTf != null)
-        {
-            DuelDef = ButtonTf.GetComponent<Button>();
-            if (DuelDef != null)
-            {
-                DuelDef.onClick.AddListener(() =>
-                {
-                    GameManagerScript.OnDuelDef();
-                });
-            }
-
-        }
-        ButtonTf = null;
         ButtonTf = _Tf.Find("Duel-AUTO");
         if (ButtonTf != null)
         {
@@ -81,7 +53,7 @@ public class UIDuel : LeadToSurviveGameBaseClass
                 DuelOff.onClick.AddListener(() =>
                 {
                     // 關閉決鬥
-                    GameManagerScript.DuelEnd();
+                    GameManagerScript.CloseDuelUI();
                 });
             }
         }

@@ -1,4 +1,6 @@
-﻿namespace Assets.Scripts
+﻿using UnityEditor;
+
+namespace Assets.Scripts
 {
     /// <summary>
     /// 公用的物件名稱
@@ -72,6 +74,15 @@
         /// 主要攝影機圖層
         /// </summary>
         public const string MainCameraLayer = "MainCamera";
+
+        /// <summary>
+        /// 地板 Tag
+        /// </summary>
+        public const string FlootTag = "floot";
+        /// <summary>
+        /// 地板圖層
+        /// </summary>
+        public const string FlooLayer = "Floot";
         #endregion
     }
 }

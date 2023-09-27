@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 7727541760490572647}
   - component: {fileID: 1754580548978315550}
   - component: {fileID: 675743715348400556}
-  - component: {fileID: 7253907287067673300}
   - component: {fileID: 3129972536348184472}
+  - component: {fileID: 5866190201159287123}
   - component: {fileID: 8501007126662567594}
+  - component: {fileID: -8228338787304535285}
   m_Layer: 0
   m_Name: Sword_Master_MAX_100
   m_TagString: Player
@@ -115,7 +116,28 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!70 &7253907287067673300
+--- !u!95 &3129972536348184472
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5987471233777006659}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 24a33ca10283fdf4c90c9f4e21884bde, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!70 &5866190201159287123
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -147,30 +169,9 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.08604884, y: -0.41170943}
-  m_Size: {x: 1.0525172, y: 2.9584982}
+  m_Offset: {x: 0.10254097, y: -0.45629096}
+  m_Size: {x: 1.1311245, y: 3.045916}
   m_Direction: 0
---- !u!95 &3129972536348184472
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5987471233777006659}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 24a33ca10283fdf4c90c9f4e21884bde, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &8501007126662567594
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -185,43 +186,44 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Tf: {fileID: 0}
   _Go: {fileID: 0}
-  _heroDataObject: {fileID: 11400000, guid: 89926b988e2012148bac3278d8965c73, type: 2}
+  _Pdo: {fileID: 0}
+  BasicQuality: 0.33
+  BasicConstitution: 70
+  BasicHp: 2500
   HeroID: 
   HeroName: 
+  HeroAvatar: {fileID: 21300000, guid: 9b133bd0a9bd42c45b0872aa5c1bdfae, type: 3}
   Hp: 1000
   Attack: 0
   Def: 0
-  HeroAvatar: {fileID: 21300000, guid: 9b133bd0a9bd42c45b0872aa5c1bdfae, type: 3}
+  Percentage: 0
   _gameManagerScript: {fileID: 0}
   heroController: {fileID: 0}
-  _tfposition: {x: 0, y: 0}
   _rg: {fileID: 0}
   _colliders: []
   _animator: {fileID: 0}
-  playAnimationTimeMax: 0.02
-  playAnimationTime: 0
   _Time: 0
   enemyLayerMask:
     serializedVersion: 2
     m_Bits: 0
   enemyCollider: []
-  dashDistance: 3
   phySize: 7
   PhyOffset: 4
   flootLayer:
     serializedVersion: 2
     m_Bits: 0
   isfloot: 0
+  _target: {fileID: 0}
   isPlayerControl: 0
   IsItPossibleToDuel: 0
-  _target: {fileID: 0}
   speed: 15
   _HeroNowState: 0
-  _HeroChengState: 0
   movAtk: []
   isMovAtk: 0
   jumpAtk: 
   isJumpAtk: 0
+  heavyAttack: 
+  isHeavyAttack: 0
   dash: 
   isDash: 0
   IsItPossibleToDash: 0
@@ -245,9 +247,41 @@ MonoBehaviour:
   miss1: 
   isMiss1: 0
   IsItPossibleMiss: 0
-  duel: 
-  isDuel: 0
   atk: []
   run: 
   idle: 
   die: 
+  _AudioSource: {fileID: 0}
+  _AudioSourceHit: {fileID: 0}
+  _Joystick: {fileID: 0}
+  _Hc: {fileID: 0}
+  _UIHc: {fileID: 0}
+  AtkCount: 0
+  AtkTime: 0
+  AtkTimeMax: 0.8
+  MissTime: 0.3
+  DashTime: 0.3
+  RollTime: 0.5
+  DefTimeMax: 2
+  DefTime: 0
+  isNowDef: 0
+  isAnimationFrameStorp: 0
+  AnimationFrameStorpTime: 0
+  AnimationFrameStorpTimeMax: 0.2
+  DefParticle: {fileID: 0}
+  HitParticle: {fileID: 0}
+--- !u!114 &-8228338787304535285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5987471233777006659}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3b16670b02646140844a59373535cec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _UIHc: {fileID: 0}
+  _Joystick: {fileID: 0}
+  _Hs: {fileID: 0}

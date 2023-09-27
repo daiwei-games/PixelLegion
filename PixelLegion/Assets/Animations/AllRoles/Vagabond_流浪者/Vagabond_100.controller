@@ -81,7 +81,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Vagabond_100_Atk4
+  m_Name: Vagabond_100_Heavy_Attack
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -241,34 +241,34 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: 3633240844431510468}
-    m_Position: {x: 200, y: 0, z: 0}
+    m_Position: {x: 30, y: 230, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 7667341636259098742}
-    m_Position: {x: 235, y: 65, z: 0}
+    m_Position: {x: 280, y: 230, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -3277730323929600146}
-    m_Position: {x: 270, y: 130, z: 0}
+    m_Position: {x: 280, y: 300, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -1391754150751051931}
-    m_Position: {x: 305, y: 195, z: 0}
+    m_Position: {x: 280, y: 370, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 2401231516319179927}
-    m_Position: {x: 340, y: 260, z: 0}
+    m_Position: {x: -210, y: 230, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 6267638350990804876}
-    m_Position: {x: 375, y: 325, z: 0}
+    m_Position: {x: 30, y: 370, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 965645018719585401}
-    m_Position: {x: 410, y: 390, z: 0}
+    m_Position: {x: 30, y: 440, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1043265532833660388}
-    m_Position: {x: 445, y: 455, z: 0}
+    m_Position: {x: 30, y: 510, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 3372147040588121973}
-    m_Position: {x: 480, y: 520, z: 0}
+    m_Position: {x: 30, y: 300, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 694705984482811199}
-    m_Position: {x: 515, y: 585, z: 0}
+    m_Position: {x: 280, y: 440, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -286,7 +286,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Vagabond_100_Def
+  m_Name: Vagabond_100_Defense1
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []

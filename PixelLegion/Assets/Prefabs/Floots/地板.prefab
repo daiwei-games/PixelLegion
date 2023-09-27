@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4046809185617581575}
   - component: {fileID: 8303255686611002294}
   - component: {fileID: 2185605899056107295}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Floot_200
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3303,9 +3303,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1659627253227791402}
   - component: {fileID: 6302930272649650364}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: "\u5730\u677F"
-  m_TagString: Untagged
+  m_TagString: floot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

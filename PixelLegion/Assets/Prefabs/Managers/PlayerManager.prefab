@@ -44,11 +44,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 362ef6fb1feb41441bb6b850e0dcd209, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerDataObject: {fileID: 11400000, guid: 48f8c93f30b3f1440b78d4706258dbe5, type: 2}
-  _transform: {fileID: 0}
-  GetHeroList: []
-  ProduceHeroTime: 0
-  ProduceHeroTimeMax: 0
+  _Tf: {fileID: 0}
+  _Go: {fileID: 0}
+  _Dom: {fileID: 0}
+  _GameManager: {fileID: 0}
   HeroUI: {fileID: 0}
-  _gameManager: {fileID: 0}
-  _gameManagerScript: {fileID: 0}
+  HeroCount: 0
+  PlayerDataObject: {fileID: 11400000, guid: 48f8c93f30b3f1440b78d4706258dbe5, type: 2}
