@@ -1,6 +1,8 @@
 ﻿using Assets.Scripts;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UIElements;
+using System.Linq;
 
 /// <summary>
 /// 敵人主堡
@@ -37,9 +39,6 @@ public class DarkMainFortressScript : MainFortressScript
                     break;
             }
         }
-
-        soldierProduceTime = soldierProduceTimeMax;
-        ProduceHeroTime = ProduceHeroTimeMax;
         _gameManagerScript.MainFortressDataFormat(this);
         GetEnemyMainFortress();
     }
@@ -53,7 +52,6 @@ public class DarkMainFortressScript : MainFortressScript
     {
         if (_soldierCount == 0) return;
         if (selectedSoldierList.Count == 0) return;
-        if (_gameManagerScript._soldierList.Count >= 200) return; // 士兵數量超過300不產生
         if (soldierProduceTime >= soldierProduceTimeMax)
         {
             //產生士兵
@@ -68,7 +66,7 @@ public class DarkMainFortressScript : MainFortressScript
             {
                 for (int i = 0; i < enemyMainFortressList.Count; i++)
                 {
-                    _enemymf = enemyMainFortressList[i];
+                    _enemymf = enemyMainFortressList[i].transform;
                     if (_enemymf == null)
                     {
                         enemyMainFortressList.RemoveAt(i);
@@ -89,9 +87,16 @@ public class DarkMainFortressScript : MainFortressScript
                         if (WhoHitMeTransform.Count > 0) // 如果有被攻擊，就將敵人變成目標
                         {
                             Transform _whotf;
+                            Collider2D _Col2D;
                             for (int whoHitMeIndex = 0; whoHitMeIndex < WhoHitMeTransform.Count; whoHitMeIndex++)
                             {
-                                _whotf = WhoHitMeTransform[whoHitMeIndex];
+                                _Col2D = WhoHitMeTransform[whoHitMeIndex];
+                                if (_Col2D == null)
+                                {
+                                    WhoHitMeTransform.RemoveAt(whoHitMeIndex);
+                                    continue;
+                                }
+                                _whotf = _Col2D.transform;
                                 if (_whotf == null)
                                 {
                                     WhoHitMeTransform.RemoveAt(whoHitMeIndex);
@@ -119,6 +124,7 @@ public class DarkMainFortressScript : MainFortressScript
         if (_hp <= 0) return;
         _hp -= hit;
         MainFortressHpTextMeshPro();
+        _gameManagerScript.CastleUnderAttack(_Tf, WhoHitMeTransform);
         if (_hp <= 0)
         {
             _gameManagerScript.MainFortressOver(this);
@@ -141,11 +147,6 @@ public class DarkMainFortressScript : MainFortressScript
         }
     }
 
-
-
-
-
-    
     /// <summary>
     /// 創建英雄
     /// </summary>
@@ -166,5 +167,25 @@ public class DarkMainFortressScript : MainFortressScript
 
         _hero.GetEmenyTarget(_gameManagerScript._MainFortressScriptList);
         _gameManagerScript.HeroDataFormat(_hero, false); //設定英雄資料
+    }
+
+
+    public override void PhyOverlapBoxAll(LayerMask _layermask)
+    {
+        PhySize = Vector2.one * Physics2DSize;
+        PhySize.y *= 2;
+        Collider2D[] _collider2D = Physics2D.OverlapBoxAll(_Tf.position, PhySize, 0, _layermask);
+        if (_collider2D.Length > 0)
+        {
+            WhoHitMeTransform = _collider2D.ToList();
+        }
+    }
+    void OnDrawGizmos()
+    {
+        if (_Tf == null) return;
+        PhySize = Vector2.one * Physics2DSize;
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireCube(_Tf.position, PhySize);
     }
 }

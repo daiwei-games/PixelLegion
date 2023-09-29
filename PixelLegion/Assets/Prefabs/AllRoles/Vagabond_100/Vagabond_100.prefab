@@ -188,13 +188,16 @@ MonoBehaviour:
   _Go: {fileID: 0}
   _Pdo: {fileID: 0}
   BasicQuality: 0.15
-  BasicConstitution: 5
+  BasicConstitution: 20
   BasicHp: 1500
   HeroID: 
   HeroName: 
   HeroAvatar: {fileID: 21300000, guid: c191c8cfe72c89d44a957d38fa23621b, type: 3}
   Hp: 1000
+  HpMax: 0
   Attack: 0
+  AttackCriticalHitRate: 10
+  AttackMagnification: 2
   Def: 0
   Percentage: 0
   _gameManagerScript: {fileID: 0}
@@ -213,6 +216,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   isfloot: 0
+  _enemyNowMainFortress: {fileID: 0}
   _target: {fileID: 0}
   isPlayerControl: 0
   IsItPossibleToDuel: 0
@@ -257,6 +261,7 @@ MonoBehaviour:
   _Hc: {fileID: 0}
   _UIHc: {fileID: 0}
   AtkCount: 0
+  CameraCenterScript: {fileID: 0}
   AtkTime: 0
   AtkTimeMax: 1.6
   MissTime: 0
@@ -268,8 +273,13 @@ MonoBehaviour:
   isAnimationFrameStorp: 0
   AnimationFrameStorpTime: 0
   AnimationFrameStorpTimeMax: 0.2
+  isCameraShake: 0
+  CameraShakeTime: 0
+  CameraShakeTimeMax: 0.5
   DefParticle: {fileID: 0}
   HitParticle: {fileID: 0}
+  _Hps: {fileID: 0}
+  _Defs: {fileID: 0}
 --- !u!114 &5072195277329411122
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -285,3 +295,5 @@ MonoBehaviour:
   _UIHc: {fileID: 0}
   _Joystick: {fileID: 0}
   _Hs: {fileID: 0}
+  CameraTf: {fileID: 0}
+  CameraPos: {x: 0, y: 0, z: 0}

@@ -2,6 +2,7 @@
 using TMPro;
 using Assets.Scripts;
 using System.Collections.Generic;
+using System.Linq;
 
 public class MainFortressScript : LeadToSurviveGameBaseClass
 {
@@ -70,7 +71,7 @@ public class MainFortressScript : LeadToSurviveGameBaseClass
     /// <summary>
     /// 誰打我變成目標
     /// </summary>
-    public List<Transform> WhoHitMeTransform;
+    public List<Collider2D> WhoHitMeTransform;
 
 
     /// <summary>
@@ -101,7 +102,11 @@ public class MainFortressScript : LeadToSurviveGameBaseClass
     /// </summary>
     [Header("英雄選擇介面")]
     public UIHeroOptions HeroUI;
+    #endregion
 
+    #region 射線
+    public float Physics2DSize;
+    public Vector2 PhySize;
     #endregion
     private void Start()
     {
@@ -131,10 +136,8 @@ public class MainFortressScript : LeadToSurviveGameBaseClass
                     break;
             }
         }
-        soldierProduceTime = soldierProduceTimeMax;
-        ProduceHeroTime = ProduceHeroTimeMax;
 
-        HeroUI = FindFirstObjectByType<UIHeroOptions>(); // 取得英雄選擇介面
+        //HeroUI = FindFirstObjectByType<UIHeroOptions>(); // 取得英雄選擇介面
         _gameManagerScript.MainFortressDataFormat(this); // 將主堡資料傳給
         GetEnemyMainFortress();
     }
@@ -145,7 +148,6 @@ public class MainFortressScript : LeadToSurviveGameBaseClass
     {
         if (_soldierCount == 0) return;
         if (selectedSoldierList.Count == 0) return;
-        if (_gameManagerScript._soldierList.Count >= 300) return; // 士兵數量超過300不產生
         if (soldierProduceTime >= soldierProduceTimeMax)
         {
             //產生士兵
@@ -183,9 +185,16 @@ public class MainFortressScript : LeadToSurviveGameBaseClass
                         if (WhoHitMeTransform.Count > 0) // 如果有被攻擊，就將敵人變成目標
                         {
                             Transform _whotf;
+                            Collider2D _Col2D;
                             for (int whoHitMeIndex = 0; whoHitMeIndex < WhoHitMeTransform.Count; whoHitMeIndex++)
                             {
-                                _whotf = WhoHitMeTransform[whoHitMeIndex];
+                                _Col2D = WhoHitMeTransform[whoHitMeIndex];
+                                if (_Col2D == null)
+                                {
+                                    WhoHitMeTransform.RemoveAt(whoHitMeIndex);
+                                    continue;
+                                }
+                                _whotf = _Col2D.transform;
                                 if (_whotf == null)
                                 {
                                     WhoHitMeTransform.RemoveAt(whoHitMeIndex);
@@ -211,6 +220,7 @@ public class MainFortressScript : LeadToSurviveGameBaseClass
     {
         if (_hp <= 0) return;
         _hp -= hit;
+        _gameManagerScript.CastleUnderAttack(_Tf, WhoHitMeTransform);
         MainFortressHpTextMeshPro();
 
         if (_hp <= 0)
@@ -277,5 +287,26 @@ public class MainFortressScript : LeadToSurviveGameBaseClass
         if (_soldierCountMeshPro == null) return;
         _soldierCountMeshPro.text = $"{_soldierCount}";
     }
+
+    public virtual void PhyOverlapBoxAll(LayerMask _layermask)
+    {
+
+        PhySize = Vector2.one * Physics2DSize;
+        PhySize.y *= 2;
+        Collider2D[] _collider2D = Physics2D.OverlapBoxAll(_Tf.position, PhySize, 0, _layermask);
+        if (_collider2D.Length > 0)
+        {
+            WhoHitMeTransform = _collider2D.ToList();
+        }
+    }
+    void OnDrawGizmos()
+    {
+        if (_Tf == null) return;
+        PhySize = Vector2.one * Physics2DSize;
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireCube(_Tf.position, PhySize);
+    }
     #endregion
+
 }

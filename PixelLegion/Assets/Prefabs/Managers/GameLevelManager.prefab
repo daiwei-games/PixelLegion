@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7536768269943488470
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6654025715741072513}
+  - component: {fileID: 2168860271857422071}
+  m_Layer: 0
+  m_Name: GameLevelManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6654025715741072513
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7536768269943488470}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2168860271857422071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7536768269943488470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2bbc1189a6f313441b8580d660b7d072, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SelectedHeroList:
+  - {fileID: 2171926007529818246, guid: 68dc7233b28931e499b18c1d99cf9ca8, type: 3}
+  - {fileID: 1391381661868710111, guid: cbb6aef24f0971c4696d020754c259d4, type: 3}
+  HeroLv: 1
+  AddHp: 0.2
+  AddAtk: 0.2
+  AddDef: 0.2
+  Percentage: 0.505
+  ProduceHeroTimeMax: 10
+  soldierSelectedList:
+  - {fileID: 8428870900922309320, guid: 3c494e5edcf7c544fa911168a570a9f0, type: 3}
+  soldierLv: 1
+  soldierHp: 0.02
+  soldierAtk: 0.02
+  soldierDefense: 0.02
+  maxhp: 2000
+  soldierCount: 30
+  soldierProduceTimeMax: 4
+  GameLevel: 

@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// 士兵計算生產間隔
     /// </summary>
-    [Header("士兵計算生產間隔"), SerializeField, Range(0.01f, 10)]
+    [Header("士兵計算生產間隔"), SerializeField, Range(0f, 10)]
     public float ProduceSoldierTimeMax;
     public float ProduceSoldierTime;
     /// <summary>
@@ -43,6 +43,11 @@ public class GameManager : MonoBehaviour
     /// </summary>
     [Header("已經產生的英雄清單")]
     public List<HeroScript> HeroList;
+    /// <summary>
+    /// 士兵數量限制
+    /// </summary>
+    [Header("士兵數量限制")]
+    public int _GmSoldierCountMax;
     /// <summary>
     /// 是否再次執行士兵動作迴圈
     /// </summary>
@@ -54,17 +59,20 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// UI腳本
     /// </summary>
+    [Header("UI腳本"), HideInInspector]
     public UIScript uiScript;
 
     /// <summary>
     /// 是否再次執行英雄動作迴圈的判斷
     /// </summary>
+    [HideInInspector]
     public bool isHeroStateForAction;
     /// <summary>
     /// 產生英雄計算間隔
     /// </summary>
-    [Header("產生英雄計算間隔"), Range(0.01f, 10)]
+    [Header("產生英雄計算間隔"), Range(0f, 10)]
     public float ProduceHeroTimeMax;
+    [HideInInspector]
     public float ProduceHeroTime;
     /// <summary>
     /// 選擇的英雄頭上出現指標
@@ -90,7 +98,10 @@ public class GameManager : MonoBehaviour
     /// 玩家英雄操作的操控介面
     /// </summary>
     public UIHeroController _UIHc;
-
+    /// <summary>
+    /// 英雄選擇介面
+    /// </summary>
+    public UIHeroOptions HeroUI;
     #region 圖層
     /// <summary>
     /// 取得光明圖層
@@ -129,6 +140,11 @@ public class GameManager : MonoBehaviour
     /// </summary>
     [Header("血條物件")]
     public HpScript _HpPrefabs;
+    /// <summary>
+    /// 防禦條預置物件
+    /// </summary>
+    [Header("防禦條預置物件")]
+    public DefScript _DefPrefabs;
     #endregion
 
     /// <summary>
@@ -144,6 +160,7 @@ public class GameManager : MonoBehaviour
         ParticleManager = FindFirstObjectByType<ParticleListManagerScript>();
         SFXList = FindFirstObjectByType<SFXListScript>();
         _Joystick = FindFirstObjectByType<VariableJoystick>();
+        HeroUI = FindFirstObjectByType<UIHeroOptions>();
 
         isSoldierStateForAction = true;
         isHeroStateForAction = true;
@@ -391,13 +408,13 @@ public class GameManager : MonoBehaviour
                     _hero.AnimationFrameStorpTime = 0;
                     _hero.isAnimationFrameStorp = false;
                 }
-                if (_hero.AnimationFrameStorpTime > (_hero.AnimationFrameStorpTimeMax / 2) || !_hero.isAnimationFrameStorp)
+                if (!_hero.isAnimationFrameStorp)
                 {
-                    _hero._animator.speed = Mathf.Lerp(_hero._animator.speed, 1, 0.2f); ;
+                    _hero._animator.speed = 1;
                 }
             }
             _hero.PhyOverlapBoxAll(_hero._Tf.position);
-            if (_hero._target == null) _hero.GetEmenyTarget(_MainFortressScriptList); // 取得敵人目標
+            if (_hero._enemyNowMainFortress == null) _hero.GetEmenyTarget(_MainFortressScriptList); // 取得敵人目標
 
             Collider2D[] ColliderArray = _hero.enemyCollider; // 取得敵人碰撞器
             if (ColliderArray.Length > 0)
@@ -409,9 +426,12 @@ public class GameManager : MonoBehaviour
 
                 continue;
             }
-            if (_hero._target != null)
+            Transform _targetTf;
+            if (_hero._enemyNowMainFortress != null)
             {
-                _MoveDirection = CorrectionDirection(_hero._Tf, _hero._target, false);
+                _targetTf = _hero._enemyNowMainFortress;
+                if(_hero._target != null) _targetTf = _hero._target;
+                _MoveDirection = CorrectionDirection(_hero._Tf, _targetTf, false);
                 _hero.HeroDuelStateFunc(HeroState.Run, _MoveDirection);
             }
         }
@@ -433,7 +453,11 @@ public class GameManager : MonoBehaviour
         Pos2.y += Mathf.PingPong(.5f + Time.time, 1f);
         SelectedHeroTarget.position = Pos2;
     }
-
+    /// <summary>
+    /// 英雄資料初始化
+    /// </summary>
+    /// <param name="_Hs"></param>
+    /// <param name="isDark"></param>
     public void HeroDataFormat(HeroScript _Hs, bool isDark = true)
     {
         int _HeroLv = _Pdo.PlayerHeroLv;
@@ -460,10 +484,13 @@ public class GameManager : MonoBehaviour
         _Hs._Joystick = _Joystick;
         _Hs.enemyLayerMask = _Lm;
         _Hs._Pdo = _Pdo;
+        _Hs.CameraCenterScript = CameraCenterScript;
         Transform _tf = _Hs._Tf;
         Vector2 _pos = _tf.position;
         _pos.y += 2;
         _Hs._Hps = Instantiate(_HpPrefabs, _pos, Quaternion.identity, _tf).HpDataInitializ();
+        _pos.y -= .2f;
+        _Hs._Defs = Instantiate(_DefPrefabs, _pos, Quaternion.identity, _tf).DefDataInitializ();
         _Hs.HeroInitializ();
         HeroList.Add(_Hs);
     }
@@ -476,8 +503,24 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void ProduceSoldier()
     {
-        if (!isProduceSoldier) return;
+        if (_MainFortressScriptList.Count <= 1) return;
         MainFortressScript _mfbs;
+        for (int mfIndex = 0; mfIndex < _MainFortressScriptList.Count; mfIndex++)
+        {
+            _mfbs = _MainFortressScriptList[mfIndex];
+            if (_mfbs == null) continue;
+            switch (_mfbs.tag)
+            {
+                case staticPublicObjectsStaticName.DarkMainFortressTag:
+                    _mfbs.PhyOverlapBoxAll(_LayerMask);
+                    break;
+                case staticPublicObjectsStaticName.MainFortressTag:
+                    _mfbs.PhyOverlapBoxAll(_DarkLayerMask);
+                    break;
+            }
+        }
+        if (!isProduceSoldier) return;
+        if (_soldierList.Count >= _GmSoldierCountMax) return;
         for (int i = 0; i < _MainFortressScriptList.Count; i++)
         {
             _mfbs = _MainFortressScriptList[i];
@@ -529,7 +572,10 @@ public class GameManager : MonoBehaviour
                 continue;
             }
             _soldierScript.Move();
-            _tf.position = Vector3.MoveTowards(Pos, _soldierScript._enemyNowMainFortress.position, _soldierScript.speed * _time);
+
+            Transform _targetTf = _soldierScript._enemyNowMainFortress;
+            if(_soldierScript._target != null) _targetTf = _soldierScript._target;
+            _tf.position = Vector3.MoveTowards(Pos, _targetTf.position, _soldierScript.speed * _time);
         }
         if (isGameOver)
         {
@@ -665,6 +711,84 @@ public class GameManager : MonoBehaviour
         GameOver();
     }
     /// <summary>
+    /// 主堡被攻擊
+    /// </summary>
+    /// <param name="_mfbTf">主堡本身</param>
+    /// <param name="_enemyList">攻擊主堡的人</param>
+    public void CastleUnderAttack(Transform _mfbTf, List<Collider2D> _enemyList)
+    {
+        if (_enemyList.Count == 0) return;
+        Transform _tf;
+        Collider2D _col;
+        SoldierScript _Ss;
+        if (_soldierList.Count > 0)
+        {
+            for (int i = 0; i < _soldierList.Count; i++)
+            {
+                _Ss = _soldierList[i];
+                if (_Ss == null) continue;
+                for (int c = 0; c < _enemyList.Count; c++)
+                {
+                    _col = _enemyList[c];
+                    if (_col != null)
+                    {
+                        _tf = _col.transform;
+                        switch (_mfbTf.tag)
+                        {
+                            case staticPublicObjectsStaticName.DarkMainFortressTag:
+                                if (_Ss.CompareTag(staticPublicObjectsStaticName.DARKSoldierTag))
+                                {
+                                    _Ss._target = _tf;
+                                }
+                                break;
+                            case staticPublicObjectsStaticName.MainFortressTag:
+                                if (_Ss.CompareTag(staticPublicObjectsStaticName.PlayerSoldierTag))
+                                {
+                                    _Ss._target = _tf;
+                                }
+                                break;
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+        HeroScript _hs;
+        if (HeroList.Count > 0)
+        {
+            for (int i = 0; i < HeroList.Count; i++)
+            {
+                _hs = HeroList[i];
+                if (_hs == null) continue;
+                for (int c = 0; c < _enemyList.Count; c++)
+                {
+                    _col = _enemyList[c];
+                    if (_col != null)
+                    {
+                        _tf = _col.transform;
+                        switch (_mfbTf.tag)
+                        {
+                            case staticPublicObjectsStaticName.DarkMainFortressTag:
+                                if (_hs.CompareTag(staticPublicObjectsStaticName.DarkHeroTag))
+                                {
+                                    _hs._target = _tf;
+                                }
+                                break;
+                            case staticPublicObjectsStaticName.MainFortressTag:
+                                if (_hs.CompareTag(staticPublicObjectsStaticName.HeroTag))
+                                {
+                                    _hs._target = _tf;
+                                }
+                                break;
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>
     /// 光明主堡資料重置
     /// </summary>
     /// <param name="_mfb">主堡腳本</param>
@@ -679,10 +803,12 @@ public class GameManager : MonoBehaviour
 
         _mfb._hp = _Pdo.maxhp;
         _mfb._MaxHp = _Pdo.maxhp;
-        _mfb.soldierProduceTimeMax = _Pdo.soldierProduceTimeMax;
+        _mfb.soldierProduceTimeMax = _Pdo.soldierProduceTimeMax; // 設定士兵生產間隔時間
+        _mfb.soldierProduceTime = _mfb.soldierProduceTimeMax; // 設定士兵生產時間
+        _mfb.ProduceHeroTimeMax = _Pdo.ProduceHeroTimeMax; // 設定英雄生產間隔時間
+        _mfb.ProduceHeroTime = _mfb.ProduceHeroTimeMax;  // 設定英雄生產時間
         _mfb._soldierCount = _Pdo.soldierCount;
-        _mfb.ProduceHeroTimeMax = _Pdo.ProduceHeroTimeMax;
-
+        _mfb.HeroUI = HeroUI;
         _mfb.selectedSoldierList.AddRange(_Pdo.soldierSelectedList); // 把士兵加入士兵清單
         _mfb.GetHeroList.AddRange(_Pdo.SelectedHeroList); // 把英雄加入英雄清單
         _mfb.selectedHeroList.AddRange(_Pdo.SelectedHeroList); // 把英雄加入英雄清單
@@ -706,10 +832,11 @@ public class GameManager : MonoBehaviour
         _mfb._hp = _Glm.maxhp;
         _mfb._MaxHp = _Glm.maxhp;
 
-        _mfb.soldierProduceTimeMax = _Glm.soldierProduceTimeMax;
+        _mfb.soldierProduceTimeMax = _Glm.soldierProduceTimeMax; // 士兵生產間隔時間
+        _mfb.soldierProduceTime = _mfb.soldierProduceTimeMax; // 士兵生產時間
+        _mfb.ProduceHeroTimeMax = _Glm.ProduceHeroTimeMax; // 英雄生產間隔時間
+        _mfb.ProduceHeroTime = _mfb.ProduceHeroTimeMax; // 英雄生產時間
         _mfb._soldierCount = _Glm.soldierCount;
-        _mfb.ProduceHeroTimeMax = _Glm.ProduceHeroTimeMax;
-
         _mfb.selectedSoldierList.AddRange(_Glm.soldierSelectedList); // 把士兵加入士兵清單
         _mfb.GetHeroList.AddRange(_Glm.SelectedHeroList); // 把英雄加入英雄清單
         _mfb.selectedHeroList.AddRange(_Glm.SelectedHeroList); // 把英雄加入英雄清單
@@ -718,5 +845,6 @@ public class GameManager : MonoBehaviour
         _mfb.MainForTressSoldierCountTextMeshPro(); // 更新主堡兵數文字
 
     }
+
     #endregion
 }

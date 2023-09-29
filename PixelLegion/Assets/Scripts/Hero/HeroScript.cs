@@ -1,6 +1,7 @@
 ﻿using Assets.Scripts;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Burst.CompilerServices;
 using UnityEngine;
 
 public class HeroScript : LeadToSurviveGameBaseClass
@@ -28,30 +29,45 @@ public class HeroScript : LeadToSurviveGameBaseClass
     /// <summary>
     /// 英雄ID (系統判斷的ID)
     /// </summary>
-    [Header("英雄ID"), HideInInspector]
+    [Header("英雄ID")]
     public string HeroID;
     /// <summary>
     /// 英雄名稱
     /// </summary>
-    [Header("英雄名稱"), HideInInspector]
+    [Header("英雄名稱")]
     public string HeroName;
     /// <summary>
     /// 英雄頭像
     /// </summary>
-    [Header("英雄頭像"), HideInInspector]
+    [Header("英雄頭像")]
     public Sprite HeroAvatar;
     /// <summary>
     /// 英雄血量
     /// </summary>
     [Header("英雄血量")]
     public int Hp;
-    //[HideInInspector]
+    [HideInInspector]
     public int HpMax;
     /// <summary>
     /// 攻擊力
     /// </summary>
     [Header("攻擊力"), HideInInspector]
     public int Attack;
+    /// <summary>
+    /// 爆擊率
+    /// </summary>
+    [Header("爆擊率"), Range(0, 100), SerializeField]
+    private int AttackCriticalHitRate;
+    /// <summary>
+    /// 爆擊倍率
+    /// </summary>
+    [Header("爆擊倍率"), Range(1, 100), SerializeField]
+    private int AttackMagnification;
+    /// <summary>
+    /// 目前是否爆擊
+    /// </summary>
+    [Header("爆擊倍率")]
+    public bool isCriticalHitRate;
     /// <summary>
     /// 攻擊力抵銷
     /// </summary>
@@ -89,11 +105,14 @@ public class HeroScript : LeadToSurviveGameBaseClass
     /// 動畫播放組件
     /// </summary>
     [Header("動畫播放組件")]
+    [HideInInspector]
     public Animator _animator;
     /// <summary>
     /// 取得動畫狀態
     /// </summary>
+    [HideInInspector]
     public AnimatorStateInfo _animatorStateInfo;
+    [HideInInspector]
     public float _Time;
     #endregion
     #region 射線
@@ -129,12 +148,21 @@ public class HeroScript : LeadToSurviveGameBaseClass
     /// </summary>
     public bool isfloot;
     #endregion
-    #region 狀態
+
+    #region 目標
     /// <summary>
-    /// AI操控時的目標
+    /// AI操控時的主要目標
     /// </summary>
-    [Header("AI操控時的目標")]
+    [Header("AI操控時的主要目標")]
+    public Transform _enemyNowMainFortress;
+    /// <summary>
+    /// AI操控時的緊急目標
+    /// </summary>
+    [Header("AI操控時的緊急目標")]
     public Transform _target;
+    #endregion
+
+    #region 狀態
     /// <summary>
     /// 是否被玩家操控
     /// </summary>
@@ -161,58 +189,58 @@ public class HeroScript : LeadToSurviveGameBaseClass
     /// 移動相關攻擊動畫
     /// </summary>
     [Header("移動相關攻擊動畫")]
-    public List<string> movAtk;
-    public bool isMovAtk;
+    [HideInInspector] public List<string> movAtk;
+    [HideInInspector] public bool isMovAtk;
     /// <summary>
     /// 跳躍攻擊動畫
     /// </summary>
     [Header("跳躍攻擊動畫")]
-    public string jumpAtk;
-    public bool isJumpAtk;
+    [HideInInspector] public string jumpAtk;
+    [HideInInspector] public bool isJumpAtk;
     /// <summary>
     /// 重擊
     /// </summary>
     [Header("重擊")]
-    public string heavyAttack;
-    public bool isHeavyAttack;
+    [HideInInspector] public string heavyAttack;
+    [HideInInspector] public bool isHeavyAttack;
     /// <summary>
     /// 衝刺動畫
     /// </summary>
     [Header("衝刺動畫")]
-    public string dash;
-    public bool isDash;
+    [HideInInspector] public string dash;
+    [HideInInspector] public bool isDash;
     /// <summary>
     /// 是否正在衝刺
     /// </summary>
-    public bool IsItPossibleToDash;
+    [HideInInspector] public bool IsItPossibleToDash;
     /// <summary>
     /// 衝刺時間
     /// </summary>
-    private float DashTimeStart;
+    [HideInInspector] private float DashTimeStart;
     ///<summary>
     /// 受傷動畫
     ///</summary>
     [Header("受傷動畫")]
     public string hit;
-    public bool isHit;
+    [HideInInspector] public bool isHit;
     /// <summary>
     /// 受到攻擊的防禦
     /// </summary>
     [Header("受到攻擊的防禦")]
-    public string def1;
-    public bool isDef1;
+    [HideInInspector] public string def1;
+    [HideInInspector] public bool isDef1;
     /// <summary>
     /// 沒受到攻擊的防禦
     /// </summary>
     [Header("沒受到攻擊的防禦")]
-    public string def2;
-    public bool isDef2;
+    [HideInInspector] public string def2;
+    [HideInInspector] public bool isDef2;
     /// <summary>
     /// 翻滾
     /// </summary>
     [Header("翻滾")]
-    public string roll;
-    public bool isRoll;
+    [HideInInspector] public string roll;
+    [HideInInspector] public bool isRoll;
 
 
     #region 組動畫
@@ -220,34 +248,34 @@ public class HeroScript : LeadToSurviveGameBaseClass
     /// 跳躍
     /// </summary>
     [Header("跳躍")]
-    public string jump;
-    public bool isJump;
+    [HideInInspector] public string jump;
+    [HideInInspector] public bool isJump;
     /// <summary>
     /// 降落
     /// </summary>
     [Header("降落")]
-    public string drop;
-    public bool isDrop;
+    [HideInInspector] public string drop;
+    [HideInInspector] public bool isDrop;
     /// <summary>
     /// 落地
     /// </summary>
     [Header("落地")]
-    public string land;
-    public bool isLand;
+    [HideInInspector] public string land;
+    [HideInInspector] public bool isLand;
 
     /// <summary>
     /// 閃現 消失
     /// </summary>
     [Header("閃現 消失")]
-    public string miss0;
-    public bool isMiss0;
-    public float missTimeStart;
+    [HideInInspector] public string miss0;
+    [HideInInspector] public bool isMiss0;
+    [HideInInspector] public float missTimeStart;
     /// <summary>
     /// 閃現 出現
     /// </summary>
     [Header("閃現 出現")]
-    public string miss1;
-    public bool isMiss1;
+    [HideInInspector] public string miss1;
+    [HideInInspector] public bool isMiss1;
     /// <summary>
     /// 是否正在閃現
     /// </summary>
@@ -285,16 +313,9 @@ public class HeroScript : LeadToSurviveGameBaseClass
     [Header("死亡")]
     public string die;
     #endregion
-
     #endregion
 
-    #region 特效
-    /// <summary>
-    /// 打擊效果
-    /// </summary>
-    //[Header("打擊效果")]
-    //public ParticleSystem AtkVfx_02;
-    #endregion
+
     #region 音效
     /// <summary>
     /// 英雄音效播放管理器
@@ -335,6 +356,14 @@ public class HeroScript : LeadToSurviveGameBaseClass
     [Header("攻擊招式"), HideInInspector]
     public int AtkCount;
     /// <summary>
+    /// 監視器中心點
+    /// </summary>
+    [HideInInspector]
+    public CameraCenterScript CameraCenterScript;
+    #endregion
+
+    #region 狀態時間設定
+    /// <summary>
     /// 每攻擊一次重置時間
     /// </summary>
     [Header("每攻擊一次重置時間")]
@@ -353,9 +382,6 @@ public class HeroScript : LeadToSurviveGameBaseClass
     public float MissTime;
     public float DashTime;
     public float RollTime;
-    #endregion
-
-    #region 狀態時間設定
     /// <summary>
     /// 防禦時間間隔
     /// </summary>
@@ -386,6 +412,22 @@ public class HeroScript : LeadToSurviveGameBaseClass
     /// </summary>
     [Header("停頓幀時間最大值")]
     public float AnimationFrameStorpTimeMax;
+
+    /// <summary>
+    /// 是否晃動攝影機
+    /// </summary>
+    [HideInInspector]
+    public bool isCameraShake;
+    /// <summary>
+    /// 晃動攝影機計時
+    /// </summary>
+    [HideInInspector]
+    public float CameraShakeTime;
+    /// <summary>
+    /// 晃動攝影機計時最大值
+    /// </summary>
+    [Header("晃動攝影機計時最大值"), HideInInspector]
+    public float CameraShakeTimeMax;
     #endregion
 
     #region VFX
@@ -407,12 +449,15 @@ public class HeroScript : LeadToSurviveGameBaseClass
     /// </summary>
     [HideInInspector]
     public HpScript _Hps;
+    /// <summary>
+    /// 防禦條腳本
+    /// </summary>
+    [HideInInspector]
+    public DefScript _Defs;
     #endregion
 
     public virtual void HeroInitializ()
     {
-        //_Tf = transform;
-        //_Go = gameObject;
         _Hc = GetComponent<HeroController>();
         if (_Hc != null)
         {
@@ -563,6 +608,11 @@ public class HeroScript : LeadToSurviveGameBaseClass
             AtkTimeMax++;
             Def *= (int)Mathf.Ceil(.7f);
         }
+        CameraShakeTimeMax = .5f;
+
+
+        if (AtkTimeMax < 1) AtkTimeMax = 1;
+        if (AttackMagnification < 1) AttackMagnification = 1;
     }
     #region 狀態機
     /// <summary>
@@ -708,11 +758,13 @@ public class HeroScript : LeadToSurviveGameBaseClass
             {
                 _animator.Play(def1);
                 DefTime = DefTimeMax; //重置防禦時間
+                _Defs.GetDefTimeMax();
                 isNowDef = false; // 已經開始執行所以目前不能再防禦
             }
             if (DefType == 2)
             {
                 DefTime -= .2f; //每次被攻擊減少防禦時間
+                _Defs.GetDefTime(DefTimeMax, .2f); //傳遞防禦時間更改時間條
                 if (isDef2)
                     _animator.Play(def2);
                 else
@@ -779,7 +831,7 @@ public class HeroScript : LeadToSurviveGameBaseClass
         if (_heroScript == null) return;
         int _atk = OffsetValue(_Pdo.Percentage, Attack, _Pdo.PlayerHeroLv);
         HeroAttack();
-        HeroAtkTarget(_heroScript, _atk, hitbool);
+        HeroAtkTarget(_heroScript, _atk);
     }
 
     /// <summary>
@@ -793,9 +845,11 @@ public class HeroScript : LeadToSurviveGameBaseClass
             HeroDuelStateFunc();
             return;
         }
-        int _atk = OffsetValue(_Pdo.Percentage, Attack, _Pdo.PlayerHeroLv);
         HeroAttack();
+
         if (_Collider2D.Length == 0) return;
+
+        int _atk = OffsetValue(_Pdo.Percentage, Attack, _Pdo.PlayerHeroLv);
         HeroAtkTarget(_atk);
     }
 
@@ -804,24 +858,33 @@ public class HeroScript : LeadToSurviveGameBaseClass
     /// </summary>
     /// <param name="t">傷害值</param>
     /// <param name="hitbool">是否受傷</param>
-    public virtual void HeroHit(int t, bool hitbool = true)
+    public virtual void HeroHit(int hp)
     {
         if (_HeroNowState == HeroState.Def)
         {
             Defense(2);
             return;
         }
-        if (!hitbool) return; // 不受傷
 
-        int _hit = t - OffsetValue(_Pdo.Percentage, Def, _Pdo.PlayerHeroLv);
+        int _hit = hp - OffsetValue(_Pdo.Percentage, Def, _Pdo.PlayerHeroLv);
         if (_hit <= 0) _hit = 1;
         Hp -= _hit;
-        _Hps.GetHit(HpMax,_hit);
+        _Hps.GetHit(HpMax, _hit);
         HeroDuelStateFunc(HeroState.Hit);
-        HitPlaySFX(Random.Range(1, 3));
-
-
-
+        HitPlaySFX(Random.Range(3, 5));
+    }
+    /// <summary>
+    /// 必須受傷 被爆擊、或決鬥或特殊狀態
+    /// </summary>
+    /// <param name="hp">傷害</param>
+    public virtual void MustBeInjured(int hp)
+    {
+        int _hit = hp - OffsetValue(_Pdo.Percentage, Def, _Pdo.PlayerHeroLv);
+        if (_hit <= 0) _hit = 1;
+        Hp -= _hit;
+        _Hps.GetHit(HpMax, _hit);
+        HeroDuelStateFunc(HeroState.Hit);
+        HitPlaySFX(20);
     }
     public virtual void Idle()
     {
@@ -832,6 +895,8 @@ public class HeroScript : LeadToSurviveGameBaseClass
         _animator.Play(die);
         _rg.gravityScale = 0;
         ColliderClose(false);
+        _gameManagerScript.HeroList.Remove(this);
+        Destroy(gameObject, 1);
     }
 
     public virtual void Hit()
@@ -853,14 +918,7 @@ public class HeroScript : LeadToSurviveGameBaseClass
         if (_Tf.localScale.x < 0) BeakBack *= -1; // 反向
         _rg.AddForce(BeakBack, ForceMode2D.Impulse);
     }
-    /// <summary>
-    /// 必須受傷
-    /// </summary>
-    /// <param name="hp">傷害</param>
-    public virtual void MustBeInjured(int hp)
-    {
 
-    }
     /// <summary>
     /// 翻滾
     /// </summary>
@@ -912,7 +970,11 @@ public class HeroScript : LeadToSurviveGameBaseClass
 
     public void AnimationFrameStop()
     {
-        if (isAnimationFrameStorp) _animator.speed = 0f;
+        if (isAnimationFrameStorp)
+        {
+            _animator.speed = 0f;
+            isCameraShake = true;
+        }
     }
     /// <summary>
     /// 計算動畫進度
@@ -1009,64 +1071,65 @@ public class HeroScript : LeadToSurviveGameBaseClass
             _col.enabled = oc;
         }
     }
+    #region 攻擊判定暫存
+    ///// <summary>
+    ///// 射線判斷到的碰撞器
+    ///// 攻擊時的的判斷 Collider2D 版
+    ///// </summary>
+    ///// <param name="_Collider2D">碰撞體</param>
+    ///// <param name="Hit">傷害數字</param>
+    //public virtual void HeroAtkTarget(Collider2D[] _Collider2D, int Hit = 1)
+    //{
+    //    Collider2D _col;
+    //    string _colTag;
+    //    HeroScript _hs; // 敵方英雄
+    //    SoldierScript _ss; // 敵方士兵
+    //    MainFortressScript _mf; // 敵方主堡
+    //    List<Collider2D> _ColList;
+    //    _Collider2D = PhyOverlapBoxAll();
+    //    if (_Collider2D.Length > 0)
+    //    {
+    //        _ColList = new List<Collider2D>();
+    //        _ColList.AddRange(_Collider2D.ToList());
 
-    /// <summary>
-    /// 射線判斷到的碰撞器
-    /// 攻擊時的的判斷 Collider2D 版
-    /// </summary>
-    /// <param name="_Collider2D">碰撞體</param>
-    /// <param name="Hit">傷害數字</param>
-    public virtual void HeroAtkTarget(Collider2D[] _Collider2D, int Hit = 1)
-    {
-        Collider2D _col;
-        string _colTag;
-        HeroScript _hs; // 敵方英雄
-        SoldierScript _ss; // 敵方士兵
-        MainFortressScript _mf; // 敵方主堡
-        List<Collider2D> _ColList;
-        _Collider2D = PhyOverlapBoxAll();
-        if (_Collider2D.Length > 0)
-        {
-            _ColList = new List<Collider2D>();
-            _ColList.AddRange(_Collider2D.ToList());
+    //        for (int i = 0; i < _ColList.Count; i++)
+    //        {
+    //            _col = _ColList[i];
+    //            if (_col == null) continue;
 
-            for (int i = 0; i < _ColList.Count; i++)
-            {
-                _col = _ColList[i];
-                if (_col == null) continue;
-
-                _target = _col.transform;
-                _colTag = _col.tag;
-                if (_colTag == staticPublicObjectsStaticName.HeroTag ||
-                    _colTag == staticPublicObjectsStaticName.DarkHeroTag)
-                {
-                    if (_col == null) continue;
-                    _hs = _col.GetComponent<HeroScript>();
-                    if (_hs.Hp <= 0) _ColList.RemoveAt(i);
-                    if (_hs != null)
-                        _hs.HeroHit(Hit);
-                }
-                else if (_colTag == staticPublicObjectsStaticName.PlayerSoldierTag ||
-                    _colTag == staticPublicObjectsStaticName.DARKSoldierTag)
-                {
-                    if (_col == null) continue;
-                    _ss = _col.GetComponent<SoldierScript>();
-                    if (_ss.soldierHp <= 0) _ColList.RemoveAt(i);
-                    if (_ss != null)
-                        _ss.MustBeInjured(Hit);
-                }
-                else if (_colTag == staticPublicObjectsStaticName.MainFortressTag ||
-                    _colTag == staticPublicObjectsStaticName.DarkMainFortressTag)
-                {
-                    if (_col == null) continue;
-                    _mf = _col.GetComponent<MainFortressScript>();
-                    if (_mf._hp <= 0) _ColList.RemoveAt(i);
-                    if (_mf != null)
-                        _mf.MainFortressHit(Hit);
-                }
-            }
-        }
-    }
+    //            _enemyNowMainFortress = _col.transform;
+    //            _colTag = _col.tag;
+    //            if (_colTag == staticPublicObjectsStaticName.HeroTag ||
+    //                _colTag == staticPublicObjectsStaticName.DarkHeroTag)
+    //            {
+    //                if (_col == null) continue;
+    //                _hs = _col.GetComponent<HeroScript>();
+    //                if (_hs.Hp <= 0) _ColList.RemoveAt(i);
+    //                if (_hs != null)
+    //                    _hs.HeroHit(Hit);
+    //            }
+    //            else if (_colTag == staticPublicObjectsStaticName.PlayerSoldierTag ||
+    //                _colTag == staticPublicObjectsStaticName.DARKSoldierTag)
+    //            {
+    //                if (_col == null) continue;
+    //                _ss = _col.GetComponent<SoldierScript>();
+    //                if (_ss.soldierHp <= 0) _ColList.RemoveAt(i);
+    //                if (_ss != null)
+    //                    _ss.MustBeInjured(Hit);
+    //            }
+    //            else if (_colTag == staticPublicObjectsStaticName.MainFortressTag ||
+    //                _colTag == staticPublicObjectsStaticName.DarkMainFortressTag)
+    //            {
+    //                if (_col == null) continue;
+    //                _mf = _col.GetComponent<MainFortressScript>();
+    //                if (_mf._hp <= 0) _ColList.RemoveAt(i);
+    //                if (_mf != null)
+    //                    _mf.MainFortressHit(Hit);
+    //            }
+    //        }
+    //    }
+    //}
+    #endregion
     public virtual void HeroAtkTarget(int Hit = 1)
     {
         string _colTag;
@@ -1077,38 +1140,45 @@ public class HeroScript : LeadToSurviveGameBaseClass
         List<Collider2D> _ColList = new List<Collider2D>(PhyOverlapBoxAll().ToList());
         if (_ColList.Count > 0)
         {
-
+            isAnimationFrameStorp = true;
             for (int i = 0; i < _ColList.Count; i++)
             {
                 _col = _ColList[i];
                 if (_col == null) continue;
-                isAnimationFrameStorp = true;
-                _target = _col.transform;
+                _enemyNowMainFortress = _col.transform;
                 _colTag = _col.tag;
                 if (_colTag == staticPublicObjectsStaticName.HeroTag ||
                     _colTag == staticPublicObjectsStaticName.DarkHeroTag)
                 {
                     if (_col == null) continue;
                     _hs = _col.GetComponent<HeroScript>();
-                    //if (_hs.Hp <= 0) _ColList.RemoveAt(i);
                     if (_hs != null)
+                    {
+                        isCriticalHitRate = CriticalHitRate();
+                        if (isCriticalHitRate)
+                        {
+                            _hs.MustBeInjured(Hit *= AttackMagnification);
+                            continue;
+                        }
                         _hs.HeroHit(Hit);
+                    }
                 }
                 else if (_colTag == staticPublicObjectsStaticName.PlayerSoldierTag ||
                     _colTag == staticPublicObjectsStaticName.DARKSoldierTag)
                 {
                     if (_col == null) continue;
                     _ss = _col.GetComponent<SoldierScript>();
-                    //if (_ss.soldierHp <= 0) _ColList.RemoveAt(i);
                     if (_ss != null)
-                        _ss.MustBeInjured(Hit);
+                    {
+                        isCriticalHitRate = CriticalHitRate();
+                        _ss.MustBeInjured(Hit, isCriticalHitRate);
+                    }
                 }
                 else if (_colTag == staticPublicObjectsStaticName.MainFortressTag ||
                     _colTag == staticPublicObjectsStaticName.DarkMainFortressTag)
                 {
                     if (_col == null) continue;
                     _mf = _col.GetComponent<MainFortressScript>();
-                    //if (_mf._hp <= 0) _ColList.RemoveAt(i);
                     if (_mf != null)
                         _mf.MainFortressHit(Hit);
                 }
@@ -1119,10 +1189,10 @@ public class HeroScript : LeadToSurviveGameBaseClass
     /// 攻擊目標對目標造成傷害
     /// </summary>
     /// <param name="_enemyHeroScript">敵人英雄的腳本</param>
-    public virtual void HeroAtkTarget(HeroScript _enemyHeroScript, int Hit = 1, bool hitbool = true)
+    public virtual void HeroAtkTarget(HeroScript _enemyHeroScript, int Hit = 1)
     {
         if (_enemyHeroScript == null) return;
-        _enemyHeroScript.HeroHit(Hit, hitbool);
+        _enemyHeroScript.HeroHit(Hit);
         AemsPlaySFX(2);
     }
     public virtual void HeroAtkTarget(SoldierScript _enemySoldierScript, int Hit = 1)
@@ -1243,6 +1313,15 @@ public class HeroScript : LeadToSurviveGameBaseClass
 
     #region 射線、其他
     /// <summary>
+    /// 判斷是否產生爆擊
+    /// </summary>
+    /// <returns>true = 爆擊</returns>
+    private bool CriticalHitRate()
+    {
+        return Random.Range(0, 101) <= AttackCriticalHitRate;
+    }
+
+    /// <summary>
     /// 是不是需要等待攻擊續力
     /// </summary>
     /// <returns>如果為true代表目前沒辦法攻擊</returns>
@@ -1269,14 +1348,14 @@ public class HeroScript : LeadToSurviveGameBaseClass
                 case staticPublicObjectsStaticName.HeroTag:
                     if (_mf.CompareTag(staticPublicObjectsStaticName.DarkMainFortressTag))
                     {
-                        _target = _mf._Tf;
+                        _enemyNowMainFortress = _mf._Tf;
                         return;
                     }
                     break;
                 case staticPublicObjectsStaticName.DarkHeroTag:
                     if (_mf.CompareTag(staticPublicObjectsStaticName.MainFortressTag))
                     {
-                        _target = _mf._Tf;
+                        _enemyNowMainFortress = _mf._Tf;
                         return;
                     }
                     break;
@@ -1364,15 +1443,21 @@ public class HeroScript : LeadToSurviveGameBaseClass
         {
             case 1:
                 Ac = _gameManagerScript.SFXList.HeroHit01;
-                _AudioSourceHit.volume = 0.5f;
                 break;
             case 2:
                 Ac = _gameManagerScript.SFXList.HeroHit02;
-                _AudioSourceHit.volume = 0.5f;
+                break;
+            case 3:
+                Ac = _gameManagerScript.SFXList.HeroHit03;
+                break;
+            case 4:
+                Ac = _gameManagerScript.SFXList.HeroHit04;
                 break;
             case 10:
                 Ac = _gameManagerScript.SFXList.Def01;
-                _AudioSourceHit.volume = 0.5f;
+                break;
+            case 20:
+                Ac = _gameManagerScript.SFXList.CriticalStrike;
                 break;
         }
 

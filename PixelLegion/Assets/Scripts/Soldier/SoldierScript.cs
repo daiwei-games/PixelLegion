@@ -87,10 +87,15 @@ public class SoldierScript : LeadToSurviveGameBaseClass
     /// </summary>
     public LayerMask _enemyLayerMask;
     /// <summary>
-    /// 目前敵人的主堡
+    /// 目前敵人的主堡 主要目標
     /// </summary>
-    [Header("目前敵人的主堡")]
+    [Header("主要目標")]
     public Transform _enemyNowMainFortress;
+    /// <summary>
+    /// 緊急目標
+    /// </summary>
+    [Header("緊急目標")]
+    public Transform _target;
     #endregion
     #region 狀態
     /// <summary>
@@ -285,23 +290,20 @@ public class SoldierScript : LeadToSurviveGameBaseClass
                         {
                             _col = _ColList[i];
                             if (_col == null) continue;
+                            _enemyNowMainFortress = _col.transform;
                             _tag = _col.tag;
                             if (_tag.IndexOf("Hero") != -1)
                             {
                                 _col.GetComponent<HeroScript>().HeroHit(soldierAtk);
-                                _enemyNowMainFortress = _col.transform;
                             }
                             else if (_tag.IndexOf("Soldier") != -1)
                             {
                                 _col.GetComponent<SoldierScript>().SoldierHP(soldierAtk);
-                                _enemyNowMainFortress = _col.transform;
                             }
                             else if (_tag.IndexOf("MainFortress") != -1)
                             {
                                 MainFortressScript _mainFortressScript = _col.GetComponent<MainFortressScript>();
                                 _mainFortressScript.MainFortressHit(soldierAtk);
-                                _mainFortressScript.WhoHitMeTransform.Add(_Tf); // 將攻擊主堡者加入清單
-                                _enemyNowMainFortress = _col.transform;
                             }
                         }
                         break;
@@ -344,13 +346,14 @@ public class SoldierScript : LeadToSurviveGameBaseClass
     /// 必須受傷
     /// </summary>
     /// <param name="hp">傷害</param>
-    public virtual void MustBeInjured(int hp)
+    /// <param name="isCriticalStrike">是否被爆擊 true = 被爆擊</param>
+    public virtual void MustBeInjured(int hp, bool isCriticalStrike = false)
     {
         if (soldierHp <= 0) return;
         if (_soldierChangeState == SoldierState.SoupHit) return;
         Vector2 DieOffset;
         int _hit = hp - soldierDefense;
-        if(_hit <= 0) _hit = 1;
+        if (_hit <= 0) _hit = 1;
         soldierHp -= _hit;
         _Hps.GetHit(soldierHpMax, _hit);
         _soldierChangeState = SoldierState.SoupHit;
@@ -374,6 +377,11 @@ public class SoldierScript : LeadToSurviveGameBaseClass
                 AtkVfx_2 = Instantiate(_gameManagerScript.ParticleManager.AtfVfx_3, _Tf.position, Quaternion.identity, _Tf);
 
             AtkVfx_2.Play();
+            if (isCriticalStrike)
+            {
+                HitPlaySFX(20);
+                return;
+            }
             HitPlaySFX(1);
 
         }
@@ -486,6 +494,9 @@ public class SoldierScript : LeadToSurviveGameBaseClass
             case 1:
                 Ac = _ScriptList.SoldierHit01;
                 _AudioSourceHit.volume = 0.3f;
+                break;
+            case 20:
+                Ac = _ScriptList.CriticalStrike;
                 break;
         }
         if (Ac != null)

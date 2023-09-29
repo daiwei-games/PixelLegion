@@ -42,6 +42,16 @@ public class SFXListScript : MonoBehaviour
     [Header("受傷毆打2 - 毆打2.ogg")]
     public AudioClip HeroHit02;
     /// <summary>
+    /// 受傷砍傷1 - 打擊1.ogg
+    /// </summary>
+    [Header("受傷砍傷1 - 打擊1.ogg")]
+    public AudioClip HeroHit03;
+    /// <summary>
+    /// 受傷砍傷2 - 打擊2.mp3
+    /// </summary>
+    [Header("受傷砍傷2 - 打擊2.mp3")]
+    public AudioClip HeroHit04;
+    /// <summary>
     /// 隔擋1 - 隔擋1.wav
     /// </summary>
     [Header("隔擋1 - 隔擋1.wav")]
@@ -53,6 +63,14 @@ public class SFXListScript : MonoBehaviour
     /// </summary>
     [Header("士兵受傷音效 - 打擊1.ogg")]
     public AudioClip SoldierHit01;
+    #endregion
+
+    #region 共用
+    /// <summary>
+    /// 爆擊 - 重擊.mp3
+    /// </summary>
+    [Header("爆擊 - 重擊.mp3")]
+    public AudioClip CriticalStrike;
     #endregion
 
     #region AudioSource 設定管理

@@ -1,5 +1,7 @@
 ﻿using System.Security.Cryptography;
+using UnityEditor.Rendering;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 /// <summary>
 /// 玩家控制角色時的腳本
 /// </summary>
@@ -44,15 +46,24 @@ public class HeroController : MonoBehaviour
     float time;
     #endregion
 
-    #region 開啟了那些狀態
-
+    #region 場景物建
+    /// <summary>
+    /// 攝影機
+    /// </summary>
+    [HideInInspector]
+    public Transform CameraTf;
+    public Vector3 CameraPos;
     #endregion
+
+    float g;
     void Start()
     {
 
     }
     private void OnEnable()
     {
+        CameraTf = Camera.main.transform;
+
         _UIHc.GetNowHeroController(this);
         _UIHc.DashOpenOrClose(_Hs.isDash); // 開啟或關閉衝刺按鈕
         _UIHc.HeavyAttackOpenOrClose(_Hs.isHeavyAttack); // 開啟或關閉重攻擊按鈕
@@ -74,6 +85,8 @@ public class HeroController : MonoBehaviour
         _JoystickDirection = Vector2.right * _Joystick.Horizontal;
         PlayGMHeroMiss(MissOrDashStartTime);
         PlayGMHeroDash(MissOrDashStartTime);
+
+        CameraPingPong();
     }
 
     private void FixedUpdate()
@@ -85,6 +98,7 @@ public class HeroController : MonoBehaviour
         if (!_Hs.isNowDef && _Hs.DefTime > 0)
         {
             _Hs.DefTime -= time;
+            _Hs._Defs.GetDefTime(_Hs.DefTimeMax, time);
         }
         if (_Hs.DefTime <= 0) _Hs.isNowDef = true;
 
@@ -95,10 +109,6 @@ public class HeroController : MonoBehaviour
             {
                 _Hs.AnimationFrameStorpTime = 0;
                 _Hs.isAnimationFrameStorp = false;
-            }
-            if (_Hs.AnimationFrameStorpTime > _Hs.AnimationFrameStorpTimeMax / 2)
-            {
-                _Hs._animator.speed = Mathf.Lerp(_Hs._animator.speed, 1, 0.2f); ;
             }
             if (!_Hs.isAnimationFrameStorp) _Hs._animator.speed = 1;
         }
@@ -157,7 +167,25 @@ public class HeroController : MonoBehaviour
         if (_Hs == null) return;
         if (!_Hs.IsItPossibleToDash) return;
         _Hs.FastForward(_Hs._Tf, time);
-
     }
     #endregion
+
+    public void CameraPingPong()
+    {
+        if (_Hs.isCameraShake)
+        {
+            g += .02f;
+            CameraPos = CameraTf.position;
+
+            CameraPos.x -= Mathf.PingPong(g, .2f);
+            CameraPos.y += Mathf.PingPong(g, .2f);
+            CameraTf.position = CameraPos;
+            _Hs.CameraShakeTime += time;
+            if (_Hs.CameraShakeTime >= _Hs.CameraShakeTimeMax)
+            {
+                _Hs.CameraShakeTime = 0;
+                _Hs.isCameraShake = false;
+            }
+        }
+    }
 }
