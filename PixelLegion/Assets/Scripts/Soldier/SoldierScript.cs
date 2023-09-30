@@ -195,8 +195,14 @@ public class SoldierScript : LeadToSurviveGameBaseClass
     /// <summary>
     /// 被攻擊特效
     /// </summary>
-    [Header("被攻擊的特效")]
+    [Header("被攻擊的特效"),HideInInspector]
     public ParticleSystem AtkVfx_2;
+
+    /// <summary>
+    /// 被爆擊粒子
+    /// </summary>
+    [HideInInspector]
+    public ParticleSystem CameraShakeParticle;
     #endregion
 
     #region 物件
@@ -372,11 +378,32 @@ public class SoldierScript : LeadToSurviveGameBaseClass
             if (_Tf.localScale.x < 0) BeakBack *= -1; // 反向
             _body2D.velocity = Vector2.zero;
             _body2D.AddForce(BeakBack, ForceMode2D.Impulse);
+            if (isCriticalStrike)
+            {
+                if (CameraShakeParticle != null)
+                {
+                    CameraShakeParticle.Play();
+                }
+                else
+                {
+                    Vector2 _ptc = _Tf.position;
+                    _ptc.x -= .5f;
+                    _ptc.y -= .5f;
+                    CameraShakeParticle = Instantiate(_gameManagerScript.ParticleManager.CameraShakeHit_1, _ptc, Quaternion.identity);
+                    Transform _Ptf = CameraShakeParticle.transform;
+                    Vector2 _Scale = _Ptf.localScale;
+                    if (_Tf.localScale.x < 0) _Scale.x *= -1;
+                    _Ptf.localScale = _Scale;
+                    CameraShakeParticle.Play();
+                }
+            }
+            else
+            {
+                if (AtkVfx_2 == null)
+                    AtkVfx_2 = Instantiate(_gameManagerScript.ParticleManager.AtfVfx_3, _Tf.position, Quaternion.identity, _Tf);
 
-            if (AtkVfx_2 == null)
-                AtkVfx_2 = Instantiate(_gameManagerScript.ParticleManager.AtfVfx_3, _Tf.position, Quaternion.identity, _Tf);
-
-            AtkVfx_2.Play();
+                AtkVfx_2.Play();
+            }
             if (isCriticalStrike)
             {
                 HitPlaySFX(20);

@@ -174,11 +174,19 @@ public class HeroController : MonoBehaviour
     {
         if (_Hs.isCameraShake)
         {
-            g += .02f;
             CameraPos = CameraTf.position;
-
-            CameraPos.x -= Mathf.PingPong(g, .2f);
-            CameraPos.y += Mathf.PingPong(g, .2f);
+            if (_Hs.isCriticalHitRate)
+            {
+                g += .05f;
+                CameraPos.x -= Mathf.PingPong(g, .4f);
+                CameraPos.y += Mathf.PingPong(g, .4f);
+            }
+            else
+            {
+                g += .02f;
+                CameraPos.x -= Mathf.PingPong(g, .2f);
+                CameraPos.y += Mathf.PingPong(g, .2f);
+            }
             CameraTf.position = CameraPos;
             _Hs.CameraShakeTime += time;
             if (_Hs.CameraShakeTime >= _Hs.CameraShakeTimeMax)

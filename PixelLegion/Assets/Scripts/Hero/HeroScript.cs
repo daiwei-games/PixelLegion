@@ -414,7 +414,7 @@ public class HeroScript : LeadToSurviveGameBaseClass
     public float AnimationFrameStorpTimeMax;
 
     /// <summary>
-    /// 是否晃動攝影機
+    /// 是否爆擊晃動攝影機
     /// </summary>
     [HideInInspector]
     public bool isCameraShake;
@@ -441,6 +441,11 @@ public class HeroScript : LeadToSurviveGameBaseClass
     /// </summary>
     [HideInInspector]
     public ParticleSystem HitParticle;
+    /// <summary>
+    /// 被爆擊粒子
+    /// </summary>
+    [HideInInspector]
+    public ParticleSystem CameraShakeParticle;
     #endregion
 
     #region 物件
@@ -872,6 +877,17 @@ public class HeroScript : LeadToSurviveGameBaseClass
         _Hps.GetHit(HpMax, _hit);
         HeroDuelStateFunc(HeroState.Hit);
         HitPlaySFX(Random.Range(3, 5));
+        if (HitParticle != null)
+        {
+            HitParticle.Play();
+        }
+        else
+        {
+            Vector2 _ptc = _Tf.position;
+            _ptc.y--;
+            HitParticle = Instantiate(_gameManagerScript.ParticleManager.AtfVfx_1, _ptc, Quaternion.identity, _Tf);
+            HitParticle.Play();
+        }
     }
     /// <summary>
     /// 必須受傷 被爆擊、或決鬥或特殊狀態
@@ -885,6 +901,22 @@ public class HeroScript : LeadToSurviveGameBaseClass
         _Hps.GetHit(HpMax, _hit);
         HeroDuelStateFunc(HeroState.Hit);
         HitPlaySFX(20);
+        if (CameraShakeParticle != null)
+        {
+            CameraShakeParticle.Play();
+        }
+        else
+        {
+            Vector2 _ptc = _Tf.position;
+            _ptc.x -= .5f;
+            _ptc.y--;
+            CameraShakeParticle = Instantiate(_gameManagerScript.ParticleManager.CameraShakeHit_1, _ptc, Quaternion.identity);
+            Transform _Ptf = CameraShakeParticle.transform;
+            Vector2 _Scale = _Ptf.localScale;
+            if (_Tf.localScale.x < 0) _Scale.x *= -1;
+            _Ptf.localScale = _Scale;
+            CameraShakeParticle.Play();
+        }
     }
     public virtual void Idle()
     {
@@ -903,17 +935,8 @@ public class HeroScript : LeadToSurviveGameBaseClass
     {
         if (!isHit) return;
         _animator.Play(hit);
-        if (HitParticle != null)
-        {
-            HitParticle.Play();
-        }
-        else
-        {
-            Vector2 _ptc = _Tf.position;
-            _ptc.y--;
-            HitParticle = Instantiate(_gameManagerScript.ParticleManager.AtfVfx_1, _ptc, Quaternion.identity, _Tf);
-            HitParticle.Play();
-        }
+        
+
         Vector2 BeakBack = Vector2.left;
         if (_Tf.localScale.x < 0) BeakBack *= -1; // 反向
         _rg.AddForce(BeakBack, ForceMode2D.Impulse);
@@ -1146,6 +1169,7 @@ public class HeroScript : LeadToSurviveGameBaseClass
                 _col = _ColList[i];
                 if (_col == null) continue;
                 _enemyNowMainFortress = _col.transform;
+                isCriticalHitRate = CriticalHitRate();
                 _colTag = _col.tag;
                 if (_colTag == staticPublicObjectsStaticName.HeroTag ||
                     _colTag == staticPublicObjectsStaticName.DarkHeroTag)
@@ -1154,7 +1178,6 @@ public class HeroScript : LeadToSurviveGameBaseClass
                     _hs = _col.GetComponent<HeroScript>();
                     if (_hs != null)
                     {
-                        isCriticalHitRate = CriticalHitRate();
                         if (isCriticalHitRate)
                         {
                             _hs.MustBeInjured(Hit *= AttackMagnification);
@@ -1170,7 +1193,6 @@ public class HeroScript : LeadToSurviveGameBaseClass
                     _ss = _col.GetComponent<SoldierScript>();
                     if (_ss != null)
                     {
-                        isCriticalHitRate = CriticalHitRate();
                         _ss.MustBeInjured(Hit, isCriticalHitRate);
                     }
                 }
