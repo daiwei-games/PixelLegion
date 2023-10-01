@@ -50,6 +50,7 @@ MonoBehaviour:
   AtfVfx_2: {fileID: 1085760314412063041, guid: ae68c2a9222e7554a82bdebbb39b10c9, type: 3}
   AtfVfx_3: {fileID: 1085760314412063041, guid: 4bc1de4a2e9e5404aac8d729ac1210ec, type: 3}
   AtfVfx_4: {fileID: 1085760314412063041, guid: c6ed735cf02ad7246955726769dfa921, type: 3}
+  CameraShakeHit_1: {fileID: 0}
 --- !u!1 &1961858639298246248
 GameObject:
   m_ObjectHideFlags: 0
@@ -231,7 +232,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4548550458062963061}
   - component: {fileID: 4109907611587090865}
-  - component: {fileID: 4407682425185278735}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -270,46 +270,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50f4d25c93f062048a44f5711071d3b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NowScenes: 0
   _Ps: {fileID: 0}
   _Pdo: {fileID: 0}
   _Glm: {fileID: 0}
   _MainFortressScriptList: []
   _soldierList: []
-  ProduceSoldierTimeMax: 0.1
   HeroList: []
-  uiScript: {fileID: 0}
-  isHeroStateForAction: 0
+  ProduceSoldierTimeMax: 0.1
+  ProduceSoldierTime: 0
   ProduceHeroTimeMax: 0.1
-  SelectedHeroTargetPrefab: {fileID: 7142136105289672756, guid: 38752e33ce3ece249a880f464e4c8fd2, type: 3}
-  isDuel: 0
-  duelScript: {fileID: 0}
-  SelectedHero: {fileID: 0}
-  _Joystick: {fileID: 0}
+  ProduceHeroTime: 0
+  uiScript: {fileID: 0}
   _UIHc: {fileID: 0}
+  HeroUI: {fileID: 0}
+  _GmSoldierCountMax: 0
+  isHeroStateForAction: 0
+  isProduceSoldier: 0
+  isGameOver: 0
+  SelectedHeroTarget: {fileID: 0}
+  _Joystick: {fileID: 0}
+  SelectedHero: {fileID: 0}
+  _LayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  _DarkLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
   CameraCenterScript: {fileID: 0}
+  SelectedHeroTargetPrefab: {fileID: 7142136105289672756, guid: 38752e33ce3ece249a880f464e4c8fd2, type: 3}
+  _HpPrefabs: {fileID: 0}
+  _DefPrefabs: {fileID: 0}
   ParticleManager: {fileID: 0}
   SFXList: {fileID: 0}
---- !u!114 &4407682425185278735
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5140066612758370205}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58faa5900d774b04ab2dac751875f628, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _Tf: {fileID: 0}
-  _Go: {fileID: 0}
-  GameManagerScript: {fileID: 0}
-  MoveListMax: 50
-  PlayerHero: {fileID: 0}
-  EnemyHero: {fileID: 0}
-  SecondsMax: 30
-  CountdownText: {fileID: 1274276623591711612}
-  bugTimeMax: 3
 --- !u!1 &7390117227693081260
 GameObject:
   m_ObjectHideFlags: 0
@@ -492,8 +485,11 @@ MonoBehaviour:
   Arms05: {fileID: 8300000, guid: 2ab55c1011ab70248b29b6f21b631161, type: 3}
   HeroHit01: {fileID: 8300000, guid: dc858a9e2a7b77c42a099e95142e2cee, type: 3}
   HeroHit02: {fileID: 8300000, guid: 96c4489c136c0aa479d7b74b7c8dc5db, type: 3}
+  HeroHit03: {fileID: 0}
+  HeroHit04: {fileID: 0}
   Def01: {fileID: 8300000, guid: 9f619d0579f17a3478577019b2a5f739, type: 3}
   SoldierHit01: {fileID: 8300000, guid: 37231337e714d564a93d2f9250091b00, type: 3}
+  CriticalStrike: {fileID: 0}
   MaxDistance: 4
   MinDistance: 2
   SpatialBlend: 1

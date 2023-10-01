@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    #region 場景判斷
+    /// <summary>
+    /// 目前是哪種場景
+    /// </summary>
+    public ScenesType NowScenes;
+    #endregion
+
+    #region 管理器、集中資料
     /// <summary>
     /// 玩家資料管理器
     /// </summary>
@@ -17,32 +25,64 @@ public class GameManager : MonoBehaviour
     /// 關卡管理器
     /// </summary>
     public GameLevelManager _Glm;
+    #endregion
 
+    #region 清單
     /// <summary>
     /// 主堡清單
     /// </summary>
     [Header("主堡清單")]
     public List<MainFortressScript> _MainFortressScriptList;
     /// <summary>
-    /// 是否執行生產士兵的函數，還是正在執行
-    /// </summary>
-    public bool isProduceSoldier;
-    /// <summary>
     /// 所有士兵清單
     /// </summary>
     [Header("所有士兵清單")]
     public List<SoldierScript> _soldierList;
     /// <summary>
-    /// 士兵計算生產間隔
-    /// </summary>
-    [Header("士兵計算生產間隔"), SerializeField, Range(0f, 10)]
-    public float ProduceSoldierTimeMax;
-    public float ProduceSoldierTime;
-    /// <summary>
     /// 已經產生的英雄清單
     /// </summary>
     [Header("已經產生的英雄清單")]
     public List<HeroScript> HeroList;
+    #endregion
+
+    #region 計算時間
+    /// <summary>
+    /// 毫秒
+    /// </summary>
+    float time;
+    /// <summary>
+    /// 士兵計算生產間隔
+    /// </summary>
+    [Header("士兵計算生產間隔"), SerializeField, Range(0f, 10)]
+    public float ProduceSoldierTimeMax;
+    [HideInInspector]
+    public float ProduceSoldierTime;
+    /// <summary>
+    /// 產生英雄計算間隔
+    /// </summary>
+    [Header("產生英雄計算間隔"), Range(0f, 10)]
+    public float ProduceHeroTimeMax;
+    [HideInInspector]
+    public float ProduceHeroTime;
+    #endregion
+
+    #region UI
+    /// <summary>
+    /// UI腳本
+    /// </summary>
+    [Header("UI腳本")]
+    public UIScript uiScript;
+    /// <summary>
+    /// 玩家英雄操作的操控介面
+    /// </summary>
+    public UIHeroController _UIHc;
+    /// <summary>
+    /// 英雄選擇介面
+    /// </summary>
+    public UIHeroOptions HeroUI;
+    #endregion
+
+    #region 程式控制
     /// <summary>
     /// 士兵數量限制
     /// </summary>
@@ -53,36 +93,26 @@ public class GameManager : MonoBehaviour
     /// </summary>
     bool isSoldierStateForAction;
     /// <summary>
-    /// 毫秒
-    /// </summary>
-    float time;
-    /// <summary>
-    /// UI腳本
-    /// </summary>
-    [Header("UI腳本"), HideInInspector]
-    public UIScript uiScript;
-
-    /// <summary>
     /// 是否再次執行英雄動作迴圈的判斷
     /// </summary>
     [HideInInspector]
     public bool isHeroStateForAction;
     /// <summary>
-    /// 產生英雄計算間隔
+    /// 是否執行生產士兵的函數，還是正在執行
     /// </summary>
-    [Header("產生英雄計算間隔"), Range(0f, 10)]
-    public float ProduceHeroTimeMax;
-    [HideInInspector]
-    public float ProduceHeroTime;
+    public bool isProduceSoldier;
+    /// <summary>
+    /// 是否遊戲結束
+    /// </summary>
+    public bool isGameOver;
+    #endregion
+
+    #region 操控類、指標類
     /// <summary>
     /// 選擇的英雄頭上出現指標
     /// </summary>
     [Header("選擇的英雄頭上出現指標")]
     public Transform SelectedHeroTarget;
-    /// <summary>
-    /// 是否遊戲結束
-    /// </summary>
-    public bool isGameOver;
     /// <summary>
     /// 搖桿腳本
     /// </summary>
@@ -93,15 +123,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     [Header("可以操控的英雄")]
     public HeroScript SelectedHero;
+    #endregion
 
-    /// <summary>
-    /// 玩家英雄操作的操控介面
-    /// </summary>
-    public UIHeroController _UIHc;
-    /// <summary>
-    /// 英雄選擇介面
-    /// </summary>
-    public UIHeroOptions HeroUI;
     #region 圖層
     /// <summary>
     /// 取得光明圖層
@@ -112,24 +135,12 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public LayerMask _DarkLayerMask;
     #endregion
+
     #region 攝影機
     /// <summary>
     /// 監視器中心點
     /// </summary>
     public CameraCenterScript CameraCenterScript;
-    #endregion
-
-    #region VFX、SFX 管理器
-    /// <summary>
-    /// VFX 管理器
-    /// </summary>
-    [Header("VFX 管理器")]
-    public ParticleListManagerScript ParticleManager;
-    /// <summary>
-    /// SFX 管理器
-    /// </summary>
-    [Header("SFX 管理器")]
-    public SFXListScript SFXList;
     #endregion
 
     #region 預置物件
@@ -145,6 +156,19 @@ public class GameManager : MonoBehaviour
     /// </summary>
     [Header("防禦條預置物件")]
     public DefScript _DefPrefabs;
+    #endregion
+
+    #region VFX、SFX 管理器
+    /// <summary>
+    /// VFX 管理器
+    /// </summary>
+    [Header("VFX 管理器")]
+    public ParticleListManagerScript ParticleManager;
+    /// <summary>
+    /// SFX 管理器
+    /// </summary>
+    [Header("SFX 管理器")]
+    public SFXListScript SFXList;
     #endregion
 
     /// <summary>
@@ -180,7 +204,6 @@ public class GameManager : MonoBehaviour
         {
             Time.timeScale = 0;
         }
-
         if (!isGameOver)
         {
             if (SelectedHero == null)
@@ -189,7 +212,14 @@ public class GameManager : MonoBehaviour
             }
 
             SelectedHeroControl();
-
+        }
+        switch (NowScenes)
+        {
+            case ScenesType.practise:
+            case ScenesType.battlefield:
+                break;
+            case ScenesType.village:
+                break;
         }
     }
     private void FixedUpdate()
@@ -199,7 +229,6 @@ public class GameManager : MonoBehaviour
         ProduceSoldierTime += time;
         if (!isGameOver)
         {
-
             if (ProduceSoldierTime >= ProduceSoldierTimeMax)
             {
                 ProduceSoldierTime = 0;
@@ -216,34 +245,39 @@ public class GameManager : MonoBehaviour
             HeroAI(time);
 
         }
+        switch (NowScenes)
+        {
+            case ScenesType.practise: // 如果是練習場景
+            case ScenesType.battlefield: // 如果是戰場場景
+                break;
+            case ScenesType.village: // 如果是村莊場景
+                break;
+        }
         CameraToPlayerPosition();
     }
 
-
-    #region 英雄相關操作
-    #region 決鬥相關操作
+    #region 攝影機操作
     /// <summary>
-    /// 按下決鬥
+    /// 取得玩家選擇的英雄 Transform
     /// </summary>
-    public void Duel()
+    public void CameraGetPlayerTransform(Transform HeroTf)
     {
-
-    }
-
-    /// <summary>
-    /// 取消
-    /// </summary>
-    public void DuelEnd()
-    {
-
+        if (SelectedHero == null) return;
+        if (CameraCenterScript == null) return;
+        CameraCenterScript.PlayerTf = HeroTf;
     }
     /// <summary>
-    /// 自動選擇動作
+    /// 捨影機跟隨玩家選擇的英雄
     /// </summary>
-    public void OnHeroMoveAuto()
+    public void CameraToPlayerPosition()
     {
-
+        if (SelectedHero == null) return;
+        if (CameraCenterScript == null) return;
+        CameraCenterScript.GotoPlyer();
     }
+    #endregion
+
+    #region UI 相關
     /// <summary>
     /// 打開決鬥介面
     /// </summary>
@@ -273,29 +307,8 @@ public class GameManager : MonoBehaviour
         uiScript.ClosePlayerMoveUI();
     }
     #endregion
-    #region 操控英雄
-    /// <summary>
-    /// 取得玩家選擇的英雄 Transform
-    /// </summary>
-    public void CameraGetPlayerTransform(Transform HeroTf)
-    {
-        if (SelectedHero == null) return;
-        if (CameraCenterScript == null) return;
-        CameraCenterScript.PlayerTf = HeroTf;
-    }
-    /// <summary>
-    /// 捨影機跟隨玩家選擇的英雄
-    /// </summary>
-    public void CameraToPlayerPosition()
-    {
-        if (CameraCenterScript == null) return;
-        CameraCenterScript.GotoPlyer();
-    }
 
-    #region 決鬥或是AI操作時
-
-    #endregion
-    #endregion
+    #region 英雄相關
     /// <summary>
     /// 產生英雄
     /// </summary>
@@ -313,7 +326,6 @@ public class GameManager : MonoBehaviour
                 _MainFortressScriptList[i].ProduceHero(time);
             }
         }
-
     }
 
     /// <summary>
@@ -430,7 +442,7 @@ public class GameManager : MonoBehaviour
             if (_hero._enemyNowMainFortress != null)
             {
                 _targetTf = _hero._enemyNowMainFortress;
-                if(_hero._target != null) _targetTf = _hero._target;
+                if (_hero._target != null) _targetTf = _hero._target;
                 _MoveDirection = CorrectionDirection(_hero._Tf, _targetTf, false);
                 _hero.HeroDuelStateFunc(HeroState.Run, _MoveDirection);
             }
@@ -494,7 +506,6 @@ public class GameManager : MonoBehaviour
         _Hs.HeroInitializ();
         HeroList.Add(_Hs);
     }
-
     #endregion
 
     #region 士兵相關動作
@@ -574,7 +585,7 @@ public class GameManager : MonoBehaviour
             _soldierScript.Move();
 
             Transform _targetTf = _soldierScript._enemyNowMainFortress;
-            if(_soldierScript._target != null) _targetTf = _soldierScript._target;
+            if (_soldierScript._target != null) _targetTf = _soldierScript._target;
             _tf.position = Vector3.MoveTowards(Pos, _targetTf.position, _soldierScript.speed * _time);
         }
         if (isGameOver)
@@ -586,7 +597,7 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 附值
+    /// 士兵資料初始化
     /// </summary>
     /// <param name="_Ss">士兵腳本</param>
     public void SoldierDataFormat(SoldierScript _Ss, bool isDark = true)
@@ -619,7 +630,6 @@ public class GameManager : MonoBehaviour
         _Ss.SoldierDataInitializ();
         _soldierList.Add(_Ss);
     }
-
     #endregion
 
     #region 功能型方法
@@ -646,6 +656,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     /// <param name="_tf">主要角色</param>
     /// <param name="_EnemyTf">對手角色</param>
+    /// <param name="SettingEnemyDirection">是否需要設定對手角色的方向</param></param>
     /// <returns>返回方向X軸1或-1的Vector2</returns>
     public Vector2 CorrectionDirection(Transform _tf, Transform _EnemyTf, bool SettingEnemyDirection = true)
     {
@@ -674,6 +685,20 @@ public class GameManager : MonoBehaviour
         return Vector2.right * _direction; // 只返回 _tf 的方向
     }
     /// <summary>
+    /// 移除清單中的物件
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="list">要清除的List</param>
+    /// <param name="item">要清除的物件</param>
+    public void RemoveFromList<T>(List<T> list, T item) //移除清單中的物件
+    {
+        int index = list.IndexOf(item);
+        if (index != -1) list.RemoveAt(index);
+    }
+    #endregion
+
+    #region 遊戲結束
+    /// <summary>
     /// 本場遊戲結束
     /// </summary>
     public void GameOver()
@@ -689,18 +714,9 @@ public class GameManager : MonoBehaviour
         isGameOver = true;
         uiScript.GameOverUI();
     }
+    #endregion
 
-    /// <summary>
-    /// 移除清單中的物件
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="list">要清除的List</param>
-    /// <param name="item">要清除的物件</param>
-    public void RemoveFromList<T>(List<T> list, T item) //移除清單中的物件
-    {
-        int index = list.IndexOf(item);
-        if (index != -1) list.RemoveAt(index);
-    }
+    #region 主堡相關
     /// <summary>
     /// 主堡爆了
     /// </summary>
@@ -721,7 +737,7 @@ public class GameManager : MonoBehaviour
         Transform _tf;
         Collider2D _col;
         SoldierScript _Ss;
-        if (_soldierList.Count > 0)
+        if (_soldierList.Count > 0) // 如果有士兵
         {
             for (int i = 0; i < _soldierList.Count; i++)
             {
@@ -735,14 +751,14 @@ public class GameManager : MonoBehaviour
                         _tf = _col.transform;
                         switch (_mfbTf.tag)
                         {
-                            case staticPublicObjectsStaticName.DarkMainFortressTag:
-                                if (_Ss.CompareTag(staticPublicObjectsStaticName.DARKSoldierTag))
+                            case staticPublicObjectsStaticName.DarkMainFortressTag: // 如果是黑暗主堡
+                                if (_Ss.CompareTag(staticPublicObjectsStaticName.DARKSoldierTag)) // 如果是黑暗士兵
                                 {
                                     _Ss._target = _tf;
                                 }
                                 break;
-                            case staticPublicObjectsStaticName.MainFortressTag:
-                                if (_Ss.CompareTag(staticPublicObjectsStaticName.PlayerSoldierTag))
+                            case staticPublicObjectsStaticName.MainFortressTag: // 如果是光明主堡
+                                if (_Ss.CompareTag(staticPublicObjectsStaticName.PlayerSoldierTag)) // 如果是玩家士兵
                                 {
                                     _Ss._target = _tf;
                                 }
@@ -754,28 +770,28 @@ public class GameManager : MonoBehaviour
             }
         }
         HeroScript _hs;
-        if (HeroList.Count > 0)
+        if (HeroList.Count > 0) // 如果有英雄
         {
-            for (int i = 0; i < HeroList.Count; i++)
+            for (int i = 0; i < HeroList.Count; i++) // 檢查每個英雄
             {
                 _hs = HeroList[i];
                 if (_hs == null) continue;
-                for (int c = 0; c < _enemyList.Count; c++)
+                for (int c = 0; c < _enemyList.Count; c++) // 檢查每個攻擊主堡的人
                 {
                     _col = _enemyList[c];
                     if (_col != null)
                     {
                         _tf = _col.transform;
-                        switch (_mfbTf.tag)
+                        switch (_mfbTf.tag) // 檢查主堡的tag
                         {
-                            case staticPublicObjectsStaticName.DarkMainFortressTag:
-                                if (_hs.CompareTag(staticPublicObjectsStaticName.DarkHeroTag))
+                            case staticPublicObjectsStaticName.DarkMainFortressTag: // 如果是黑暗主堡
+                                if (_hs.CompareTag(staticPublicObjectsStaticName.DarkHeroTag)) // 如果是黑暗英雄
                                 {
                                     _hs._target = _tf;
                                 }
                                 break;
-                            case staticPublicObjectsStaticName.MainFortressTag:
-                                if (_hs.CompareTag(staticPublicObjectsStaticName.HeroTag))
+                            case staticPublicObjectsStaticName.MainFortressTag: // 如果是光明主堡
+                                if (_hs.CompareTag(staticPublicObjectsStaticName.HeroTag)) // 如果是玩家英雄
                                 {
                                     _hs._target = _tf;
                                 }
@@ -845,6 +861,29 @@ public class GameManager : MonoBehaviour
         _mfb.MainForTressSoldierCountTextMeshPro(); // 更新主堡兵數文字
 
     }
+    #endregion
 
+
+    #region 村莊場景
     #endregion
 }
+#region 場景類型
+/// <summary>
+/// 
+/// </summary>
+public enum ScenesType
+{
+    /// <summary>
+    /// 練習場景
+    /// </summary>
+    practise,
+    /// <summary>
+    /// 戰場場景
+    /// </summary>
+    battlefield,
+    /// <summary>
+    /// 村莊場景
+    /// </summary>
+    village,
+}
+#endregion

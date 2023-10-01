@@ -195,7 +195,7 @@ public class SoldierScript : LeadToSurviveGameBaseClass
     /// <summary>
     /// 被攻擊特效
     /// </summary>
-    [Header("被攻擊的特效"),HideInInspector]
+    [Header("被攻擊的特效"), HideInInspector]
     public ParticleSystem AtkVfx_2;
 
     /// <summary>
@@ -382,6 +382,12 @@ public class SoldierScript : LeadToSurviveGameBaseClass
             {
                 if (CameraShakeParticle != null)
                 {
+                    Transform _Ptf = CameraShakeParticle.transform;
+                    Quaternion _Rotation = _Ptf.localRotation;
+                    _Rotation.y = 0;
+                    if (_Tf.localScale.x < 0) _Rotation.y = 180;
+                    _Ptf.localRotation = _Rotation;
+
                     CameraShakeParticle.Play();
                 }
                 else
@@ -391,9 +397,10 @@ public class SoldierScript : LeadToSurviveGameBaseClass
                     _ptc.y -= .5f;
                     CameraShakeParticle = Instantiate(_gameManagerScript.ParticleManager.CameraShakeHit_1, _ptc, Quaternion.identity);
                     Transform _Ptf = CameraShakeParticle.transform;
-                    Vector2 _Scale = _Ptf.localScale;
-                    if (_Tf.localScale.x < 0) _Scale.x *= -1;
-                    _Ptf.localScale = _Scale;
+                    Quaternion _Rotation = _Ptf.localRotation;
+                    _Rotation.y = 0;
+                    if (_Tf.localScale.x < 0) _Rotation.y = 180;
+                    _Ptf.localRotation = _Rotation;
                     CameraShakeParticle.Play();
                 }
             }

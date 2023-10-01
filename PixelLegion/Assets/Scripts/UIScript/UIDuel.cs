@@ -37,7 +37,7 @@ public class UIDuel : LeadToSurviveGameBaseClass
             {
                 DuelAUTO.onClick.AddListener(() =>
                 {
-                    GameManagerScript.OnHeroMoveAuto();
+
                 });
             }
         }

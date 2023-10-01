@@ -113,7 +113,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 8417500467252992318}
@@ -203,18 +203,18 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.074472666, y: 0.023522854}
+  m_Offset: {x: -0.12753868, y: -0.0015682578}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 5.8125, y: 1.5}
+    oldSize: {x: 11.625, y: 3}
     newSize: {x: 5.8125, y: 1.5}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 5.604872, y: 1.3693638}
+  m_Size: {x: 11.059992, y: 2.9759016}
   m_EdgeRadius: 0
 --- !u!114 &9000614993931223183
 MonoBehaviour:
@@ -249,6 +249,8 @@ MonoBehaviour:
   ProduceHeroTime: 0
   ProduceHeroTimeMax: 0
   HeroUI: {fileID: 0}
+  Physics2DSize: 35
+  PhySize: {x: 0, y: 0}
 --- !u!1 &5013076206298169237
 GameObject:
   m_ObjectHideFlags: 0
@@ -274,7 +276,7 @@ Transform:
   m_GameObject: {fileID: 5013076206298169237}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.2, z: 0}
+  m_LocalPosition: {x: 0, y: 1.2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

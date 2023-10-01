@@ -1,7 +1,4 @@
-﻿using System.Security.Cryptography;
-using UnityEditor.Rendering;
-using UnityEngine;
-using static UnityEngine.Rendering.DebugUI;
+﻿using UnityEngine;
 /// <summary>
 /// 玩家控制角色時的腳本
 /// </summary>
@@ -92,8 +89,8 @@ public class HeroController : MonoBehaviour
     private void FixedUpdate()
     {
         time = Time.deltaTime;
-        _Hs.AtkTime += time;
 
+        _Hs.AtkTime += time;
         _Hs.HeroDuelStateFunc(HeroState.Run, _JoystickDirection);
         if (!_Hs.isNowDef && _Hs.DefTime > 0)
         {

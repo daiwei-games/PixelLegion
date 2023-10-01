@@ -890,6 +890,22 @@ public class HeroScript : LeadToSurviveGameBaseClass
         }
     }
     /// <summary>
+    /// 粒子轉向
+    /// </summary>
+    /// <param name="_Ps">粒子物件</param>
+    /// <param name="_tf">跟隨方向的物件</param>
+    private void ParticleRotation(ParticleSystem _Ps, Transform _tf)
+    {
+        if(_Ps != null)
+        {
+            Transform _Ptf = CameraShakeParticle.transform;
+            Quaternion _Rotation = _Ptf.localRotation;
+            _Rotation.y = 0;
+            if (_tf.localScale.x < 0) _Rotation.y = 180;
+            _Ptf.localRotation = _Rotation;
+        }
+    }
+    /// <summary>
     /// 必須受傷 被爆擊、或決鬥或特殊狀態
     /// </summary>
     /// <param name="hp">傷害</param>
@@ -903,18 +919,15 @@ public class HeroScript : LeadToSurviveGameBaseClass
         HitPlaySFX(20);
         if (CameraShakeParticle != null)
         {
+            ParticleRotation(CameraShakeParticle, _Tf);
             CameraShakeParticle.Play();
         }
         else
         {
             Vector2 _ptc = _Tf.position;
-            _ptc.x -= .5f;
             _ptc.y--;
-            CameraShakeParticle = Instantiate(_gameManagerScript.ParticleManager.CameraShakeHit_1, _ptc, Quaternion.identity);
-            Transform _Ptf = CameraShakeParticle.transform;
-            Vector2 _Scale = _Ptf.localScale;
-            if (_Tf.localScale.x < 0) _Scale.x *= -1;
-            _Ptf.localScale = _Scale;
+            CameraShakeParticle = Instantiate(_gameManagerScript.ParticleManager.CameraShakeHit_1, _ptc, Quaternion.identity,_Tf);
+            ParticleRotation(CameraShakeParticle, _Tf);
             CameraShakeParticle.Play();
         }
     }
