@@ -1,0 +1,269 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/daiwei/Desktop/PixelLegion/PixelLegion/Unity.Mathematics.csproj": {}
+  },
+  "projects": {
+    "/Users/daiwei/Desktop/PixelLegion/PixelLegion/Unity.Mathematics.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/daiwei/Desktop/PixelLegion/PixelLegion/Unity.Mathematics.csproj",
+        "projectName": "Unity.Mathematics",
+        "projectPath": "/Users/daiwei/Desktop/PixelLegion/PixelLegion/Unity.Mathematics.csproj",
+        "packagesPath": "/Users/daiwei/.nuget/packages/",
+        "outputPath": "/Users/daiwei/Desktop/PixelLegion/PixelLegion/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/daiwei/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "targetAlias": "netstandard2.1",
+            "projectReferences": {
+              "/Users/daiwei/Desktop/PixelLegion/PixelLegion/UnityEditor.UI.csproj": {
+                "projectPath": "/Users/daiwei/Desktop/PixelLegion/PixelLegion/UnityEditor.UI.csproj"
+              },
+              "/Users/daiwei/Desktop/PixelLegion/PixelLegion/UnityEngine.UI.csproj": {
+                "projectPath": "/Users/daiwei/Desktop/PixelLegion/PixelLegion/UnityEngine.UI.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "targetAlias": "netstandard2.1",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.304/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/daiwei/Desktop/PixelLegion/PixelLegion/UnityEditor.TestRunner.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/daiwei/Desktop/PixelLegion/PixelLegion/UnityEditor.TestRunner.csproj",
+        "projectName": "UnityEditor.TestRunner",
+        "projectPath": "/Users/daiwei/Desktop/PixelLegion/PixelLegion/UnityEditor.TestRunner.csproj",
+        "packagesPath": "/Users/daiwei/.nuget/packages/",
+        "outputPath": "/Users/daiwei/Desktop/PixelLegion/PixelLegion/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/daiwei/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "targetAlias": "netstandard2.1",
+            "projectReferences": {
+              "/Users/daiwei/Desktop/PixelLegion/PixelLegion/UnityEngine.TestRunner.csproj": {
+                "projectPath": "/Users/daiwei/Desktop/PixelLegion/PixelLegion/UnityEngine.TestRunner.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "targetAlias": "netstandard2.1",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.304/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/daiwei/Desktop/PixelLegion/PixelLegion/UnityEditor.UI.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/daiwei/Desktop/PixelLegion/PixelLegion/UnityEditor.UI.csproj",
+        "projectName": "UnityEditor.UI",
+        "projectPath": "/Users/daiwei/Desktop/PixelLegion/PixelLegion/UnityEditor.UI.csproj",
+        "packagesPath": "/Users/daiwei/.nuget/packages/",
+        "outputPath": "/Users/daiwei/Desktop/PixelLegion/PixelLegion/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/daiwei/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "targetAlias": "netstandard2.1",
+            "projectReferences": {
+              "/Users/daiwei/Desktop/PixelLegion/PixelLegion/UnityEditor.TestRunner.csproj": {
+                "projectPath": "/Users/daiwei/Desktop/PixelLegion/PixelLegion/UnityEditor.TestRunner.csproj"
+              },
+              "/Users/daiwei/Desktop/PixelLegion/PixelLegion/UnityEngine.TestRunner.csproj": {
+                "projectPath": "/Users/daiwei/Desktop/PixelLegion/PixelLegion/UnityEngine.TestRunner.csproj"
+              },
+              "/Users/daiwei/Desktop/PixelLegion/PixelLegion/UnityEngine.UI.csproj": {
+                "projectPath": "/Users/daiwei/Desktop/PixelLegion/PixelLegion/UnityEngine.UI.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "targetAlias": "netstandard2.1",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.304/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/daiwei/Desktop/PixelLegion/PixelLegion/UnityEngine.TestRunner.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/daiwei/Desktop/PixelLegion/PixelLegion/UnityEngine.TestRunner.csproj",
+        "projectName": "UnityEngine.TestRunner",
+        "projectPath": "/Users/daiwei/Desktop/PixelLegion/PixelLegion/UnityEngine.TestRunner.csproj",
+        "packagesPath": "/Users/daiwei/.nuget/packages/",
+        "outputPath": "/Users/daiwei/Desktop/PixelLegion/PixelLegion/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/daiwei/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "targetAlias": "netstandard2.1",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "targetAlias": "netstandard2.1",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.304/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/daiwei/Desktop/PixelLegion/PixelLegion/UnityEngine.UI.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/daiwei/Desktop/PixelLegion/PixelLegion/UnityEngine.UI.csproj",
+        "projectName": "UnityEngine.UI",
+        "projectPath": "/Users/daiwei/Desktop/PixelLegion/PixelLegion/UnityEngine.UI.csproj",
+        "packagesPath": "/Users/daiwei/.nuget/packages/",
+        "outputPath": "/Users/daiwei/Desktop/PixelLegion/PixelLegion/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/daiwei/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "targetAlias": "netstandard2.1",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "targetAlias": "netstandard2.1",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.304/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
