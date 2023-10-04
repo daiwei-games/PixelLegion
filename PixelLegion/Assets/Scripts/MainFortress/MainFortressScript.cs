@@ -112,6 +112,9 @@ public class MainFortressScript : LeadToSurviveGameBaseClass
     {
         MainFortressDataInitializ();
     }
+    /// <summary>
+    /// 主堡資料初始化
+    /// </summary>
     public virtual void MainFortressDataInitializ()
     {
         _Tf = transform; // 取得物件transform
@@ -136,14 +139,14 @@ public class MainFortressScript : LeadToSurviveGameBaseClass
                     break;
             }
         }
-
-        //HeroUI = FindFirstObjectByType<UIHeroOptions>(); // 取得英雄選擇介面
         _gameManagerScript.MainFortressDataFormat(this); // 將主堡資料傳給
         GetEnemyMainFortress();
     }
 
 
-
+    /// <summary>
+    /// 產生士兵
+    /// </summary>
     public virtual void ProduceSoldier()
     {
         if (_soldierCount == 0) return;
@@ -215,7 +218,10 @@ public class MainFortressScript : LeadToSurviveGameBaseClass
             MainForTressSoldierCountTextMeshPro(); // 更新主堡兵數文字
         }
     }
-
+    /// <summary>
+    /// 主堡受傷
+    /// </summary>
+    /// <param name="hit">傷害指數</param>
     public virtual void MainFortressHit(int hit)
     {
         if (_hp <= 0) return;
@@ -265,8 +271,14 @@ public class MainFortressScript : LeadToSurviveGameBaseClass
         _hero.GetEmenyTarget(_gameManagerScript._MainFortressScriptList);
         _gameManagerScript.HeroDataFormat(_hero); //設定英雄資料
     }
-
-
+    /// <summary>
+    /// 村莊產生英雄
+    /// </summary>
+    /// <param name="_hs"></param>
+    public virtual void ProduceHero(HeroScript _hs)
+    {
+        
+    }
 
     #region 其他
     /// <summary>
@@ -287,7 +299,10 @@ public class MainFortressScript : LeadToSurviveGameBaseClass
         if (_soldierCountMeshPro == null) return;
         _soldierCountMeshPro.text = $"{_soldierCount}";
     }
-
+    /// <summary>
+    /// 主堡判斷射線
+    /// </summary>
+    /// <param name="_layermask">判斷圖層</param>
     public virtual void PhyOverlapBoxAll(LayerMask _layermask)
     {
 

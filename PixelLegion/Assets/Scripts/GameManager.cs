@@ -210,13 +210,13 @@ public class GameManager : MonoBehaviour
             {
                 SelectedHeroFunc();
             }
-
             SelectedHeroControl();
         }
         switch (NowScenes)
         {
             case ScenesType.practise:
             case ScenesType.battlefield:
+
                 break;
             case ScenesType.village:
                 break;
@@ -226,31 +226,32 @@ public class GameManager : MonoBehaviour
     {
         if (staticPublicGameStopSwitch.gameStop) return;
         time = Time.deltaTime;
-        ProduceSoldierTime += time;
-        if (!isGameOver)
-        {
-            if (ProduceSoldierTime >= ProduceSoldierTimeMax)
-            {
-                ProduceSoldierTime = 0;
-                ProduceSoldier(); //兩邊士兵生產
-            }
-            ProduceHeroTime += time;
-            if (ProduceHeroTime >= ProduceHeroTimeMax)
-            {
-                ProduceHeroTime = 0;
-                ProduceHero(); //產生英雄
-            }
-            //管理器區塊
-            SoldierState(time);
-            HeroAI(time);
 
-        }
         switch (NowScenes)
         {
             case ScenesType.practise: // 如果是練習場景
             case ScenesType.battlefield: // 如果是戰場場景
+                ProduceSoldierTime += time;
+                ProduceHeroTime += time;
+                if (!isGameOver)
+                {
+                    if (ProduceSoldierTime >= ProduceSoldierTimeMax)
+                    {
+                        ProduceSoldierTime = 0;
+                        ProduceSoldier(); //兩邊士兵生產
+                    }
+                    if (ProduceHeroTime >= ProduceHeroTimeMax)
+                    {
+                        ProduceHeroTime = 0;
+                        ProduceHero(); //產生英雄
+                    }
+                    //管理器區塊
+                    SoldierState(time);
+                    HeroAI(time);
+                }
                 break;
             case ScenesType.village: // 如果是村莊場景
+
                 break;
         }
         CameraToPlayerPosition();
@@ -328,6 +329,21 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 取得角色控制
+    /// </summary>
+    private void SelectedHeroControl()
+    {
+        if (SelectedHero == null) return;
+
+        Vector2 Pos = SelectedHero._Tf.position; //取得位置
+        SelectedHero.PhyOverlapBoxAll(Pos);
+
+        Vector2 Pos2 = Pos; //取得位置
+        Pos2.y += 4;
+        Pos2.y += Mathf.PingPong(.5f + Time.time, 1f);
+        SelectedHeroTarget.position = Pos2;
+    }
     /// <summary>
     /// 當可操控角色為null時，就查找符合可操作的角色
     /// </summary>
@@ -450,21 +466,6 @@ public class GameManager : MonoBehaviour
         isHeroStateForAction = true;
     }
 
-    /// <summary>
-    /// 取得角色控制
-    /// </summary>
-    private void SelectedHeroControl()
-    {
-        if (SelectedHero == null) return;
-
-        Vector2 Pos = SelectedHero._Tf.position; //取得位置
-        SelectedHero.PhyOverlapBoxAll(Pos);
-
-        Vector2 Pos2 = Pos; //取得位置
-        Pos2.y += 4;
-        Pos2.y += Mathf.PingPong(.5f + Time.time, 1f);
-        SelectedHeroTarget.position = Pos2;
-    }
     /// <summary>
     /// 英雄資料初始化
     /// </summary>
@@ -805,6 +806,19 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 在村莊時產生一位已選擇的英雄
+    /// </summary>
+    /// <param name="_hs">英雄</param>
+    /// <param name="_tf">主堡Transform</param>
+    private void VillageScenesProduceHero(HeroScript _hs, Transform _tf)
+    {
+        if (_hs == null) return; //如果沒有英雄就不執行
+        HeroScript _hero = Instantiate(_hs, _tf.position, Quaternion.identity, null); //產生英雄
+        _hero.tag = staticPublicObjectsStaticName.HeroTag; //設定英雄tag
+        _hero.gameObject.layer = LayerMask.NameToLayer(staticPublicObjectsStaticName.HeroLayer); //設定英雄圖層
+        HeroDataFormat(_hero); //設定英雄資料
+    }
+    /// <summary>
     /// 光明主堡資料重置
     /// </summary>
     /// <param name="_mfb">主堡腳本</param>
@@ -831,6 +845,11 @@ public class GameManager : MonoBehaviour
         _MainFortressScriptList.Add(_mfb);
         _mfb.MainFortressHpTextMeshPro(); // 更新主堡血量文字
         _mfb.MainForTressSoldierCountTextMeshPro(); // 更新主堡兵數文字
+
+        if (NowScenes == ScenesType.village && SelectedHero == null)
+        {
+            VillageScenesProduceHero(_mfb.GetHeroList[Random.Range(0, _mfb.GetHeroList.Count)], _mfb._Tf);
+        }
     }
     /// <summary>
     /// 黑暗主堡資料重置
@@ -863,13 +882,12 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
-
     #region 村莊場景
     #endregion
 }
 #region 場景類型
 /// <summary>
-/// 
+/// 場景類型
 /// </summary>
 public enum ScenesType
 {

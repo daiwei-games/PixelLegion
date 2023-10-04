@@ -185,31 +185,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Tf: {fileID: 0}
   _Go: {fileID: 0}
-  _soldierDataObject: {fileID: 0}
   _body2D: {fileID: 0}
-  _soldierScript: {fileID: 0}
-  BasicQuality: 0
-  BasicConstitution: 0
-  BasicHp: 0
+  BasicQuality: 0.1
+  BasicConstitution: 25
+  BasicHp: 776
   soldierName: 
   soldierAtk: 0
   soldierDefense: 0
   soldierHp: 0
-  speed: 0
-  soldierLv: 0
-  soldierLvMax: 0
-  animPrefix: 
+  soldierHpMax: 0
+  speed: 9
   _gameManagerScript: {fileID: 0}
   _SoldierScale: {x: 0, y: 0, z: 0}
+  PhyOffset: 2
   _collider2D: []
-  Physics2DSize: 0
-  _enemySoldierLayer: 0
-  _enemyMainFortressLayer: 0
-  _enemyHeroLayer: 0
+  Physics2DSize: 4
   _enemyLayerMask:
     serializedVersion: 2
     m_Bits: 0
   _enemyNowMainFortress: {fileID: 0}
+  _target: {fileID: 0}
+  IsCloseRigidbody: 1
   _animator: {fileID: 0}
   _animationClip: []
   animationTime: 0
@@ -224,5 +220,5 @@ MonoBehaviour:
   _soldierNowState: 0
   _soldierChangeState: 0
   AtkVfx_2: {fileID: 0}
-  PhyOffset: 0
-  IsCloseRigidbody: 0
+  CameraShakeParticle: {fileID: 0}
+  _Hps: {fileID: 0}

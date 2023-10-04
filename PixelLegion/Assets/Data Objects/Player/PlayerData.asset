@@ -18,8 +18,8 @@ MonoBehaviour:
   PlayerDiamond: 0
   PlayerEnergy: 0
   SelectedHeroList:
-  - {fileID: 8501007126662567594, guid: ebee31bdf2480c749a630119bb025606, type: 3}
-  - {fileID: -1149047480555715007, guid: ca2afdcb6c5416249a880d204d71e752, type: 3}
+  - {fileID: 9008879848357846960, guid: f4c11d720e093e342b063a8455b667f7, type: 3}
+  - {fileID: 7698872245049011082, guid: 0e5dd2b9dda67334ab730ed9254b8bd1, type: 3}
   PlayerHeroLv: 1
   AddHp: 0.2
   AddAtk: 0.2
@@ -28,6 +28,7 @@ MonoBehaviour:
   ProduceHeroTimeMax: 10
   soldierSelectedList:
   - {fileID: 2469343175491405471, guid: 1954582f411329345aeefdba63978b4d, type: 3}
+  - {fileID: 545057208322360471, guid: 6c13d616869b8b44b95d404f68d7664f, type: 3}
   soldierLv: 1
   soldierHp: 0.02
   soldierAtk: 0.02

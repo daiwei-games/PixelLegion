@@ -463,6 +463,7 @@ public class HeroScript : LeadToSurviveGameBaseClass
 
     public virtual void HeroInitializ()
     {
+        GameObject d = GameObject.Find("");
         _Hc = GetComponent<HeroController>();
         if (_Hc != null)
         {
@@ -1552,8 +1553,6 @@ public class HeroScript : LeadToSurviveGameBaseClass
         if (_Tf == null) return;
         Gizmos.color = Color.red;
         Gizmos.DrawWireCube(Physics2DOffset(_Tf, PhyOffset, _Tf.position), PhySizeVector2);
-
-
     }
 
     private void OnCollisionStay2D(Collision2D collision)

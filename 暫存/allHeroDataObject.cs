@@ -1,0 +1,15 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+/// <summary>
+/// 所有英雄清單
+/// </summary>
+[CreateAssetMenu(fileName = "New HeroList Data", menuName = "Data Object/All Hero Data")]
+public class allHeroDataObject : ScriptableObject
+{
+    /// <summary>
+    /// 英雄清單
+    /// </summary>
+    public List<HeroScript> AllHeros;
+}

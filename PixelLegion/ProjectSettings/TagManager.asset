@@ -41,8 +41,8 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
+  - SceneDecoration
+  - NPC
   - VFX
   - MainCamera
   m_SortingLayers:
