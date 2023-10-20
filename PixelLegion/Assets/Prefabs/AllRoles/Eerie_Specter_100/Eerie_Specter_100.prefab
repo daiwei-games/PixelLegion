@@ -136,7 +136,6 @@ MonoBehaviour:
   Attack: 0
   AttackCriticalHitRate: 30
   AttackMagnification: 2
-  isCriticalHitRate: 0
   Def: 0
   Percentage: 0
   _gameManagerScript: {fileID: 0}
@@ -157,10 +156,13 @@ MonoBehaviour:
   isfloot: 0
   _enemyNowMainFortress: {fileID: 0}
   _target: {fileID: 0}
+  _HeroNowState: 0
   isPlayerControl: 0
   IsItPossibleToDuel: 0
   speed: 12
-  _HeroNowState: 0
+  isCriticalHitRate: 0
+  isCameraShake: 0
+  isAnimationFrameStorp: 0
   movAtk: []
   isMovAtk: 0
   jumpAtk: 
@@ -202,17 +204,15 @@ MonoBehaviour:
   AtkCount: 0
   CameraCenterScript: {fileID: 0}
   AtkTime: 0
-  AtkTimeMax: 1.5
+  AtkTimeMax: 1.2
   MissTime: 0
   DashTime: 0.3
   RollTime: 0
   DefTimeMax: 2
   DefTime: 0
   isNowDef: 0
-  isAnimationFrameStorp: 0
   AnimationFrameStorpTime: 0
   AnimationFrameStorpTimeMax: 0.2
-  isCameraShake: 0
   CameraShakeTime: 0
   CameraShakeTimeMax: 0
   DefParticle: {fileID: 0}

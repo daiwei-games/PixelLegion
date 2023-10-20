@@ -1,8 +1,6 @@
-﻿using Assets.Scripts.IFace;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 public class UIScript : LeadToSurviveGameBaseClass
 {
@@ -46,10 +44,16 @@ public class UIScript : LeadToSurviveGameBaseClass
     [Header("功能型UI"), SerializeField]
     private RectTransform FuncUI;
     /// <summary>
+    /// 傳送陣的介面
+    /// </summary>
+    [Header("傳送陣的介面"), SerializeField]
+    private RectTransform TeleportationArrayUI;
+    /// <summary>
     /// 需要集中管理的介面
     /// </summary>
     [Header("需要集中管理的介面"), SerializeField]
     private List<RectTransform> CentralizedManagementUI;
+
     private void Awake()
     {
         GUIDataInitializ();
@@ -98,6 +102,11 @@ public class UIScript : LeadToSurviveGameBaseClass
         GetUI = _Tf.Find("使用角色選擇");
         if (GetUI != null)
             CentralizedManagementUI.Add(GetUI.GetComponent<RectTransform>());
+
+        GetUI = _Tf.Find("TeleportationArrayUI");
+        if (GetUI != null)
+            CentralizedManagementUI.Add(GetUI.GetComponent<RectTransform>());
+
 
         _Gm = FindFirstObjectByType<GameManager>();
         if (_Gm != null)

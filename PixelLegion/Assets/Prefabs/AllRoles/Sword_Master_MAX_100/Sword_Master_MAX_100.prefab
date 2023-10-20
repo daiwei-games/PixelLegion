@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7727541760490572647}
   - component: {fileID: 1754580548978315550}
-  - component: {fileID: 675743715348400556}
   - component: {fileID: 3129972536348184472}
+  - component: {fileID: 675743715348400556}
   - component: {fileID: 5866190201159287123}
   - component: {fileID: 8501007126662567594}
   - component: {fileID: -8228338787304535285}
@@ -89,6 +89,27 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &3129972536348184472
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5987471233777006659}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 24a33ca10283fdf4c90c9f4e21884bde, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!50 &675743715348400556
 Rigidbody2D:
   serializedVersion: 4
@@ -116,27 +137,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!95 &3129972536348184472
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5987471233777006659}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 24a33ca10283fdf4c90c9f4e21884bde, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!70 &5866190201159287123
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -191,14 +191,13 @@ MonoBehaviour:
   BasicConstitution: 70
   BasicHp: 2500
   HeroID: 
-  HeroName: 
+  HeroName: Sword Master MAX
   HeroAvatar: {fileID: 21300000, guid: 9b133bd0a9bd42c45b0872aa5c1bdfae, type: 3}
   Hp: 1000
   HpMax: 0
   Attack: 0
   AttackCriticalHitRate: 60
   AttackMagnification: 4
-  isCriticalHitRate: 0
   Def: 0
   Percentage: 0
   _gameManagerScript: {fileID: 0}
@@ -211,18 +210,21 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   enemyCollider: []
-  phySize: 7
-  PhyOffset: 4
+  phySize: 7.8
+  PhyOffset: 3.2
   flootLayer:
     serializedVersion: 2
     m_Bits: 0
   isfloot: 0
   _enemyNowMainFortress: {fileID: 0}
   _target: {fileID: 0}
+  _HeroNowState: 0
   isPlayerControl: 0
   IsItPossibleToDuel: 0
   speed: 15
-  _HeroNowState: 0
+  isCriticalHitRate: 0
+  isCameraShake: 0
+  isAnimationFrameStorp: 0
   movAtk: []
   isMovAtk: 0
   jumpAtk: 
@@ -240,12 +242,6 @@ MonoBehaviour:
   isDef2: 0
   roll: 
   isRoll: 0
-  jump: 
-  isJump: 0
-  drop: 
-  isDrop: 0
-  land: 
-  isLand: 0
   miss0: 
   isMiss0: 0
   missTimeStart: 0
@@ -271,14 +267,13 @@ MonoBehaviour:
   DefTimeMax: 2
   DefTime: 0
   isNowDef: 0
-  isAnimationFrameStorp: 0
   AnimationFrameStorpTime: 0
   AnimationFrameStorpTimeMax: 0.2
-  isCameraShake: 0
   CameraShakeTime: 0
   CameraShakeTimeMax: 0.5
   DefParticle: {fileID: 0}
   HitParticle: {fileID: 0}
+  CameraShakeParticle: {fileID: 0}
   _Hps: {fileID: 0}
   _Defs: {fileID: 0}
 --- !u!114 &-8228338787304535285

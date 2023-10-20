@@ -264,7 +264,7 @@ MonoBehaviour:
   AtkCount: 0
   CameraCenterScript: {fileID: 0}
   AtkTime: 0
-  AtkTimeMax: 1.5
+  AtkTimeMax: 1
   MissTime: 0.3
   DashTime: 0.3
   RollTime: 0

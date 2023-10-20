@@ -191,13 +191,13 @@ MonoBehaviour:
   BasicConstitution: 40
   BasicHp: 1800
   HeroID: 
-  HeroName: 
+  HeroName: Tiny Swordmaster
   HeroAvatar: {fileID: 21300000, guid: 99c1209e88d2e624d81de689e66ae78d, type: 3}
   Hp: 0
   HpMax: 0
   Attack: 0
-  AttackCriticalHitRate: 60
-  AttackMagnification: 2
+  AttackCriticalHitRate: 70
+  AttackMagnification: 3
   isCriticalHitRate: 0
   Def: 0
   Percentage: 0
@@ -279,6 +279,7 @@ MonoBehaviour:
   CameraShakeTimeMax: 0
   DefParticle: {fileID: 0}
   HitParticle: {fileID: 0}
+  CameraShakeParticle: {fileID: 0}
   _Hps: {fileID: 0}
   _Defs: {fileID: 0}
 --- !u!114 &-8372234216700937852

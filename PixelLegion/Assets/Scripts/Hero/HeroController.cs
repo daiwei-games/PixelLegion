@@ -30,6 +30,10 @@ public class HeroController : MonoBehaviour
     /// </summary>
     [Header("當前英雄")]
     public HeroScript _Hs;
+    /// <summary>
+    /// 當前英雄的 Sprite Renderer
+    /// </summary>
+    private SpriteRenderer _SpriteRenderer;
     #endregion
 
     #region 計時相關
@@ -49,10 +53,13 @@ public class HeroController : MonoBehaviour
     /// </summary>
     [HideInInspector]
     public Transform CameraTf;
+
     public Vector3 CameraPos;
     #endregion
-
-    float g;
+    /// <summary>
+    /// 攝影機晃動距離
+    /// </summary>
+    float Strength;
     void Start()
     {
 
@@ -60,6 +67,10 @@ public class HeroController : MonoBehaviour
     private void OnEnable()
     {
         CameraTf = Camera.main.transform;
+        if (_SpriteRenderer == null)
+            _SpriteRenderer = GetComponent<SpriteRenderer>();
+
+        _SpriteRenderer.sortingOrder = 110;
 
         _UIHc.GetNowHeroController(this);
         _UIHc.DashOpenOrClose(_Hs.isDash); // 開啟或關閉衝刺按鈕
@@ -70,6 +81,11 @@ public class HeroController : MonoBehaviour
     }
     private void OnDisable()
     {
+        if (_SpriteRenderer == null)
+            _SpriteRenderer = GetComponent<SpriteRenderer>();
+
+        _SpriteRenderer.sortingOrder = 100;
+
         _Hs.DefTime = 0;
         _Hs.isNowDef = true;
         _Hs.isPlayerControl = false;
@@ -167,6 +183,9 @@ public class HeroController : MonoBehaviour
     }
     #endregion
 
+    /// <summary>
+    /// 晃動攝影機
+    /// </summary>
     public void CameraPingPong()
     {
         if (_Hs.isCameraShake)
@@ -174,15 +193,15 @@ public class HeroController : MonoBehaviour
             CameraPos = CameraTf.position;
             if (_Hs.isCriticalHitRate)
             {
-                g += .05f;
-                CameraPos.x -= Mathf.PingPong(g, .4f);
-                CameraPos.y += Mathf.PingPong(g, .4f);
+                Strength += .05f;
+                CameraPos.x -= Mathf.PingPong(Strength, .4f);
+                CameraPos.y += Mathf.PingPong(Strength, .4f);
             }
             else
             {
-                g += .02f;
-                CameraPos.x -= Mathf.PingPong(g, .2f);
-                CameraPos.y += Mathf.PingPong(g, .2f);
+                Strength += .02f;
+                CameraPos.x -= Mathf.PingPong(Strength, .2f);
+                CameraPos.y += Mathf.PingPong(Strength, .2f);
             }
             CameraTf.position = CameraPos;
             _Hs.CameraShakeTime += time;

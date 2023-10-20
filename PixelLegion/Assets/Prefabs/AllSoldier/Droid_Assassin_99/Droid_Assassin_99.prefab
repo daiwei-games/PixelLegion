@@ -197,9 +197,9 @@ MonoBehaviour:
   speed: 9
   _gameManagerScript: {fileID: 0}
   _SoldierScale: {x: 0, y: 0, z: 0}
-  PhyOffset: 2
+  PhyOffset: 1.5
   _collider2D: []
-  Physics2DSize: 4
+  Physics2DSize: 3
   _enemyLayerMask:
     serializedVersion: 2
     m_Bits: 0

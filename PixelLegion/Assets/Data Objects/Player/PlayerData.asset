@@ -18,8 +18,7 @@ MonoBehaviour:
   PlayerDiamond: 0
   PlayerEnergy: 0
   SelectedHeroList:
-  - {fileID: 9008879848357846960, guid: f4c11d720e093e342b063a8455b667f7, type: 3}
-  - {fileID: 7698872245049011082, guid: 0e5dd2b9dda67334ab730ed9254b8bd1, type: 3}
+  - {fileID: 2171926007529818246, guid: 68dc7233b28931e499b18c1d99cf9ca8, type: 3}
   PlayerHeroLv: 1
   AddHp: 0.2
   AddAtk: 0.2

@@ -16,26 +16,47 @@ AnimationClip:
   m_EulerCurves: []
   m_PositionCurves: []
   m_ScaleCurves: []
-  m_FloatCurves: []
+  m_FloatCurves:
+  - serializedVersion: 2
+    curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 4.02
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: PhyOffset
+    path: 
+    classID: 114
+    script: {fileID: 11500000, guid: 72d42a1b0f0016441b65311a293bf977, type: 3}
+    flags: 0
   m_PPtrCurves:
   - serializedVersion: 2
     curve:
     - time: 0
       value: {fileID: -1589023717, guid: 0ededa81944682c46943b75486f72b87, type: 3}
-    - time: 0.083333336
+    - time: 0.0625
       value: {fileID: 1202521615, guid: 0ededa81944682c46943b75486f72b87, type: 3}
-    - time: 0.16666667
+    - time: 0.125
       value: {fileID: 1752284258, guid: 0ededa81944682c46943b75486f72b87, type: 3}
-    - time: 0.25
+    - time: 0.1875
       value: {fileID: -1047979121, guid: 0ededa81944682c46943b75486f72b87, type: 3}
-    - time: 0.33333334
+    - time: 0.25
       value: {fileID: -2096244943, guid: 0ededa81944682c46943b75486f72b87, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
     script: {fileID: 0}
     flags: 2
-  m_SampleRate: 12
+  m_SampleRate: 16
   m_WrapMode: 0
   m_Bounds:
     m_Center: {x: 0, y: 0, z: 0}
@@ -51,6 +72,15 @@ AnimationClip:
       isPPtrCurve: 1
       isIntCurve: 0
       isSerializeReferenceCurve: 0
+    - serializedVersion: 2
+      path: 0
+      attribute: 29431147
+      script: {fileID: 11500000, guid: 72d42a1b0f0016441b65311a293bf977, type: 3}
+      typeID: 114
+      customType: 0
+      isPPtrCurve: 0
+      isIntCurve: 0
+      isSerializeReferenceCurve: 0
     pptrCurveMapping:
     - {fileID: -1589023717, guid: 0ededa81944682c46943b75486f72b87, type: 3}
     - {fileID: 1202521615, guid: 0ededa81944682c46943b75486f72b87, type: 3}
@@ -62,7 +92,7 @@ AnimationClip:
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 0.4166667
+    m_StopTime: 0.3125
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -77,7 +107,28 @@ AnimationClip:
     m_KeepOriginalPositionXZ: 0
     m_HeightFromFeet: 0
     m_Mirror: 0
-  m_EditorCurves: []
+  m_EditorCurves:
+  - serializedVersion: 2
+    curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 4.02
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: PhyOffset
+    path: 
+    classID: 114
+    script: {fileID: 11500000, guid: 72d42a1b0f0016441b65311a293bf977, type: 3}
+    flags: 0
   m_EulerEditorCurves: []
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
@@ -89,17 +140,17 @@ AnimationClip:
     floatParameter: 0
     intParameter: 1
     messageOptions: 0
-  - time: 0.083333336
+  - time: 0.0625
+    functionName: AnimationHeroAtkTarget
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.0625
     functionName: AemsPlaySFX
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 2
-    messageOptions: 0
-  - time: 0.083333336
-    functionName: AnimationFrameStop
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
     messageOptions: 0

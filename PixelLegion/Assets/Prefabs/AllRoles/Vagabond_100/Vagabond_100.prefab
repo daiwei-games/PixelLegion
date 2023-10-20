@@ -191,13 +191,14 @@ MonoBehaviour:
   BasicConstitution: 20
   BasicHp: 1500
   HeroID: 
-  HeroName: 
+  HeroName: Vagabond
   HeroAvatar: {fileID: 21300000, guid: c191c8cfe72c89d44a957d38fa23621b, type: 3}
   Hp: 1000
   HpMax: 0
   Attack: 0
   AttackCriticalHitRate: 10
   AttackMagnification: 2
+  isCriticalHitRate: 0
   Def: 0
   Percentage: 0
   _gameManagerScript: {fileID: 0}
@@ -278,6 +279,7 @@ MonoBehaviour:
   CameraShakeTimeMax: 0.5
   DefParticle: {fileID: 0}
   HitParticle: {fileID: 0}
+  CameraShakeParticle: {fileID: 0}
   _Hps: {fileID: 0}
   _Defs: {fileID: 0}
 --- !u!114 &5072195277329411122

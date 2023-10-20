@@ -50,20 +50,6 @@ public class GameManager : MonoBehaviour
     /// 毫秒
     /// </summary>
     float time;
-    /// <summary>
-    /// 士兵計算生產間隔
-    /// </summary>
-    [Header("士兵計算生產間隔"), SerializeField, Range(0f, 10)]
-    public float ProduceSoldierTimeMax;
-    [HideInInspector]
-    public float ProduceSoldierTime;
-    /// <summary>
-    /// 產生英雄計算間隔
-    /// </summary>
-    [Header("產生英雄計算間隔"), Range(0f, 10)]
-    public float ProduceHeroTimeMax;
-    [HideInInspector]
-    public float ProduceHeroTime;
     #endregion
 
     #region UI
@@ -100,7 +86,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// 是否執行生產士兵的函數，還是正在執行
     /// </summary>
-    public bool isProduceSoldier;
+    public bool isProduce;
     /// <summary>
     /// 是否遊戲結束
     /// </summary>
@@ -188,7 +174,7 @@ public class GameManager : MonoBehaviour
 
         isSoldierStateForAction = true;
         isHeroStateForAction = true;
-        isProduceSoldier = true;
+        isProduce = true;
         isGameOver = false;
 
         _LayerMask = LayerMask.GetMask(staticPublicObjectsStaticName.PlayerSoldierLayer, staticPublicObjectsStaticName.HeroLayer, staticPublicObjectsStaticName.MainFortressLayer);
@@ -231,20 +217,12 @@ public class GameManager : MonoBehaviour
         {
             case ScenesType.practise: // 如果是練習場景
             case ScenesType.battlefield: // 如果是戰場場景
-                ProduceSoldierTime += time;
-                ProduceHeroTime += time;
+
                 if (!isGameOver)
                 {
-                    if (ProduceSoldierTime >= ProduceSoldierTimeMax)
-                    {
-                        ProduceSoldierTime = 0;
-                        ProduceSoldier(); //兩邊士兵生產
-                    }
-                    if (ProduceHeroTime >= ProduceHeroTimeMax)
-                    {
-                        ProduceHeroTime = 0;
-                        ProduceHero(); //產生英雄
-                    }
+                    //生產區塊
+                    ProduceOrStateFunc(time, Time.time);
+
                     //管理器區塊
                     SoldierState(time);
                     HeroAI(time);
@@ -313,19 +291,15 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// 產生英雄
     /// </summary>
-    private void ProduceHero()
+    private void ProduceHero(MainFortressScript _mfbs)
     {
-        for (int i = 0; i < _MainFortressScriptList.Count; i++)
+        if (_mfbs == null)
         {
-            if (_MainFortressScriptList[i] == null)
-            {
-                _MainFortressScriptList.RemoveAt(i);
-                continue;
-            }
-            else
-            {
-                _MainFortressScriptList[i].ProduceHero(time);
-            }
+            _MainFortressScriptList.Remove(_mfbs);
+        }
+        else
+        {
+            _mfbs.ProduceHero(time);
         }
     }
 
@@ -513,35 +487,13 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// 兩邊士兵生產
     /// </summary>
-    private void ProduceSoldier()
+    private void ProduceSoldier(MainFortressScript _mfbs, float _time)
     {
-        if (_MainFortressScriptList.Count <= 1) return;
-        MainFortressScript _mfbs;
-        for (int mfIndex = 0; mfIndex < _MainFortressScriptList.Count; mfIndex++)
-        {
-            _mfbs = _MainFortressScriptList[mfIndex];
-            if (_mfbs == null) continue;
-            switch (_mfbs.tag)
-            {
-                case staticPublicObjectsStaticName.DarkMainFortressTag:
-                    _mfbs.PhyOverlapBoxAll(_LayerMask);
-                    break;
-                case staticPublicObjectsStaticName.MainFortressTag:
-                    _mfbs.PhyOverlapBoxAll(_DarkLayerMask);
-                    break;
-            }
-        }
-        if (!isProduceSoldier) return;
         if (_soldierList.Count >= _GmSoldierCountMax) return;
-        for (int i = 0; i < _MainFortressScriptList.Count; i++)
-        {
-            _mfbs = _MainFortressScriptList[i];
-            isProduceSoldier = false;
-            if (_mfbs != null)
-                _mfbs.soldierProduceTime += time;
-            _mfbs.ProduceSoldier();
-        }
-        isProduceSoldier = true;
+        if (_mfbs != null)
+            _mfbs.soldierProduceTime += _time;
+        _mfbs.ProduceSoldier();
+
     }
     /// <summary>
     /// 士兵的動作資訊
@@ -580,14 +532,37 @@ public class GameManager : MonoBehaviour
             _soldierScript.PhyOverlapBoxAll(Pos);
             if (_soldierScript._collider2D.Length > 0)
             {
-                _soldierScript.Atk();
+                if (_soldierScript.AttackingTime <= 0)
+                {
+                    _soldierScript.Atk();
+                }
+                else
+                {
+                    _soldierScript.Idle();
+                    _soldierScript.AttackingTime -= _time;
+                }
                 continue;
             }
-            _soldierScript.Move();
+            if (!_soldierScript.isNowHit) //如果沒有被攻擊
+            {
+                _soldierScript.Move();
 
-            Transform _targetTf = _soldierScript._enemyNowMainFortress;
-            if (_soldierScript._target != null) _targetTf = _soldierScript._target;
-            _tf.position = Vector3.MoveTowards(Pos, _targetTf.position, _soldierScript.speed * _time);
+                Transform _targetTf = _soldierScript._enemyNowMainFortress;
+                if (_soldierScript._target != null) _targetTf = _soldierScript._target;
+                _tf.position = Vector3.MoveTowards(Pos, _targetTf.position, _soldierScript.speed * _time);
+            }
+            else
+            {
+                //被攻擊
+                _soldierScript.isNowHitTime += _time;
+                if (_soldierScript.isNowHitTimeMax <= _soldierScript.isNowHitTime)
+                {
+                    _soldierScript.isNowHit = false;
+                    _soldierScript.isNowHitTime = 0;
+                }
+                continue;
+            }
+
         }
         if (isGameOver)
         {
@@ -709,6 +684,7 @@ public class GameManager : MonoBehaviour
         {
             if (_MainFortressScriptList[i].CompareTag(staticPublicObjectsStaticName.MainFortressTag))
             {
+                uiScript.NameOpenCentralizedManagementUI("TeleportationArrayUI");
                 return;
             }
         }
@@ -718,6 +694,38 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region 主堡相關
+    /// <summary>
+    /// 主堡產生、執行狀態相關
+    /// </summary>
+    public void ProduceOrStateFunc(float _deltatime, float _time)
+    {
+
+        if (!isProduce) return;
+        if (_MainFortressScriptList.Count <= 1) return;
+
+        MainFortressScript _mfbs;
+        for (int mfIndex = 0; mfIndex < _MainFortressScriptList.Count; mfIndex++)
+        {
+            isProduce = false;
+            _mfbs = _MainFortressScriptList[mfIndex];
+            if (_mfbs == null) continue;
+
+            switch (_mfbs.tag)
+            {
+                case staticPublicObjectsStaticName.DarkMainFortressTag:
+                    _mfbs.PhyOverlapBoxAll(_LayerMask);
+                    break;
+                case staticPublicObjectsStaticName.MainFortressTag:
+                    _mfbs.PhyOverlapBoxAll(_DarkLayerMask);
+                    break;
+            }
+            ProduceSoldier(_mfbs, _deltatime); //兩邊士兵生產
+            ProduceHero(_mfbs); //產生英雄
+
+            _mfbs.MainFortressHitVFX(_deltatime, _time); //受傷效果
+        }
+        isProduce = true;
+    }
     /// <summary>
     /// 主堡爆了
     /// </summary>

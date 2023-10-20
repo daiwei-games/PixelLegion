@@ -22,20 +22,20 @@ AnimationClip:
     curve:
     - time: 0
       value: {fileID: 1790186184, guid: 0ededa81944682c46943b75486f72b87, type: 3}
-    - time: 0.083333336
+    - time: 0.0625
       value: {fileID: 423508927, guid: 0ededa81944682c46943b75486f72b87, type: 3}
-    - time: 0.16666667
+    - time: 0.125
       value: {fileID: -1257658304, guid: 0ededa81944682c46943b75486f72b87, type: 3}
-    - time: 0.25
+    - time: 0.1875
       value: {fileID: -1584192803, guid: 0ededa81944682c46943b75486f72b87, type: 3}
-    - time: 0.33333334
+    - time: 0.25
       value: {fileID: -1751921150, guid: 0ededa81944682c46943b75486f72b87, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
     script: {fileID: 0}
     flags: 2
-  m_SampleRate: 12
+  m_SampleRate: 16
   m_WrapMode: 0
   m_Bounds:
     m_Center: {x: 0, y: 0, z: 0}
@@ -62,7 +62,7 @@ AnimationClip:
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 0.4166667
+    m_StopTime: 0.3125
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -89,17 +89,17 @@ AnimationClip:
     floatParameter: 0
     intParameter: 1
     messageOptions: 0
-  - time: 0.083333336
+  - time: 0.0625
+    functionName: AnimationHeroAtkTarget
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.0625
     functionName: AemsPlaySFX
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 2
-    messageOptions: 0
-  - time: 0.083333336
-    functionName: AnimationFrameStop
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
     messageOptions: 0

@@ -3,6 +3,8 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UIElements;
 using System.Linq;
+using System.Collections.Generic;
+using static UnityEditor.PlayerSettings;
 
 /// <summary>
 /// 敵人主堡
@@ -41,6 +43,39 @@ public class DarkMainFortressScript : MainFortressScript
         }
         _gameManagerScript.MainFortressDataFormat(this);
         GetEnemyMainFortress();
+
+        _AudioSourceHit = _Go.AddComponent<AudioSource>(); // 添加音效撥放器
+
+        MfSpriteRenderer = GetComponent<SpriteRenderer>(); // 取得SpriteRenderer組件
+        HitTimeMax = .2f; // 設定受傷效果時間
+
+        MfHitVFX = new Queue<MfHitVfxScript>(); // 建立受傷效果物件佇列
+        GameObject _go;
+        Transform _tf;
+        SpriteRenderer _sr;
+        MfHitVfxScript _mhvs;
+        for (int i = 0; i < 3; i++)
+        {
+            LeftOrRight = !LeftOrRight;
+            _go = new GameObject("MfHitGo");
+            _sr = _go.AddComponent<SpriteRenderer>();
+            _sr.sprite = MfSpriteRenderer.sprite;
+            _sr.color = new Color(0.25f, 0, 0.53f, .5f);
+            _sr.sortingOrder = MfSpriteRenderer.sortingOrder - 1;
+            _mhvs = _go.AddComponent<MfHitVfxScript>();
+            _mhvs._Mfs = this;
+            _mhvs.LeftOrRight = LeftOrRight;
+            _tf = _go.transform;
+            _tf.parent = _Tf;
+            _tf.localPosition = Vector3.zero;
+            _tf.localScale = Vector3.one;
+            MfHitVFX.Enqueue(_mhvs);
+
+            _go.SetActive(false);
+        }
+
+        MfPos = _Tf.position;
+        MfHitPos = MfPos;
     }
 
 
@@ -119,19 +154,7 @@ public class DarkMainFortressScript : MainFortressScript
             MainForTressSoldierCountTextMeshPro(); // 更新主堡兵數文字
         }
     }
-    public override void MainFortressHit(int hit)
-    {
-        if (_hp <= 0) return;
-        _hp -= hit;
-        MainFortressHpTextMeshPro();
-        _gameManagerScript.CastleUnderAttack(_Tf, WhoHitMeTransform);
-        if (_hp <= 0)
-        {
-            _gameManagerScript.MainFortressOver(this);
-            Destroy(_Go, 1);
-        }
 
-    }
     /// <summary>
     /// 取得敵人主堡
     /// </summary>

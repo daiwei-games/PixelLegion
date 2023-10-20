@@ -64,7 +64,13 @@ public class SFXListScript : MonoBehaviour
     [Header("士兵受傷音效 - 打擊1.ogg")]
     public AudioClip SoldierHit01;
     #endregion
-
+    #region 主堡
+    /// <summary>
+    /// 主堡被打音效 = 主堡受傷.mp3
+    /// </summary>
+    [Header("主堡被打音效 = 主堡受傷.mp3")]
+    public AudioClip MfHit01;
+    #endregion
     #region 共用
     /// <summary>
     /// 爆擊 - 重擊.mp3

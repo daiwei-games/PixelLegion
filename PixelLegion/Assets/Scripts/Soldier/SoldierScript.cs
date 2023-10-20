@@ -103,7 +103,35 @@ public class SoldierScript : LeadToSurviveGameBaseClass
     /// </summary>
     [Header("死亡之後是否關閉剛體"), SerializeField]
     private bool IsCloseRigidbody;
+    /// <summary>
+    /// 現在是否正在受傷 false = 沒有受傷
+    /// </summary>
+    [Header("現在是否正在受傷 false = 沒有受傷")]
+    public bool isNowHit;
     #endregion
+
+    #region 狀態時間計時
+    /// <summary>
+    /// 受傷僵直時間計算
+    /// </summary>
+    [HideInInspector]
+    public float isNowHitTime;
+    /// <summary>
+    /// 受傷僵直時間
+    /// </summary>
+    [HideInInspector]
+    public float isNowHitTimeMax;
+    /// <summary>
+    /// 攻擊間隔計算
+    /// </summary>
+    public float AttackingTime;
+    /// <summary>
+    /// 攻擊間隔
+    /// </summary>
+    public float AttackingTimeMax;
+    #endregion
+
+
     #region 動畫控制
     /// <summary>
     /// 動畫控制器
@@ -177,6 +205,7 @@ public class SoldierScript : LeadToSurviveGameBaseClass
     [Header("想切換的狀態")]
     public SoldierState _soldierChangeState;
     #endregion
+
     #region 特效、音效
     /// <summary>
     /// 音效組件管理器
@@ -196,7 +225,7 @@ public class SoldierScript : LeadToSurviveGameBaseClass
     /// 被攻擊特效
     /// </summary>
     [Header("被攻擊的特效"), HideInInspector]
-    public ParticleSystem AtkVfx_2;
+    public ParticleSystem AtkVfx_1;
 
     /// <summary>
     /// 被爆擊粒子
@@ -221,6 +250,9 @@ public class SoldierScript : LeadToSurviveGameBaseClass
 
         _AudioSource = _Go.AddComponent<AudioSource>();
         _AudioSourceHit = _Go.AddComponent<AudioSource>();
+
+        isNowHitTimeMax = 1f;
+        AttackingTimeMax = .6f;
 
     }
     public virtual void GetAllAnimationClipName()
@@ -265,7 +297,6 @@ public class SoldierScript : LeadToSurviveGameBaseClass
                 if (_soldierNowState == SoldierState.Hit && _normalizedTime < 0.9f) return; // 當狀態為受傷將會return
             }
             if (_soldierNowState == SoldierState.SoupHit && _normalizedTime < 0.9f) return; // 當狀態為超級受傷將會return
-
         }
         switch (_soldierChangeState)
         {
@@ -292,6 +323,7 @@ public class SoldierScript : LeadToSurviveGameBaseClass
                         Collider2D _col;
                         List<Collider2D> _ColList = new List<Collider2D>();
                         _ColList.AddRange(_collider2D.ToList());
+                        AttackingTime = AttackingTimeMax;
                         for (int i = 0; i < _ColList.Count; i++) // 尋找敵人
                         {
                             _col = _ColList[i];
@@ -363,6 +395,7 @@ public class SoldierScript : LeadToSurviveGameBaseClass
         soldierHp -= _hit;
         _Hps.GetHit(soldierHpMax, _hit);
         _soldierChangeState = SoldierState.SoupHit;
+        SoldierStateAI();
         if (soldierHp <= 0)
         {
             _soldierChangeState = SoldierState.Die;
@@ -374,10 +407,9 @@ public class SoldierScript : LeadToSurviveGameBaseClass
         }
         else
         {
-            Vector2 BeakBack = Vector2.left * 4;
-            if (_Tf.localScale.x < 0) BeakBack *= -1; // 反向
-            _body2D.velocity = Vector2.zero;
-            _body2D.AddForce(BeakBack, ForceMode2D.Impulse);
+            isNowHit = true;
+            BeakBack();
+
             if (isCriticalStrike)
             {
                 if (CameraShakeParticle != null)
@@ -393,7 +425,6 @@ public class SoldierScript : LeadToSurviveGameBaseClass
                 else
                 {
                     Vector2 _ptc = _Tf.position;
-                    _ptc.x -= .5f;
                     _ptc.y -= .5f;
                     CameraShakeParticle = Instantiate(_gameManagerScript.ParticleManager.CameraShakeHit_1, _ptc, Quaternion.identity);
                     Transform _Ptf = CameraShakeParticle.transform;
@@ -406,10 +437,14 @@ public class SoldierScript : LeadToSurviveGameBaseClass
             }
             else
             {
-                if (AtkVfx_2 == null)
-                    AtkVfx_2 = Instantiate(_gameManagerScript.ParticleManager.AtfVfx_3, _Tf.position, Quaternion.identity, _Tf);
+                if (AtkVfx_1 == null)
+                {
+                    Vector2 _ptc = _Tf.position;
+                    _ptc.y -= .5f;
+                    AtkVfx_1 = Instantiate(_gameManagerScript.ParticleManager.AtfVfx_1, _ptc, Quaternion.identity, _Tf);
+                }
 
-                AtkVfx_2.Play();
+                AtkVfx_1.Play();
             }
             if (isCriticalStrike)
             {
@@ -421,6 +456,7 @@ public class SoldierScript : LeadToSurviveGameBaseClass
         }
         SoldierStateAI();
     }
+
     public virtual void SoldierHP(int hitAmount)
     {
         if (soldierHp <= 0) return;
@@ -452,6 +488,16 @@ public class SoldierScript : LeadToSurviveGameBaseClass
 
 
     #region 射線、音效、其他
+    /// <summary>
+    /// 擊退
+    /// </summary>
+    void BeakBack()
+    {
+        Vector2 BeakBack = Vector2.left * 3;
+        if (_Tf.localScale.x < 0) BeakBack *= -1; // 反向
+        _body2D.velocity = BeakBack;
+        //_body2D.AddForce(BeakBack, ForceMode2D.Impulse);
+    }
     /// <summary>
     /// 取得敵人主堡並放入目標
     /// </summary>
