@@ -101,7 +101,4 @@ public class GameLevelManager : MonoBehaviour
     [Header("士兵生產時間 (1 - 10)"), Range(1, 10)]
     public float soldierProduceTimeMax;
     #endregion
-
-
-    public List<int> GameLevel;
 }

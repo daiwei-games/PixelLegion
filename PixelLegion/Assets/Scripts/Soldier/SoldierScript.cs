@@ -251,7 +251,7 @@ public class SoldierScript : LeadToSurviveGameBaseClass
         _AudioSource = _Go.AddComponent<AudioSource>();
         _AudioSourceHit = _Go.AddComponent<AudioSource>();
 
-        isNowHitTimeMax = 1f;
+        isNowHitTimeMax = .5f;
         AttackingTimeMax = .6f;
 
     }

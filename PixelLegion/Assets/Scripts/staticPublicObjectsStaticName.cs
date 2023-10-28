@@ -69,6 +69,16 @@ namespace Assets.Scripts
         /// </summary>
         public const string DarkHeroLayer = "DarkHero";
         #endregion
+        #region 野生
+        /// <summary>
+        /// 野生士兵
+        /// </summary>
+        public const string WildSoldierTag = "WildSoldier";
+        /// <summary>
+        /// 野生士兵圖層
+        /// </summary>
+        public const string WildSoldierLayer = "WildSoldier";
+        #endregion
         #region 攝影機、其他
         /// <summary>
         /// 主要攝影機圖層

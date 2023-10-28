@@ -43,6 +43,12 @@ public class GameManager : MonoBehaviour
     /// </summary>
     [Header("已經產生的英雄清單")]
     public List<HeroScript> HeroList;
+
+    /// <summary>
+    /// 怪物產生節點
+    /// </summary>
+    [Header("怪物產生節點")]
+    public List<MonsterNodeScript> _monsterNodesList;
     #endregion
 
     #region 計算時間
@@ -692,7 +698,7 @@ public class GameManager : MonoBehaviour
         uiScript.GameOverUI();
     }
     #endregion
-
+        
     #region 主堡相關
     /// <summary>
     /// 主堡產生、執行狀態相關
