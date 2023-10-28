@@ -97,6 +97,10 @@ public class GameManager : MonoBehaviour
     /// 是否遊戲結束
     /// </summary>
     public bool isGameOver;
+    /// <summary>
+    /// 怪物節可不可以運行
+    /// </summary>
+    public bool isMonsterNodes;
     #endregion
 
     #region 操控類、指標類
@@ -182,6 +186,7 @@ public class GameManager : MonoBehaviour
         isHeroStateForAction = true;
         isProduce = true;
         isGameOver = false;
+        isMonsterNodes = false;
 
         _LayerMask = LayerMask.GetMask(staticPublicObjectsStaticName.PlayerSoldierLayer, staticPublicObjectsStaticName.HeroLayer, staticPublicObjectsStaticName.MainFortressLayer);
         _DarkLayerMask = LayerMask.GetMask(staticPublicObjectsStaticName.DarkSoldierLayer, staticPublicObjectsStaticName.DarkHeroLayer, staticPublicObjectsStaticName.DarkMainFortressLayer);
@@ -896,7 +901,18 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
-    #region 村莊場景
+    #region 村莊、野生場景
+    /// <summary>
+    /// 野生節點資料初始化
+    /// </summary>
+    /// <param name="_mns">野生節點腳本</param>
+    public void MonsterNodeDataGet(MonsterNodeScript _mns)
+    {
+        _monsterNodesList.Add(_mns);
+        _mns.SoldierReTime = Random.Range(100, 1000);
+        if (_mns.MapLv < 1) _mns.MapLv = 1;
+        isMonsterNodes = true;
+    }
     #endregion
 }
 #region 場景類型

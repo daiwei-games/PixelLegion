@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 /// <summary>
 /// 怪物產生節點
 /// </summary>
@@ -23,17 +22,24 @@ public class MonsterNodeScript : LeadToSurviveGameBaseClass
     /// 士兵重置時間
     /// </summary>
     [Header("士兵數量重置時間")]
-    public DateTime SoldierReTime;
+    public float SoldierReTime;
     private void OnEnable()
+    {
+        WildInitializ();
+    }
+    /// <summary>
+    /// 野生節點初始化
+    /// </summary>
+    public void WildInitializ()
     {
         _Tf = transform;
         _Go = gameObject;
-
         _gameManager = FindObjectOfType<GameManager>();
+        _gameManager.MonsterNodeDataGet(this);
+    }
 
-        SoldierReTime = DateTime.Now;
+    public void ProduceSoldier()
+    {
 
-        if (MapLv < 1) MapLv = 1;
-        Debug.Log("士兵數量重置時間:" + SoldierReTime);
     }
 }

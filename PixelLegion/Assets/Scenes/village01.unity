@@ -18757,7 +18757,7 @@ GameObject:
   - component: {fileID: 559692599}
   - component: {fileID: 559692598}
   m_Layer: 0
-  m_Name: MonsterNode
+  m_Name: "\u91CE\u751F\u50B3\u9001\u7BC0\u9EDE_MonsterNode"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -18777,9 +18777,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Tf: {fileID: 0}
   _Go: {fileID: 0}
+  MapLv: 0
   _gameManager: {fileID: 0}
   SoldierCount: 0
-  SoldierCountMax: 0
+  SoldierReTime: 0
 --- !u!4 &559692599
 Transform:
   m_ObjectHideFlags: 0
@@ -27315,7 +27316,7 @@ MonoBehaviour:
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.5
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 0.9
+  m_Intensity: 1.44
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
   m_ApplyToSortingLayers: 00000000
@@ -36258,6 +36259,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9105643975779448143, guid: 748e03cad7494e14fb95394d3b8cbd58, type: 3}
       propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9105643975779448143, guid: 748e03cad7494e14fb95394d3b8cbd58, type: 3}
+      propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9107635796429621217, guid: 748e03cad7494e14fb95394d3b8cbd58, type: 3}
@@ -54282,7 +54287,7 @@ GameObject:
   - component: {fileID: 1618336898}
   - component: {fileID: 1618336897}
   m_Layer: 0
-  m_Name: Global Volume
+  m_Name: "\u6FFE\u6DE8\u6548\u679C"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
