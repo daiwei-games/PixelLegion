@@ -13,12 +13,12 @@ public class HeroScript : LeadToSurviveGameBaseClass
     /// <summary>
     /// 英雄基本素質
     /// </summary>
-    [Header("英雄基本素質 (0.001 - 0.5)"), Range(0.001f, 0.5f)]
+    [Header("英雄基本素質 (0.001 - 100)"), Range(0.001f, 100f)]
     public float BasicQuality;
     /// <summary>
     /// 基本體質
     /// </summary>
-    [Header("基本體質 (1 - 100)"), Range(1, 100)]
+    [Header("基本體質 (1 - 300)"), Range(1, 300)]
     public int BasicConstitution;
     /// <summary>
     /// 基本血量
@@ -79,12 +79,12 @@ public class HeroScript : LeadToSurviveGameBaseClass
     /// <summary>
     /// GM管理器腳本
     /// </summary>
-    [Header("GM管理器腳本")]
+    [Header("GM管理器腳本"),HideInInspector]
     public GameManager _gameManagerScript;
     /// <summary>
     /// 英雄操作介面
     /// </summary>
-    [Header("英雄操作介面")]
+    [Header("英雄操作介面"),HideInInspector]
     public UIHeroController heroController;
     #endregion
 
@@ -770,7 +770,7 @@ public class HeroScript : LeadToSurviveGameBaseClass
 
 
     /// <summary>
-    /// 決鬥時的受傷
+    /// 一般的受傷
     /// </summary>
     /// <param name="t">傷害值</param>
     /// <param name="hitbool">是否受傷</param>
@@ -922,11 +922,17 @@ public class HeroScript : LeadToSurviveGameBaseClass
                         PlayOkay = isNowDef;
                     }
                     break;
-                case HeroState.Hit:
                 case HeroState.Attack:
                 case HeroState.HeavyAttack:
-                case HeroState.Dash:
                 case HeroState.MovAtk:
+                if (s > 0.6f)
+                    {
+                        animatorPlay("", -1, 0);
+                        PlayOkay = true;
+                    }
+                    break;
+                case HeroState.Hit:
+                case HeroState.Dash:
                     if (s > 0.9f)
                     {
                         animatorPlay("", -1, 0);
@@ -1004,25 +1010,6 @@ public class HeroScript : LeadToSurviveGameBaseClass
         AtkTime = 0;
         AemsPlaySFX(2);
     }
-    #region 單體攻擊
-    ///// <summary>
-    ///// 單體攻擊
-    ///// </summary>
-    ///// <param name="_heroScript">傷害對對象</param>
-    ///// <param name="hitbool">是否受傷</param>
-    //public virtual void HeroAttack(HeroScript _heroScript, bool hitbool = true)
-    //{
-    //    if (IsAtkLimit())
-    //    {
-    //        HeroDuelStateFunc();
-    //        return;
-    //    }
-    //    if (_heroScript == null) return;
-    //    int _atk = OffsetValue(_Pdo.Percentage, Attack, _Pdo.PlayerHeroLv);
-    //    HeroAttack();
-    //    HeroAtkTarget(_heroScript, _atk);
-    //}
-    #endregion
     /// <summary>
     /// 攻擊射線取得的碰撞體 Collider2D 判斷到的物件
     /// </summary>
@@ -1050,7 +1037,10 @@ public class HeroScript : LeadToSurviveGameBaseClass
         if(atktype == 1) _atk *= 2;
         HeroAtkTarget(_atk);
     }
-
+    /// <summary>
+    /// 攻擊所有敵人
+    /// </summary>
+    /// <param name="Hit">傷害</param>
     public virtual void HeroAtkTarget(int Hit = 1)
     {
         string _colTag;
@@ -1061,6 +1051,7 @@ public class HeroScript : LeadToSurviveGameBaseClass
         List<Collider2D> _ColList = new List<Collider2D>(PhyOverlapBoxAll().ToList());
         if (_ColList.Count > 0)
         {
+            
             isAnimationFrameStorp = true;
             AnimationFrameStop();
             for (int i = 0; i < _ColList.Count; i++)
@@ -1086,13 +1077,15 @@ public class HeroScript : LeadToSurviveGameBaseClass
                     }
                 }
                 else if (_colTag == staticPublicObjectsStaticName.PlayerSoldierTag ||
-                    _colTag == staticPublicObjectsStaticName.DARKSoldierTag)
+                    _colTag == staticPublicObjectsStaticName.DARKSoldierTag ||
+                    _colTag == staticPublicObjectsStaticName.WildSoldierTag)
                 {
                     if (_col == null) continue;
                     _ss = _col.GetComponent<SoldierScript>();
                     if (_ss != null)
                     {
                         _ss.MustBeInjured(Hit, isCriticalHitRate);
+                        _ss.HitMeTransform(_Tf);
                     }
                 }
                 else if (_colTag == staticPublicObjectsStaticName.MainFortressTag ||
@@ -1107,6 +1100,7 @@ public class HeroScript : LeadToSurviveGameBaseClass
         }
         isCriticalHitRate = false;
     }
+
     /// <summary>
     /// 攻擊目標對目標造成傷害
     /// </summary>
@@ -1121,7 +1115,7 @@ public class HeroScript : LeadToSurviveGameBaseClass
     {
         if (_enemySoldierScript == null) return;
         _enemySoldierScript.MustBeInjured(Hit);
-    }
+    } 
 
 
     #region 衝刺、瞬移
@@ -1478,57 +1472,4 @@ public class HeroScript : LeadToSurviveGameBaseClass
     }
     #endregion
 }
-/// <summary>
-/// 英雄狀態
-/// </summary>
-public enum HeroState
-{
-    /// <summary>
-    /// 等待
-    /// </summary>
-    Idle,
-    /// <summary>
-    /// 移動
-    /// </summary>
-    Run,
-    /// <summary>
-    /// 防禦
-    /// </summary>
-    Def,
-    /// <summary>
-    /// 受傷
-    /// </summary>
-    Hit,
-    /// <summary>
-    /// 死亡
-    /// </summary>
-    Die,
-    /// <summary>
-    /// 攻擊
-    /// </summary>
-    Attack,
-    /// <summary>
-    /// 重攻擊
-    /// </summary>
-    HeavyAttack,
-    /// <summary>
-    /// 衝刺
-    /// </summary>
-    Dash,
-    /// <summary>
-    /// 閃現 - 消失
-    /// </summary>
-    Miss,
-    /// <summary>
-    /// 閃現 - 出現
-    /// </summary>
-    Miss1,
-    /// <summary>
-    /// 移動攻擊
-    ///</summary>
-    MovAtk,
-    /// <summary>
-    /// 跳躍
-    /// </summary>
-    Jump
-}
+

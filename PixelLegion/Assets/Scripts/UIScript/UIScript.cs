@@ -53,6 +53,11 @@ public class UIScript : LeadToSurviveGameBaseClass
     /// </summary>
     [Header("需要集中管理的介面"), SerializeField]
     private List<RectTransform> CentralizedManagementUI;
+    /// <summary>
+    /// 必須存在一個的UI介面
+    /// </summary>
+    [Header("必須存在一個的UI介面"), SerializeField]
+    private List<RectTransform> OnlyUI;
 
     private void Awake()
     {
@@ -76,10 +81,6 @@ public class UIScript : LeadToSurviveGameBaseClass
         if (GetUI != null)
             JoystickUI = GetUI.GetComponent<RectTransform>();
 
-        GetUI = _Tf.Find("英雄操作");
-        if (GetUI != null)
-            PlayerMoveUI = GetUI.GetComponent<RectTransform>();
-
         GetUI = _Tf.Find("決鬥 Duel");
         if (GetUI != null)
         {
@@ -87,9 +88,19 @@ public class UIScript : LeadToSurviveGameBaseClass
             CloseDuelUI();
         }
 
+        GetUI = _Tf.Find("英雄操作");
+        if (GetUI != null)
+        {
+            PlayerMoveUI = GetUI.GetComponent<RectTransform>();
+            OnlyUI.Add(PlayerMoveUI);
+        }
+
         GetUI = _Tf.Find("功能型UI");
         if (GetUI != null)
+        {
             FuncUI = GetUI.GetComponent<RectTransform>();
+            OnlyUI.Add(FuncUI);
+        }
 
         GetUI = _Tf.Find("Menu");
         if (GetUI != null)
@@ -304,6 +315,30 @@ public class UIScript : LeadToSurviveGameBaseClass
         }
     }
     #endregion
+
+
+    /// <summary>
+    /// 使用選單名稱開功能選單或其他操控選單
+    /// </summary>
+    /// <param name="_name">選單物件的名稱</param>
+    public void NameOpenOnlyUI(string _name)
+    {
+        Time.timeScale = 0f;
+
+        Vector2 pos;
+        foreach (RectTransform item in OnlyUI)
+        {
+            if (item.name == _name)
+            {
+                item.anchoredPosition = Vector2.zero;
+                continue;
+            }
+            pos = item.anchoredPosition;
+            pos.y = 720;
+            item.anchoredPosition = pos;
+        }
+        Time.timeScale = 1f;
+    }
 
     #region 離開遊戲
     /// <summary>

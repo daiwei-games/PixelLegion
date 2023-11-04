@@ -78,6 +78,14 @@ namespace Assets.Scripts
         /// 野生士兵圖層
         /// </summary>
         public const string WildSoldierLayer = "WildSoldier";
+        /// <summary>
+        /// 野生節點Tag
+        /// </summary>
+        public const string wildNodeTag = "WildNode";
+        /// <summary>
+        /// 野生節點圖層
+        /// </summary>
+        public const string wildNodeLayer = "WildNode";
         #endregion
         #region 攝影機、其他
         /// <summary>

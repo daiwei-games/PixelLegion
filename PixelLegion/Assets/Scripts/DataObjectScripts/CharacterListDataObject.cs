@@ -16,4 +16,9 @@ public class CharacterListDataObject : ScriptableObject
     /// </summary>
     [Header("士兵清單")]
     public List<SoldierScript> SoldierList;
+    /// <summary>
+    /// 野生士兵、怪物清單
+    /// </summary>
+    [Header("野生清單")]
+    public List<SoldierScript> WildSoldierList;
 }

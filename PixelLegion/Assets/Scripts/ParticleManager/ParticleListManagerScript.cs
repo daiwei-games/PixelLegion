@@ -26,8 +26,6 @@ public class ParticleListManagerScript : LeadToSurviveGameBaseClass
     [Header("報擊傷害打擊特效 CameraShakeHit_01_110")]
     public ParticleSystem CameraShakeHit_1;
 
-    [Header("主爆受傷效果 MainFortress")]
-    public ParticleSystem MainFortress_1;
     private void Awake()
     {
         _Tf = transform;

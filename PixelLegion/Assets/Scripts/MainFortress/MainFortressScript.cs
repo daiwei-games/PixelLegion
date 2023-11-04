@@ -391,14 +391,6 @@ public class MainFortressScript : LeadToSurviveGameBaseClass
         _hero.GetEmenyTarget(_gameManagerScript._MainFortressScriptList);
         _gameManagerScript.HeroDataFormat(_hero); //設定英雄資料
     }
-    /// <summary>
-    /// 村莊產生英雄
-    /// </summary>
-    /// <param name="_hs"></param>
-    public virtual void ProduceHero(HeroScript _hs)
-    {
-
-    }
 
     #region 其他
 

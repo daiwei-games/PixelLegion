@@ -18,7 +18,11 @@ public class HpScript : LeadToSurviveGameBaseClass
 
         return this;
     }
-
+    /// <summary>
+    /// 血條控制
+    /// </summary>
+    /// <param name="HpMax">血條最大值</param>
+    /// <param name="_hit">受到的傷害</param>
     public void GetHit(int HpMax, int _hit)
     {
         float percentage = Mathf.InverseLerp(0, HpMax, _hit);

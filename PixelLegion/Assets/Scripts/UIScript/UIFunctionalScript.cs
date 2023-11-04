@@ -20,7 +20,7 @@ public class UIFunctionalScript : LeadToSurviveGameBaseClass
         _Tf = transform;
         _Go = gameObject;
 
-        Transform _tfFind = _Tf.Find("對話");
+        Transform _tfFind = _Tf.Find("ButtonBackground2/對話");
         if (_tfFind != null)
         {
             DialogueButton = _tfFind.GetComponent<Button>();

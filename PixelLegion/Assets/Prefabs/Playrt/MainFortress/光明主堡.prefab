@@ -251,6 +251,11 @@ MonoBehaviour:
   HeroUI: {fileID: 0}
   Physics2DSize: 35
   PhySize: {x: 0, y: 0}
+  _AudioSourceHit: {fileID: 0}
+  isHit: 0
+  MfSpriteRenderer: {fileID: 0}
+  HitTimeMax: 0
+  HitTime: 0
 --- !u!1 &5013076206298169237
 GameObject:
   m_ObjectHideFlags: 0
@@ -361,7 +366,7 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 32
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &3592190910695584027
 MonoBehaviour:
@@ -533,7 +538,7 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 32
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &368609456087856897
 MonoBehaviour:

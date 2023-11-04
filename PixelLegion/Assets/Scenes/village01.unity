@@ -171,6 +171,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2304002433709900704, guid: e84dd2fde38b90c40a370c7a8bdcdeb8, type: 3}
+      propertyPath: m_TagString
+      value: floot
+      objectReference: {fileID: 0}
     - target: {fileID: 2683687821810053086, guid: e84dd2fde38b90c40a370c7a8bdcdeb8, type: 3}
       propertyPath: m_TileSpriteArray.Array.data[6].m_Data
       value: 
@@ -5356,9 +5360,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: Archer_99
       objectReference: {fileID: 0}
-    - target: {fileID: 8751122448996484727, guid: 6b34f0474a2b6ea42bf454b9614001af, type: 3}
-      propertyPath: m_SortingOrder
-      value: 99
+    - target: {fileID: 9165653301009625072, guid: 6b34f0474a2b6ea42bf454b9614001af, type: 3}
+      propertyPath: OffsetY
+      value: 0.7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5436,7 +5440,7 @@ GameObject:
   - component: {fileID: 377274943}
   m_Layer: 8
   m_Name: Floot_200_Reduce_2
-  m_TagString: Untagged
+  m_TagString: floot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -18777,10 +18781,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Tf: {fileID: 0}
   _Go: {fileID: 0}
-  MapLv: 0
   _gameManager: {fileID: 0}
+  _cldo: {fileID: 11400000, guid: de3c87c07f5d3454d8d6049aaccdca78, type: 2}
+  _Glm: {fileID: 0}
   SoldierCount: 0
+  SoldierCountMax: 0
   SoldierReTime: 0
+  _Tag: 
 --- !u!4 &559692599
 Transform:
   m_ObjectHideFlags: 0
@@ -18790,7 +18797,7 @@ Transform:
   m_GameObject: {fileID: 559692597}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 168.37, y: -1.72, z: 0}
+  m_LocalPosition: {x: 55, y: -1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -18813,7 +18820,7 @@ GameObject:
   - component: {fileID: 563411906}
   m_Layer: 8
   m_Name: Floot_200_Reduce_1
-  m_TagString: Untagged
+  m_TagString: floot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -27544,7 +27551,7 @@ GameObject:
   - component: {fileID: 854172874}
   m_Layer: 8
   m_Name: Floot_200_Add_5
-  m_TagString: Untagged
+  m_TagString: floot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -36302,7 +36309,7 @@ GameObject:
   - component: {fileID: 992160103}
   m_Layer: 8
   m_Name: Floot_200_Add_3
-  m_TagString: Untagged
+  m_TagString: floot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -44899,7 +44906,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4109907611587090865, guid: e8ce0b3f75bb31c48a331b90ca036d07, type: 3}
       propertyPath: NowScenes
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4109907611587090865, guid: e8ce0b3f75bb31c48a331b90ca036d07, type: 3}
       propertyPath: _HpPrefabs
@@ -45049,7 +45056,7 @@ GameObject:
   - component: {fileID: 1139505037}
   m_Layer: 8
   m_Name: Floot_200_Add_2
-  m_TagString: Untagged
+  m_TagString: floot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -53980,6 +53987,53 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2502927837737403058, guid: bc53f24ee15b644638bfebdee07e9a36, type: 3}
   m_PrefabInstance: {fileID: 4564139094736630693}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1387551288
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1387551290}
+  - component: {fileID: 1387551289}
+  m_Layer: 0
+  m_Name: "\u5B88\u885B\u7522\u751F\u7BC0\u9EDE_GuardProduceNode"
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1387551289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1387551288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0423872818adde449426dd1ce135d09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _Tf: {fileID: 0}
+  _Go: {fileID: 0}
+  SoldierPrefab: {fileID: 3923186992172568239, guid: 6b34f0474a2b6ea42bf454b9614001af, type: 3}
+--- !u!4 &1387551290
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1387551288}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.7501721, y: 0.40717465, z: -0.07172325}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1456507539
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -54341,7 +54395,7 @@ GameObject:
   - component: {fileID: 1659860587}
   m_Layer: 8
   m_Name: Floot_200_Reduce_3
-  m_TagString: Untagged
+  m_TagString: floot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -67654,7 +67708,7 @@ GameObject:
   - component: {fileID: 1771357519}
   m_Layer: 8
   m_Name: Floot_200_Add_4
-  m_TagString: Untagged
+  m_TagString: floot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -76376,7 +76430,7 @@ GameObject:
   - component: {fileID: 2021777634}
   m_Layer: 8
   m_Name: Floot_200_Add_1
-  m_TagString: Untagged
+  m_TagString: floot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -91520,3 +91574,4 @@ SceneRoots:
   - {fileID: 1824552531}
   - {fileID: 559692599}
   - {fileID: 1618336898}
+  - {fileID: 1387551290}

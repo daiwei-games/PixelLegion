@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public playerDataObject _Pdo;
     /// <summary>
-    /// 關卡管理器
+    /// 地圖英雄、士兵、怪物管理器
     /// </summary>
     public GameLevelManager _Glm;
     #endregion
@@ -185,11 +185,10 @@ public class GameManager : MonoBehaviour
         isSoldierStateForAction = true;
         isHeroStateForAction = true;
         isProduce = true;
-        isGameOver = false;
-        isMonsterNodes = false;
+        
 
         _LayerMask = LayerMask.GetMask(staticPublicObjectsStaticName.PlayerSoldierLayer, staticPublicObjectsStaticName.HeroLayer, staticPublicObjectsStaticName.MainFortressLayer);
-        _DarkLayerMask = LayerMask.GetMask(staticPublicObjectsStaticName.DarkSoldierLayer, staticPublicObjectsStaticName.DarkHeroLayer, staticPublicObjectsStaticName.DarkMainFortressLayer);
+        _DarkLayerMask = LayerMask.GetMask(staticPublicObjectsStaticName.DarkSoldierLayer, staticPublicObjectsStaticName.DarkHeroLayer, staticPublicObjectsStaticName.DarkMainFortressLayer, staticPublicObjectsStaticName.WildSoldierLayer);
     }
     private void Awake()
     {
@@ -211,11 +210,21 @@ public class GameManager : MonoBehaviour
         }
         switch (NowScenes)
         {
+            case ScenesType.village:
+
+                break;
+            case ScenesType.prairie:
+
+                break;
+            case ScenesType.mine:
+
+                break;
+            case ScenesType.dark:
+
+                break;
             case ScenesType.practise:
             case ScenesType.battlefield:
 
-                break;
-            case ScenesType.village:
                 break;
         }
     }
@@ -223,24 +232,26 @@ public class GameManager : MonoBehaviour
     {
         if (staticPublicGameStopSwitch.gameStop) return;
         time = Time.deltaTime;
-
         switch (NowScenes)
         {
-            case ScenesType.practise: // 如果是練習場景
-            case ScenesType.battlefield: // 如果是戰場場景
-
+            case ScenesType.village:
+            case ScenesType.prairie:
+            case ScenesType.mine:
+            case ScenesType.dark:
+                ProduceWildSoldier(time);
+                SoldierState(time, NowScenes);
+                break;
+            case ScenesType.practise:
+            case ScenesType.battlefield:
                 if (!isGameOver)
                 {
                     //生產區塊
                     ProduceOrStateFunc(time, Time.time);
 
                     //管理器區塊
-                    SoldierState(time);
+                    SoldierState(time, NowScenes);
                     HeroAI(time);
                 }
-                break;
-            case ScenesType.village: // 如果是村莊場景
-
                 break;
         }
         CameraToPlayerPosition();
@@ -583,6 +594,107 @@ public class GameManager : MonoBehaviour
         isSoldierStateForAction = true;
     }
 
+
+    /// <summary>
+    /// 士兵的動作資訊
+    /// </summary>
+    /// <param name="_time">時間</param>
+    /// <param name="_st">場景類型</param>
+    public void SoldierState(float _time, ScenesType _st)
+    {
+        if (_soldierList.Count == 0 || !isSoldierStateForAction) return;//如果士兵清單為0，或主堡清單為1，或執行迴圈狀態為false (上一輪還再執行)，則不執行
+
+
+        SoldierScript _soldierScript;
+        Transform _tf;
+        Vector2 Pos;
+        for (int i = 0; i < _soldierList.Count; i++)
+        {
+            isSoldierStateForAction = false;
+            _soldierScript = _soldierList[i];
+            if (_soldierScript == null) continue;
+
+            switch (_st)
+            {
+                case ScenesType.practise:
+                case ScenesType.battlefield:
+                    if (_MainFortressScriptList.Count == 1 || isGameOver)  //如果遊戲結束，則全體士兵都進入等待
+                    {
+                        _soldierScript.Idle();
+                        continue;
+                    }
+                    _soldierScript.GetEmenyMainFortress(_MainFortressScriptList);
+                    break;
+            }
+
+            if (_soldierScript.soldierHp <= 0)
+            {
+                _soldierScript.Die();
+                continue;
+            }
+            _soldierScript._Time = _time;
+
+            _tf = _soldierScript._Tf;
+            if (_tf == null) continue;
+            Pos = _tf.position;
+
+            _soldierScript._animator.speed = 1;
+
+            
+            _soldierScript.PhyOverlapBoxAll(Pos);
+            if (_soldierScript._collider2D.Length > 0)
+            {
+                if (_soldierScript.AttackingTime <= 0)
+                {
+                    _soldierScript.Atk();
+                }
+                else
+                {
+                    _soldierScript.Idle();
+                    _soldierScript.AttackingTime -= _time;
+                }
+                continue;
+            }
+            if (!_soldierScript.isNowHit) //如果沒有被攻擊
+            {
+                if (_soldierScript._enemyNowMainFortress == null) continue;
+                _soldierScript.Move();
+
+                Transform _targetTf = _soldierScript._enemyNowMainFortress;
+                if (_soldierScript._target != null) _targetTf = _soldierScript._target;
+                _tf.position = Vector3.MoveTowards(Pos, _targetTf.position, _soldierScript.speed * _time);
+            }
+            else
+            {
+                //被攻擊
+                _soldierScript.isNowHitTime += _time;
+                if (_soldierScript.isNowHitTimeMax <= _soldierScript.isNowHitTime)
+                {
+                    _soldierScript.isNowHit = false;
+                    _soldierScript.isNowHitTime = 0;
+                }
+                continue;
+            }
+
+        }
+        switch (_st)
+        {
+            case ScenesType.practise:
+            case ScenesType.battlefield:
+                if (isGameOver)
+                {
+                    isSoldierStateForAction = false; //遊戲結束，士兵不再執行
+                    return;
+                }
+                break;
+        }
+
+        
+        isSoldierStateForAction = true;
+    }
+
+
+
     /// <summary>
     /// 士兵資料初始化
     /// </summary>
@@ -616,6 +728,17 @@ public class GameManager : MonoBehaviour
         _Ss._enemyLayerMask = _Lm;
         _Ss.SoldierDataInitializ();
         _soldierList.Add(_Ss);
+    }
+
+
+    /// <summary>
+    /// 刪除士兵清單以及士兵本體
+    /// </summary>
+    /// <param name="_ss">士兵腳本</param>
+    public void SolidListRemove(SoldierScript _ss)
+    {
+        _soldierList.Remove(_ss); // 從清單中移除
+        Destroy(_ss._Go, 2); // 1秒後刪除物件
     }
     #endregion
 
@@ -703,7 +826,7 @@ public class GameManager : MonoBehaviour
         uiScript.GameOverUI();
     }
     #endregion
-        
+
     #region 主堡相關
     /// <summary>
     /// 主堡產生、執行狀態相關
@@ -768,21 +891,24 @@ public class GameManager : MonoBehaviour
                     _col = _enemyList[c];
                     if (_col != null)
                     {
-                        _tf = _col.transform;
-                        switch (_mfbTf.tag)
+                        if (_Ss._target == null)
                         {
-                            case staticPublicObjectsStaticName.DarkMainFortressTag: // 如果是黑暗主堡
-                                if (_Ss.CompareTag(staticPublicObjectsStaticName.DARKSoldierTag)) // 如果是黑暗士兵
-                                {
-                                    _Ss._target = _tf;
-                                }
-                                break;
-                            case staticPublicObjectsStaticName.MainFortressTag: // 如果是光明主堡
-                                if (_Ss.CompareTag(staticPublicObjectsStaticName.PlayerSoldierTag)) // 如果是玩家士兵
-                                {
-                                    _Ss._target = _tf;
-                                }
-                                break;
+                            _tf = _col.transform;
+                            switch (_mfbTf.tag)
+                            {
+                                case staticPublicObjectsStaticName.DarkMainFortressTag: // 如果是黑暗主堡
+                                    if (_Ss.CompareTag(staticPublicObjectsStaticName.DARKSoldierTag)) // 如果是黑暗士兵
+                                    {
+                                        _Ss._target = _tf;
+                                    }
+                                    break;
+                                case staticPublicObjectsStaticName.MainFortressTag: // 如果是光明主堡
+                                    if (_Ss.CompareTag(staticPublicObjectsStaticName.PlayerSoldierTag)) // 如果是玩家士兵
+                                    {
+                                        _Ss._target = _tf;
+                                    }
+                                    break;
+                            }
                         }
                         break;
                     }
@@ -801,21 +927,24 @@ public class GameManager : MonoBehaviour
                     _col = _enemyList[c];
                     if (_col != null)
                     {
-                        _tf = _col.transform;
-                        switch (_mfbTf.tag) // 檢查主堡的tag
+                        if (_hs._target == null)
                         {
-                            case staticPublicObjectsStaticName.DarkMainFortressTag: // 如果是黑暗主堡
-                                if (_hs.CompareTag(staticPublicObjectsStaticName.DarkHeroTag)) // 如果是黑暗英雄
-                                {
-                                    _hs._target = _tf;
-                                }
-                                break;
-                            case staticPublicObjectsStaticName.MainFortressTag: // 如果是光明主堡
-                                if (_hs.CompareTag(staticPublicObjectsStaticName.HeroTag)) // 如果是玩家英雄
-                                {
-                                    _hs._target = _tf;
-                                }
-                                break;
+                            _tf = _col.transform;
+                            switch (_mfbTf.tag) // 檢查主堡的tag
+                            {
+                                case staticPublicObjectsStaticName.DarkMainFortressTag: // 如果是黑暗主堡
+                                    if (_hs.CompareTag(staticPublicObjectsStaticName.DarkHeroTag)) // 如果是黑暗英雄
+                                    {
+                                        _hs._target = _tf;
+                                    }
+                                    break;
+                                case staticPublicObjectsStaticName.MainFortressTag: // 如果是光明主堡
+                                    if (_hs.CompareTag(staticPublicObjectsStaticName.HeroTag)) // 如果是玩家英雄
+                                    {
+                                        _hs._target = _tf;
+                                    }
+                                    break;
+                            }
                         }
                         break;
                     }
@@ -909,29 +1038,24 @@ public class GameManager : MonoBehaviour
     public void MonsterNodeDataGet(MonsterNodeScript _mns)
     {
         _monsterNodesList.Add(_mns);
-        _mns.SoldierReTime = Random.Range(100, 1000);
-        if (_mns.MapLv < 1) _mns.MapLv = 1;
+        // _monsterNodesList 代表傳送點的List有東西，可以生產地圖怪物了
         isMonsterNodes = true;
     }
+    /// <summary>
+    /// 野生怪物、士兵產生
+    /// </summary>
+    /// <param name="_time"></param>
+    void ProduceWildSoldier(float _time)
+    {
+        if (!isMonsterNodes || _monsterNodesList.Count < 1) return;
+        for (int i = 0; i < _monsterNodesList.Count; i++)
+        {
+            if (_monsterNodesList[i].SoldierCount <= 0) return;
+            _monsterNodesList[i].ProduceWildSoldier(_LayerMask);
+        }
+    }
+    
+
     #endregion
 }
-#region 場景類型
-/// <summary>
-/// 場景類型
-/// </summary>
-public enum ScenesType
-{
-    /// <summary>
-    /// 練習場景
-    /// </summary>
-    practise,
-    /// <summary>
-    /// 戰場場景
-    /// </summary>
-    battlefield,
-    /// <summary>
-    /// 村莊場景
-    /// </summary>
-    village,
-}
-#endregion
+

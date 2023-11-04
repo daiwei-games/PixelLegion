@@ -1,21 +1,40 @@
-﻿using System.Collections;
-using System.Net;
-using UnityEngine;
-public class ParabolaScript : MonoBehaviour
+﻿using UnityEngine;
+public class ParabolaScript : LeadToSurviveGameBaseClass
 {
-    public Transform movePoint;
+    /// <summary>
+    /// 物件起始點
+    /// </summary>
     public Transform startPoint;
+    /// <summary>
+    /// 移動物件
+    /// </summary>
+    public Transform movePoint;
+    /// <summary>
+    /// 控制點
+    /// </summary>
     public Transform controlPoint;
+    /// <summary>
+    /// 物件結束點
+    /// </summary>
     public Transform endPoint;
-    public float speed;
+    /// <summary>
+    /// 速度
+    /// </summary>
+    private float speed;
 
     private float t;
-    private void Start()
+    private void OnEnable()
     {
-        speed = 1f;
+        _Tf = transform;
+        _Go = gameObject;
+
+        if(speed < 1) speed = 1;
         t = 0f;
     }
-    void Update()
+    /// <summary>
+    /// 前往目標
+    /// </summary>
+    public void Goto()
     {
 
         // 在0到1之間變化的參數t
@@ -28,13 +47,13 @@ public class ParabolaScript : MonoBehaviour
         Vector3 targetPosition = CalculateQuadraticBezierPoint(t, startPoint.position, controlPoint.position, endPoint.position);
 
 
-        Vector3 direction = targetPosition - movePoint.position;
+        Vector3 direction = targetPosition - _Tf.position;
 
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         Quaternion rotation = Quaternion.Euler(new Vector3(0, 0, angle));
         // 移動物件到計算得到的點
-        movePoint.position = targetPosition;
-        movePoint.rotation = rotation;
+        _Tf.position = targetPosition;
+        _Tf.rotation = rotation;
 
         // 如果t等於1，表示物件已經移動到了控制點P2，這裡你可以觸發相應的事件或做其他處理
         if (t >= 1f)
@@ -51,26 +70,6 @@ public class ParabolaScript : MonoBehaviour
     {
         float u = 1 - t;
         return u * u * p0 + 2 * u * t * p1 + t * t * p2;
-
-
-        //// 计算参数 t 的补数 u
-        //float u = 1 - t;
-
-        //// 计算三个部分
-        //// 第一个部分：u^2 * p0，对应于公式中的 (1 - t)^2 * p0
-        //Vector3 part1 = u * u * p0;
-
-        //// 第二个部分：2 * u * t * p1，对应于公式中的 2 * (1 - t) * t * p1
-        //Vector3 part2 = 2 * u * t * p1;
-
-        //// 第三个部分：t^2 * p2，对应于公式中的 t^2 * p2
-        //Vector3 part3 = t * t * p2;
-
-        //// 将三个部分相加，得到曲线上的点
-        //Vector3 bezierPoint = part1 + part2 + part3;
-
-        //// 返回曲线上的点
-        //return bezierPoint;
     }
 
 }

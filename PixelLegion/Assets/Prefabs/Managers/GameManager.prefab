@@ -50,7 +50,7 @@ MonoBehaviour:
   AtfVfx_2: {fileID: 1085760314412063041, guid: ae68c2a9222e7554a82bdebbb39b10c9, type: 3}
   AtfVfx_3: {fileID: 1085760314412063041, guid: 4bc1de4a2e9e5404aac8d729ac1210ec, type: 3}
   AtfVfx_4: {fileID: 1085760314412063041, guid: c6ed735cf02ad7246955726769dfa921, type: 3}
-  CameraShakeHit_1: {fileID: 0}
+  CameraShakeHit_1: {fileID: 7269511728658382997, guid: 1d5f942147018704ead8e1f90ab4029a, type: 3}
 --- !u!1 &1961858639298246248
 GameObject:
   m_ObjectHideFlags: 0
@@ -68,7 +68,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2620015930699941393
 RectTransform:
   m_ObjectHideFlags: 0
@@ -277,17 +277,15 @@ MonoBehaviour:
   _MainFortressScriptList: []
   _soldierList: []
   HeroList: []
-  ProduceSoldierTimeMax: 0.1
-  ProduceSoldierTime: 0
-  ProduceHeroTimeMax: 0.1
-  ProduceHeroTime: 0
+  _monsterNodesList: []
   uiScript: {fileID: 0}
   _UIHc: {fileID: 0}
   HeroUI: {fileID: 0}
   _GmSoldierCountMax: 0
   isHeroStateForAction: 0
-  isProduceSoldier: 0
+  isProduce: 0
   isGameOver: 0
+  isMonsterNodes: 0
   SelectedHeroTarget: {fileID: 0}
   _Joystick: {fileID: 0}
   SelectedHero: {fileID: 0}
@@ -485,11 +483,12 @@ MonoBehaviour:
   Arms05: {fileID: 8300000, guid: 2ab55c1011ab70248b29b6f21b631161, type: 3}
   HeroHit01: {fileID: 8300000, guid: dc858a9e2a7b77c42a099e95142e2cee, type: 3}
   HeroHit02: {fileID: 8300000, guid: 96c4489c136c0aa479d7b74b7c8dc5db, type: 3}
-  HeroHit03: {fileID: 0}
-  HeroHit04: {fileID: 0}
+  HeroHit03: {fileID: 8300000, guid: 37231337e714d564a93d2f9250091b00, type: 3}
+  HeroHit04: {fileID: 8300000, guid: 85a0e20a6deeac1459c949a7ec307f15, type: 3}
   Def01: {fileID: 8300000, guid: 9f619d0579f17a3478577019b2a5f739, type: 3}
   SoldierHit01: {fileID: 8300000, guid: 37231337e714d564a93d2f9250091b00, type: 3}
-  CriticalStrike: {fileID: 0}
+  MfHit01: {fileID: 8300000, guid: 96c13a9ceb7ff364a8b8a473412a50ba, type: 3}
+  CriticalStrike: {fileID: 8300000, guid: bdef87bd8e2b8ec45af8256c45b91f5d, type: 3}
   MaxDistance: 4
   MinDistance: 2
   SpatialBlend: 1

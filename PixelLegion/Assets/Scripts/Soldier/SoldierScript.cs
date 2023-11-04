@@ -13,12 +13,12 @@ public class SoldierScript : LeadToSurviveGameBaseClass
     /// <summary>
     /// 士兵基本素質
     /// </summary>
-    [Header("士兵基本素質 (0.01 - 0.3)"), Range(0.01f, 0.3f)]
+    [Header("士兵基本素質 (0.01 - 70)"), Range(0.01f, 20f)]
     public float BasicQuality;
     /// <summary>
     /// 基本體質
     /// </summary>
-    [Header("基本體質 (1- 60)"), Range(1, 60)]
+    [Header("基本體質 (1- 120)"), Range(1, 120)]
     public int BasicConstitution;
     /// <summary>
     /// 基本血量
@@ -55,13 +55,27 @@ public class SoldierScript : LeadToSurviveGameBaseClass
     /// <summary>
     /// 取得 GameManager 腳本
     /// </summary>
+    [HideInInspector]
     public GameManager _gameManagerScript;
     /// <summary>
     /// 士兵方向
     /// </summary>
+    [HideInInspector]
     public Vector3 _SoldierScale;
+
+    /// <summary>
+    /// 裝備所有投擲、遠程武器的腳本
+    /// </summary>
+    [Header("所有投擲、遠程武器的腳本")]
+    public AmmunitionScript _ammunitionScript;
     #endregion
+
     #region 射線
+    /// <summary>
+    /// 射線範圍
+    /// </summary>
+    [Header("射線範圍")]
+    public float Physics2DSize;
     /// <summary>
     /// 矩形射線偏移
     /// </summary>
@@ -75,28 +89,26 @@ public class SoldierScript : LeadToSurviveGameBaseClass
     /// <summary>
     /// 敵人檢測射線
     /// </summary>
-    [Header("敵人檢測射線")]
+    [Header("敵人檢測射線"), HideInInspector]
     public Collider2D[] _collider2D;
-    /// <summary>
-    /// 射線範圍
-    /// </summary>
-    [Header("射線範圍")]
-    public float Physics2DSize;
+
     /// <summary>
     /// 取得攻擊目標的圖層
     /// </summary>
+    [HideInInspector]
     public LayerMask _enemyLayerMask;
     /// <summary>
-    /// 目前敵人的主堡 主要目標
+    /// 目前敵人的主堡或主要攻擊目標
     /// </summary>
-    [Header("主要目標")]
+    [Header("主要攻擊目標"), HideInInspector]
     public Transform _enemyNowMainFortress;
     /// <summary>
-    /// 緊急目標
+    /// 緊急目標，當自家主堡被揍了，將會被賦予攻擊目標，並趕回來守護
     /// </summary>
-    [Header("緊急目標")]
+    [Header("緊急目標"), HideInInspector]
     public Transform _target;
     #endregion
+
     #region 狀態
     /// <summary>
     /// 死亡之後是否關閉剛體
@@ -106,7 +118,7 @@ public class SoldierScript : LeadToSurviveGameBaseClass
     /// <summary>
     /// 現在是否正在受傷 false = 沒有受傷
     /// </summary>
-    [Header("現在是否正在受傷 false = 沒有受傷")]
+    [Header("現在是否正在受傷 false = 沒有受傷"),HideInInspector]
     public bool isNowHit;
     #endregion
 
@@ -130,7 +142,6 @@ public class SoldierScript : LeadToSurviveGameBaseClass
     /// </summary>
     public float AttackingTimeMax;
     #endregion
-
 
     #region 動畫控制
     /// <summary>
@@ -235,13 +246,15 @@ public class SoldierScript : LeadToSurviveGameBaseClass
     #endregion
 
     #region 物件
+    /// <summary>
+    /// 血條物件
+    /// </summary>
+    [Header("血條物件"), HideInInspector]
     public HpScript _Hps;
     #endregion
 
     public virtual void SoldierDataInitializ()
     {
-        //_Tf = transform; // 取得物件transform
-        //_Go = gameObject; // 取得物件gameobject
         _body2D = GetComponent<Rigidbody2D>(); // 取得物件rigidbody2D
         _animator = GetComponent<Animator>(); // 取得動畫控制器
 
@@ -253,7 +266,6 @@ public class SoldierScript : LeadToSurviveGameBaseClass
 
         isNowHitTimeMax = .5f;
         AttackingTimeMax = .6f;
-
     }
     public virtual void GetAllAnimationClipName()
     {
@@ -274,6 +286,9 @@ public class SoldierScript : LeadToSurviveGameBaseClass
             if (nameIndexOf.IndexOf("_dash") != -1) dashAnimationName.Add(_name);
         }
     }
+    /// <summary>
+    /// 士兵狀態機
+    /// </summary>
     public virtual void SoldierStateAI()
     {
         _animationInfo = _animator.GetCurrentAnimatorStateInfo(0); // 取得動畫資訊
@@ -293,7 +308,7 @@ public class SoldierScript : LeadToSurviveGameBaseClass
         {
             if (_soldierChangeState != SoldierState.SoupHit)
             {
-                if (_soldierNowState == SoldierState.Atk && _normalizedTime < 0.9f) return; // 當狀態為攻擊將會return
+                if (_soldierNowState == SoldierState.Atk && _normalizedTime < 0.8f) return; // 當狀態為攻擊將會return
                 if (_soldierNowState == SoldierState.Hit && _normalizedTime < 0.9f) return; // 當狀態為受傷將會return
             }
             if (_soldierNowState == SoldierState.SoupHit && _normalizedTime < 0.9f) return; // 當狀態為超級受傷將會return
@@ -310,40 +325,13 @@ public class SoldierScript : LeadToSurviveGameBaseClass
                 if (_soldierNowState == SoldierState.Die) return; // 當前狀態為死亡時將會retun
                 if (IsCloseRigidbody) _body2D.bodyType = RigidbodyType2D.Static; // 將剛體設定為靜態
                 soldierAnimatorPlay(dieAnimationName);
-                _gameManagerScript._soldierList.Remove(this); // 從清單中移除
-                Destroy(_Go, 2); // 1秒後刪除物件
+                _gameManagerScript.SolidListRemove(this);
                 break;
             default:
                 switch (_soldierChangeState)
                 {
                     case SoldierState.Atk:
-                        if (_collider2D.Length == 0) return;
                         soldierAnimatorPlay(atkAnimationName[Random.Range(0, atkAnimationName.Count)]);
-                        string _tag;
-                        Collider2D _col;
-                        List<Collider2D> _ColList = new List<Collider2D>();
-                        _ColList.AddRange(_collider2D.ToList());
-                        AttackingTime = AttackingTimeMax;
-                        for (int i = 0; i < _ColList.Count; i++) // 尋找敵人
-                        {
-                            _col = _ColList[i];
-                            if (_col == null) continue;
-                            _enemyNowMainFortress = _col.transform;
-                            _tag = _col.tag;
-                            if (_tag.IndexOf("Hero") != -1)
-                            {
-                                _col.GetComponent<HeroScript>().HeroHit(soldierAtk);
-                            }
-                            else if (_tag.IndexOf("Soldier") != -1)
-                            {
-                                _col.GetComponent<SoldierScript>().SoldierHP(soldierAtk);
-                            }
-                            else if (_tag.IndexOf("MainFortress") != -1)
-                            {
-                                MainFortressScript _mainFortressScript = _col.GetComponent<MainFortressScript>();
-                                _mainFortressScript.MainFortressHit(soldierAtk);
-                            }
-                        }
                         break;
                     case SoldierState.SoupHit:
                     case SoldierState.Hit:
@@ -370,6 +358,48 @@ public class SoldierScript : LeadToSurviveGameBaseClass
         _soldierChangeState = SoldierState.Atk;
         SoldierStateAI();
     }
+    /// <summary>
+    /// 遠程攻擊
+    /// </summary>
+    public void RemoteAttack()
+    {
+        if (_ammunitionScript == null) return; // 當沒有彈藥庫時將會return
+    }
+    /// <summary>
+    /// 近戰攻擊
+    /// </summary>
+    public void MeleeAttacking()
+    {
+        if (_collider2D.Length == 0) return;
+        string _tag;
+        Collider2D _col;
+        List<Collider2D> _ColList = new List<Collider2D>();
+        _ColList.AddRange(_collider2D.ToList());
+        AttackingTime = AttackingTimeMax;
+        for (int i = 0; i < _ColList.Count; i++) // 尋找敵人
+        {
+            _col = _ColList[i];
+            if (_col == null) continue;
+            _enemyNowMainFortress = _col.transform;
+            _tag = _col.tag;
+            if (_tag.IndexOf("Hero") != -1)
+            {
+                HeroScript _Hs = _col.GetComponent<HeroScript>();
+                _Hs.HeroHit(soldierAtk);
+            }
+            else if (_tag.IndexOf("Soldier") != -1)
+            {
+                SoldierScript _Ss = _col.GetComponent<SoldierScript>();
+                _Ss.SoldierHP(soldierAtk);
+                _Ss.HitMeTransform(_Tf);
+            }
+            else if (_tag.IndexOf("MainFortress") != -1)
+            {
+                MainFortressScript _mainFortressScript = _col.GetComponent<MainFortressScript>();
+                _mainFortressScript.MainFortressHit(soldierAtk);
+            }
+        }
+    }
     public virtual void Die()
     {
         _soldierChangeState = SoldierState.Die;
@@ -389,7 +419,7 @@ public class SoldierScript : LeadToSurviveGameBaseClass
     {
         if (soldierHp <= 0) return;
         if (_soldierChangeState == SoldierState.SoupHit) return;
-        Vector2 DieOffset;
+        //Vector2 DieOffset;
         int _hit = hp - soldierDefense;
         if (_hit <= 0) _hit = 1;
         soldierHp -= _hit;
@@ -399,14 +429,15 @@ public class SoldierScript : LeadToSurviveGameBaseClass
         if (soldierHp <= 0)
         {
             _soldierChangeState = SoldierState.Die;
-            DieOffset = Vector2.left;
-            if (_Tf.localScale.x > 0)
-                DieOffset = Vector3.right;
+            //DieOffset = Vector2.left;
+            //if (_Tf.localScale.x > 0)
+            //    DieOffset = Vector3.right;
 
-            _body2D.velocity = DieOffset * 5;
+            //_body2D.velocity = DieOffset * 5;
         }
         else
         {
+            
             isNowHit = true;
             BeakBack();
 
@@ -426,7 +457,7 @@ public class SoldierScript : LeadToSurviveGameBaseClass
                 {
                     Vector2 _ptc = _Tf.position;
                     _ptc.y -= .5f;
-                    CameraShakeParticle = Instantiate(_gameManagerScript.ParticleManager.CameraShakeHit_1, _ptc, Quaternion.identity);
+                    CameraShakeParticle = Instantiate(_gameManagerScript.ParticleManager.CameraShakeHit_1, _ptc, Quaternion.identity, _Tf);
                     Transform _Ptf = CameraShakeParticle.transform;
                     Quaternion _Rotation = _Ptf.localRotation;
                     _Rotation.y = 0;
@@ -456,7 +487,10 @@ public class SoldierScript : LeadToSurviveGameBaseClass
         }
         SoldierStateAI();
     }
-
+    /// <summary>
+    /// 一般受傷
+    /// </summary>
+    /// <param name="hitAmount">傷害值</param>
     public virtual void SoldierHP(int hitAmount)
     {
         if (soldierHp <= 0) return;
@@ -467,6 +501,18 @@ public class SoldierScript : LeadToSurviveGameBaseClass
         _Hps.GetHit(soldierHpMax, _hit);
         if (soldierHp <= 0) Die();
     }
+    /// <summary>
+    /// 傷害我的角色
+    /// </summary>
+    public void HitMeTransform(Transform _who)
+    {
+        //被攻擊了，如果目前沒有目標，也沒有緊急目標，就將目標轉移為攻擊者
+        if (_enemyNowMainFortress == null)
+        {
+            _enemyNowMainFortress = _who;
+        }
+
+    }
     public virtual void Idle()
     {
         if (_soldierChangeState == _soldierNowState && _soldierNowState == SoldierState.Idle) return;
@@ -475,6 +521,8 @@ public class SoldierScript : LeadToSurviveGameBaseClass
     }
     public virtual void Move()
     {
+        
+
         _SoldierScale = _Tf.localScale;
         _SoldierScale.x = Mathf.Abs(_SoldierScale.x);
         if (_enemyNowMainFortress.position.x < _Tf.position.x)
@@ -565,6 +613,10 @@ public class SoldierScript : LeadToSurviveGameBaseClass
             return false;
         }
     }
+    /// <summary>
+    /// 受傷音效
+    /// </summary>
+    /// <param name="SFXIndex"></param>
     public void HitPlaySFX(int SFXIndex)
     {
         if (PlaySFXBaseFunc("hit")) return;
@@ -609,6 +661,7 @@ public class SoldierScript : LeadToSurviveGameBaseClass
     }
     void OnDrawGizmos()
     {
+        if(_Tf == null) return;
         PhySize = Vector2.one * Physics2DSize;
         PhySize.y *= 2;
 
@@ -618,30 +671,4 @@ public class SoldierScript : LeadToSurviveGameBaseClass
     }
     #endregion
 }
-public enum SoldierState
-{
-    /// <summary>
-    /// 等待
-    /// </summary>
-    Idle,
-    /// <summary>
-    /// 移動
-    /// </summary>
-    Move,
-    /// <summary>
-    /// 攻擊
-    /// </summary>
-    Atk,
-    /// <summary>
-    /// 受傷
-    /// </summary>
-    Hit,
-    /// <summary>
-    /// 超級受傷
-    /// </summary>
-    SoupHit,
-    /// <summary>
-    /// 死亡
-    /// </summary>
-    Die
-}
+

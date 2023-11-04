@@ -12,6 +12,8 @@ TagManager:
   - DarkHero
   - UI
   - floot
+  - WildNode
+  - WildSoldier
   layers:
   - Default
   - TransparentFX
@@ -27,8 +29,8 @@ TagManager:
   - DarkSoldier
   - Hero
   - DarkHero
-  - 
-  - 
+  - WildSoldier
+  - WildNode
   - 
   - 
   - 
