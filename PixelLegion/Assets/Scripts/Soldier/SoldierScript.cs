@@ -62,12 +62,6 @@ public class SoldierScript : LeadToSurviveGameBaseClass
     /// </summary>
     [HideInInspector]
     public Vector3 _SoldierScale;
-
-    /// <summary>
-    /// 裝備所有投擲、遠程武器的腳本
-    /// </summary>
-    [Header("所有投擲、遠程武器的腳本")]
-    public AmmunitionScript _ammunitionScript;
     #endregion
 
     #region 射線
@@ -118,7 +112,7 @@ public class SoldierScript : LeadToSurviveGameBaseClass
     /// <summary>
     /// 現在是否正在受傷 false = 沒有受傷
     /// </summary>
-    [Header("現在是否正在受傷 false = 沒有受傷"),HideInInspector]
+    [Header("現在是否正在受傷 false = 沒有受傷"), HideInInspector]
     public bool isNowHit;
     #endregion
 
@@ -194,6 +188,11 @@ public class SoldierScript : LeadToSurviveGameBaseClass
     [Header("攻擊動畫")]
     public List<string> atkAnimationName;
     /// <summary>
+    /// 遠程攻擊動畫
+    /// </summary>
+    [Header("遠程攻擊動畫")]
+    public List<string> remoteAtkAnimationName;
+    /// <summary>
     /// 跑步動畫
     /// </summary>
     [Header("跑步動畫")]
@@ -231,6 +230,7 @@ public class SoldierScript : LeadToSurviveGameBaseClass
     /// </summary>
     private AudioSource _AudioSourceHit;
     #endregion
+
     #region 特效
     /// <summary>
     /// 被攻擊特效
@@ -251,8 +251,30 @@ public class SoldierScript : LeadToSurviveGameBaseClass
     /// </summary>
     [Header("血條物件"), HideInInspector]
     public HpScript _Hps;
+    /// <summary>
+    /// 裝備所有投擲、遠程武器的腳本
+    /// </summary>
+    [Header("所有投擲、遠程武器的腳本")]
+    public AmmunitionScript _ammunitionScript;
+    /// <summary>
+    /// 投擲物件的座標
+    /// </summary>
+    [HideInInspector]
+    public Transform _ammunitionTf;
     #endregion
 
+    #region 型態資料
+    /// <summary>
+    /// 職責 目前是遠攻、近戰守衛或者戰場上的士兵
+    /// </summary>
+    [Header("職責")]
+    public SoldierPost _Sp;
+    /// <summary>
+    /// 是哪種攻擊型態, 建立任務預先設定
+    /// </summary>
+    [Header("攻擊型態")]
+    public AttackType _At;
+    #endregion
     public virtual void SoldierDataInitializ()
     {
         _body2D = GetComponent<Rigidbody2D>(); // 取得物件rigidbody2D
@@ -281,6 +303,7 @@ public class SoldierScript : LeadToSurviveGameBaseClass
             if (nameIndexOf.IndexOf("_idle") != -1) idleAnimationName = _name;
             if (nameIndexOf.IndexOf("_hit") != -1) hitAnimationName = _name;
             if (nameIndexOf.IndexOf("_atk") != -1) atkAnimationName.Add(_name);
+            if (nameIndexOf.IndexOf("_remoteatk") != -1) remoteAtkAnimationName.Add(_name);
             if (nameIndexOf.IndexOf("_die") != -1) dieAnimationName = _name;
             if (nameIndexOf.IndexOf("_run") != -1) runAnimationName.Add(_name);
             if (nameIndexOf.IndexOf("_dash") != -1) dashAnimationName.Add(_name);
@@ -308,8 +331,9 @@ public class SoldierScript : LeadToSurviveGameBaseClass
         {
             if (_soldierChangeState != SoldierState.SoupHit)
             {
-                if (_soldierNowState == SoldierState.Atk && _normalizedTime < 0.8f) return; // 當狀態為攻擊將會return
-                if (_soldierNowState == SoldierState.Hit && _normalizedTime < 0.9f) return; // 當狀態為受傷將會return
+                if ((_soldierNowState == SoldierState.Atk && _normalizedTime < 0.8f) ||
+                    (_soldierNowState == SoldierState.RemoteAtk && _normalizedTime < 0.8f) ||
+                    (_soldierNowState == SoldierState.Hit && _normalizedTime < 0.9f)) return; // 當狀態為攻擊將會return
             }
             if (_soldierNowState == SoldierState.SoupHit && _normalizedTime < 0.9f) return; // 當狀態為超級受傷將會return
         }
@@ -331,7 +355,12 @@ public class SoldierScript : LeadToSurviveGameBaseClass
                 switch (_soldierChangeState)
                 {
                     case SoldierState.Atk:
+                        if (atkAnimationName.Count == 0) return;
                         soldierAnimatorPlay(atkAnimationName[Random.Range(0, atkAnimationName.Count)]);
+                        break;
+                    case SoldierState.RemoteAtk:
+                        if (remoteAtkAnimationName.Count == 0) return;
+                        soldierAnimatorPlay(remoteAtkAnimationName[Random.Range(0, remoteAtkAnimationName.Count)]);
                         break;
                     case SoldierState.SoupHit:
                     case SoldierState.Hit:
@@ -361,9 +390,37 @@ public class SoldierScript : LeadToSurviveGameBaseClass
     /// <summary>
     /// 遠程攻擊
     /// </summary>
-    public void RemoteAttack()
+    public void RemoteAtk()
     {
         if (_ammunitionScript == null) return; // 當沒有彈藥庫時將會return
+        _soldierChangeState = SoldierState.RemoteAtk;
+        SoldierStateAI();
+    }
+    /// <summary>
+    /// 遠程攻擊或近戰攻擊
+    /// </summary>
+    public void RemoteOrMeleeAttacking()
+    {
+        if (_collider2D.Length == 0) return;
+        Collider2D _col;
+        for (int i = 0; i < _collider2D.Length; i++)
+        {
+            _col = _collider2D[i];
+            if (_col == null) continue;
+            if (Vector2.Distance(_Tf.position, _col.transform.position) < 3)
+                Atk();
+            else            
+                RemoteAtk();
+        }
+    }
+    /// <summary>
+    /// 遠程物件發射
+    /// </summary>
+    public void RemoteAttacking(string RemoteObjectName)
+    {
+        if (_ammunitionScript == null) return; // 當沒有彈藥庫時將會return
+        if(string.IsNullOrWhiteSpace(RemoteObjectName)) return;
+        Transform _tf = Instantiate(_ammunitionScript.PrefabNameGetPrefab(RemoteObjectName), _ammunitionTf.position,Quaternion.identity,_Tf);
     }
     /// <summary>
     /// 近戰攻擊
@@ -437,7 +494,7 @@ public class SoldierScript : LeadToSurviveGameBaseClass
         }
         else
         {
-            
+
             isNowHit = true;
             BeakBack();
 
@@ -521,7 +578,7 @@ public class SoldierScript : LeadToSurviveGameBaseClass
     }
     public virtual void Move()
     {
-        
+
 
         _SoldierScale = _Tf.localScale;
         _SoldierScale.x = Mathf.Abs(_SoldierScale.x);
@@ -656,14 +713,21 @@ public class SoldierScript : LeadToSurviveGameBaseClass
     public virtual void PhyOverlapBoxAll(Vector2 Pos)
     {
         PhySize = Vector2.one * Physics2DSize;
-        PhySize.y *= 2;
+        if (_At == AttackType.MeleeAttack)
+            PhySize.y /= 2;
+        else
+            PhySize.y *= 2;
+
         _collider2D = Physics2D.OverlapBoxAll(Physics2DOffset(_Tf, PhyOffset, Pos), PhySize, 0, _enemyLayerMask);
     }
     void OnDrawGizmos()
     {
-        if(_Tf == null) return;
+        if (_Tf == null) return;
         PhySize = Vector2.one * Physics2DSize;
-        PhySize.y *= 2;
+        if (_At == AttackType.MeleeAttack)
+            PhySize.y /= 2;
+        else
+            PhySize.y *= 2;
 
         Vector2 Pos = _Tf.position;
         Gizmos.color = Color.yellow;

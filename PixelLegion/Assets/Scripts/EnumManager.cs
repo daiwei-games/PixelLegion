@@ -1,6 +1,18 @@
-﻿
+﻿/// <summary>
+/// 光明或者黑暗
+/// </summary>
+public enum PromisingOrDARK
+{
+    /// <summary>
+    /// 光明的物件
+    /// </summary>
+    Promising,
+    /// <summary>
+    /// 黑暗的物件
+    /// </summary>
+    Dark
+}
 #region 場景類型
-using System.Data;
 /// <summary>
 /// 場景類型
 /// </summary>
@@ -109,6 +121,10 @@ public enum SoldierState
     /// </summary>
     Atk,
     /// <summary>
+    /// 遠攻
+    /// </summary>
+    RemoteAtk,
+    /// <summary>
     /// 受傷
     /// </summary>
     Hit,
@@ -138,5 +154,23 @@ public enum SoldierPost {
     /// 進戰攻擊守衛 範圍移動
     /// </summary>
     MeleeAttackGuard
+}
+/// <summary>
+/// 攻擊型態
+/// </summary>
+public enum AttackType
+{
+    /// <summary>
+    /// 遠程攻擊
+    /// </summary>
+    RemoteAttack,
+    /// <summary>
+    /// 進戰攻擊
+    /// </summary>
+    MeleeAttack,
+    /// <summary>
+    /// 遠程+進戰攻擊
+    /// </summary>
+    RemoteAndMelee
 }
 #endregion

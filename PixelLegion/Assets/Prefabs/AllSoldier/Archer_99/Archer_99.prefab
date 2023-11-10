@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2521761627766527488}
   - component: {fileID: 130584894118354870}
   - component: {fileID: 920452490815385687}
-  - component: {fileID: 1722755237382442564}
+  - component: {fileID: 4435318367427320139}
   m_Layer: 0
   m_Name: Archer_99
   m_TagString: Untagged
@@ -173,7 +173,7 @@ CapsuleCollider2D:
   m_Offset: {x: 0.010156155, y: -0.9886519}
   m_Size: {x: 1.2968016, y: 2.5890725}
   m_Direction: 0
---- !u!114 &1722755237382442564
+--- !u!114 &4435318367427320139
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -182,22 +182,57 @@ MonoBehaviour:
   m_GameObject: {fileID: 3923186992172568239}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9136a347471f31649b86a3d09ac61ab8, type: 3}
+  m_Script: {fileID: 11500000, guid: 914d8801271b9a44fbf8daee377cee1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _Tf: {fileID: 0}
   _Go: {fileID: 0}
-  _Sp: 0
-  _Ss: {fileID: 0}
   _body2D: {fileID: 0}
   BasicQuality: 1
   BasicConstitution: 22
   BasicHp: 224
   soldierName: Archer
+  soldierAtk: 0
+  soldierDefense: 0
+  soldierHp: 0
+  soldierHpMax: 0
   speed: 6
-  _ammunitionScript: {fileID: 0}
+  _gameManagerScript: {fileID: 0}
+  _SoldierScale: {x: 0, y: 0, z: 0}
   Physics2DSize: 18
   PhyOffset: 9
+  _collider2D: []
+  _enemyLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  _enemyNowMainFortress: {fileID: 0}
+  _target: {fileID: 0}
+  IsCloseRigidbody: 0
+  isNowHit: 0
+  isNowHitTime: 0
+  isNowHitTimeMax: 0
+  AttackingTime: 0
+  AttackingTimeMax: 0
+  _animator: {fileID: 0}
+  _animationClip: []
+  animationTime: 0
+  animationTimerMax: 0
+  _Time: 0
+  idleAnimationName: 
+  hitAnimationName: 
+  dieAnimationName: 
+  atkAnimationName: []
+  remoteAtkAnimationName: []
+  runAnimationName: []
+  dashAnimationName: []
+  _soldierNowState: 0
+  _soldierChangeState: 0
+  AtkVfx_1: {fileID: 0}
+  CameraShakeParticle: {fileID: 0}
+  _Hps: {fileID: 0}
+  _ammunitionScript: {fileID: 0}
+  _Sp: 0
+  _At: 0
 --- !u!1001 &3228185556564316087
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -208,15 +243,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 36672394778278741, guid: b5eba46da7464db4db6263d643943289, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 42.78662
+      value: 1.15
       objectReference: {fileID: 0}
     - target: {fileID: 36672394778278741, guid: b5eba46da7464db4db6263d643943289, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.69309145
+      value: -0.75
       objectReference: {fileID: 0}
     - target: {fileID: 36672394778278741, guid: b5eba46da7464db4db6263d643943289, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.0022809468
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 36672394778278741, guid: b5eba46da7464db4db6263d643943289, type: 3}
       propertyPath: m_LocalRotation.w

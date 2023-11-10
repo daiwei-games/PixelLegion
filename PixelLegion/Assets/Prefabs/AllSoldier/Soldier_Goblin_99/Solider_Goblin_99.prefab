@@ -186,7 +186,7 @@ MonoBehaviour:
   _Tf: {fileID: 0}
   _Go: {fileID: 0}
   _body2D: {fileID: 0}
-  BasicQuality: 0.09
+  BasicQuality: 0.52
   BasicConstitution: 15
   BasicHp: 300
   soldierName: Goblin
@@ -197,15 +197,20 @@ MonoBehaviour:
   speed: 4
   _gameManagerScript: {fileID: 0}
   _SoldierScale: {x: 0, y: 0, z: 0}
+  Physics2DSize: 4
   PhyOffset: 2
   _collider2D: []
-  Physics2DSize: 4
   _enemyLayerMask:
     serializedVersion: 2
     m_Bits: 0
   _enemyNowMainFortress: {fileID: 0}
   _target: {fileID: 0}
   IsCloseRigidbody: 1
+  isNowHit: 0
+  isNowHitTime: 0
+  isNowHitTimeMax: 0
+  AttackingTime: 0
+  AttackingTimeMax: 0
   _animator: {fileID: 0}
   _animationClip: []
   animationTime: 0
@@ -219,6 +224,9 @@ MonoBehaviour:
   dashAnimationName: []
   _soldierNowState: 0
   _soldierChangeState: 0
-  AtkVfx_2: {fileID: 0}
+  AtkVfx_1: {fileID: 0}
   CameraShakeParticle: {fileID: 0}
   _Hps: {fileID: 0}
+  _ammunitionScript: {fileID: 0}
+  _Sp: 0
+  _At: 1

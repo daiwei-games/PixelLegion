@@ -109,6 +109,7 @@ public class DarkMainFortressScript : MainFortressScript
                     }
                     if (_enemymf.CompareTag(staticPublicObjectsStaticName.MainFortressTag)) {
                         _soldierScript = Instantiate(selectedSoldierList[Random.Range(0, selectedSoldierList.Count)], ParentPosition, Quaternion.identity);
+                        _soldierScript._Sp = _Sp;
                         _go = _soldierScript.gameObject;
                         _go.tag = soldierTag;
                         _go.layer = LayerMask.NameToLayer(staticPublicObjectsStaticName.DarkSoldierLayer);

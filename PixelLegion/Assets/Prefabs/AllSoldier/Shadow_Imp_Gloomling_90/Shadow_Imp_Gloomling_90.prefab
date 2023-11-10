@@ -197,9 +197,9 @@ MonoBehaviour:
   speed: 5
   _gameManagerScript: {fileID: 0}
   _SoldierScale: {x: 0, y: 0, z: 0}
+  Physics2DSize: 1.5
   PhyOffset: 1
   _collider2D: []
-  Physics2DSize: 1.5
   _enemyLayerMask:
     serializedVersion: 2
     m_Bits: 0
@@ -227,3 +227,6 @@ MonoBehaviour:
   AtkVfx_1: {fileID: 0}
   CameraShakeParticle: {fileID: 0}
   _Hps: {fileID: 0}
+  _ammunitionScript: {fileID: 0}
+  _Sp: 0
+  _At: 1

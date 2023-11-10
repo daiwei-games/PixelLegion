@@ -3,11 +3,15 @@ using TMPro;
 using Assets.Scripts;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.MemoryProfiler;
 
 public class MainFortressScript : LeadToSurviveGameBaseClass
 {
     #region 主堡基礎資料
+    /// <summary>
+    /// 職責 用在這裡主要是用來判斷產生守衛還是士兵、野生怪物
+    /// </summary>
+    [Header("職責")]
+    public SoldierPost _Sp;
     /// <summary>
     /// 主堡血量
     /// </summary>
@@ -269,6 +273,7 @@ public class MainFortressScript : LeadToSurviveGameBaseClass
                     {
                         int u = Random.Range(0, selectedSoldierList.Count);
                         _soldierScript = Instantiate(selectedSoldierList[u], ParentPosition, Quaternion.identity);
+                        _soldierScript._Sp = _Sp;
                         _go = _soldierScript.gameObject;
                         _go.tag = soldierTag;
                         _go.layer = LayerMask.NameToLayer(staticPublicObjectsStaticName.PlayerSoldierLayer);

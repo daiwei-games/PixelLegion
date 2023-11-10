@@ -6,6 +6,16 @@ using UnityEngine;
 public class MonsterNodeScript : LeadToSurviveGameBaseClass
 {
     /// <summary>
+    /// 光明還是黑暗
+    /// </summary>
+    [Header("光明還是黑暗")]
+    public PromisingOrDARK _pod;
+    /// <summary>
+    /// 職責 用在這裡主要是用來判斷產生守衛還是士兵、野生怪物
+    /// </summary>
+    [Header("職責")]
+    public SoldierPost _Sp;
+    /// <summary>
     /// 遊戲管理器
     /// </summary>
     [HideInInspector]
@@ -72,12 +82,13 @@ public class MonsterNodeScript : LeadToSurviveGameBaseClass
     {
         if (SoldierCount <= 0) return;
         Vector3 _pos = _Tf.position;
+        SoldierScript _ss;
         while (SoldierCount > 0) {
             _pos.x = Random.Range(_pos.x - 2, _pos.x + 2);
-            SoldierScript _ss = Instantiate(_cldo.WildSoldierList[Random.Range(0, _cldo.WildSoldierList.Count)], _pos, Quaternion.identity, null);
+            _ss = Instantiate(_cldo.WildSoldierList[Random.Range(0, _cldo.WildSoldierList.Count)], _pos, Quaternion.identity, null);
             _ss._gameManagerScript = _gameManager;
             _ss._enemyLayerMask = _PlayLayerMask;
-
+            _ss._Sp = _Sp;
             GameObject _go = _ss.gameObject;
             _go.tag = _Tag;
             _go.layer = LayerMask.NameToLayer(staticPublicObjectsStaticName.WildSoldierLayer);

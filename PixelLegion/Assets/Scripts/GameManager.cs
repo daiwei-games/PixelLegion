@@ -608,6 +608,7 @@ public class GameManager : MonoBehaviour
         SoldierScript _soldierScript;
         Transform _tf;
         Vector2 Pos;
+
         for (int i = 0; i < _soldierList.Count; i++)
         {
             isSoldierStateForAction = false;
@@ -646,7 +647,18 @@ public class GameManager : MonoBehaviour
             {
                 if (_soldierScript.AttackingTime <= 0)
                 {
-                    _soldierScript.Atk();
+                    switch (_soldierScript._At)
+                    {
+                        case AttackType.RemoteAttack:
+                            _soldierScript.RemoteAtk();
+                            break;
+                        case AttackType.MeleeAttack:
+                            _soldierScript.Atk();
+                            break;
+                        case AttackType.RemoteAndMelee:
+                            _soldierScript.RemoteOrMeleeAttacking();
+                            break;
+                    }
                 }
                 else
                 {
@@ -715,8 +727,16 @@ public class GameManager : MonoBehaviour
             _soldierDefense = _soldierLv * _Glm.soldierDefense;
             _Lm = _LayerMask;
         }
+
         _Ss._Tf = _Ss.transform;
         _Ss._Go = _Ss.gameObject;
+        if (_Ss._At != AttackType.MeleeAttack)
+        {
+            Transform _tf = _Ss._Tf.Find("遠程武器預製物集合");
+            if (_tf != null)
+                _Ss._ammunitionScript = _tf.GetComponent<AmmunitionScript>();
+                _Ss._ammunitionTf = _Ss._ammunitionScript.transform;
+        }
         _Ss.soldierHp = (int)Mathf.Ceil(500 * _soldierHp) + _Ss.BasicHp;
         _Ss.soldierHpMax = _Ss.soldierHp;
         _Ss.soldierAtk = (int)Mathf.Ceil(102 * _soldierAtk) + BasicInt;
