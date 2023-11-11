@@ -1,6 +1,19 @@
 ﻿using UnityEngine;
+/// <summary>
+/// 投擲類武器、道具或魔法物件的腳本
+/// </summary>
 public class ParabolaScript : LeadToSurviveGameBaseClass
 {
+    /// <summary>
+    /// 武器或魔法的投擲軌道類型
+    /// </summary>
+    public ParabolaType _Pt;
+    /// <summary>
+    /// 腳本管理
+    /// </summary>
+    public GameManager _gameManager;
+
+    #region 二次貝茲曲線
     /// <summary>
     /// 物件起始點
     /// </summary>
@@ -17,8 +30,11 @@ public class ParabolaScript : LeadToSurviveGameBaseClass
     /// 速度
     /// </summary>
     private float speed;
-
-    private float t;
+    /// <summary>
+    /// 進度時間
+    /// </summary>
+    private float t; 
+    #endregion
     private void OnEnable()
     {
         _Tf = transform;
@@ -35,18 +51,16 @@ public class ParabolaScript : LeadToSurviveGameBaseClass
 
         // 在0到1之間變化的參數t
         t += speed * Time.deltaTime;
-
         // 限制t的範圍在0到1之間
         t = Mathf.Clamp01(t);
-
         // 計算二次貝茲曲線上的點
         Vector3 targetPosition = CalculateQuadraticBezierPoint(t, startPoint.position, controlPoint.position, endPoint.position);
         Vector3 direction = targetPosition - _Tf.position;
 
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         Quaternion rotation = Quaternion.Euler(new Vector3(0, 0, angle));
-        // 移動物件到計算得到的點
 
+        // 移動物件到計算得到的點
         //_Tf.position = targetPosition;
         //_Tf.rotation = rotation;
         _Tf.SetPositionAndRotation(targetPosition, rotation);
@@ -72,5 +86,8 @@ public class ParabolaScript : LeadToSurviveGameBaseClass
         float u = 1 - t;
         return u * u * p0 + 2 * u * t * p1 + t * t * p2;
     }
-
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        
+    }
 }

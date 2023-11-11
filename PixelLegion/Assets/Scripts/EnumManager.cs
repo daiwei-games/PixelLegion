@@ -174,3 +174,26 @@ public enum AttackType
     RemoteAndMelee
 }
 #endregion
+
+/// <summary>
+/// 投擲類武器、道具或魔法物件分類
+/// </summary>
+public enum ParabolaType
+{
+    /// <summary>
+    /// 拋物線 需要控制拋物至高點
+    /// </summary>
+    parabola,
+    /// <summary>
+    /// 直線前進
+    /// </summary>
+    straightLine,
+    /// <summary>
+    /// 直接落在地面
+    /// </summary>
+    ground,
+    /// <summary>
+    /// 漂浮
+    /// </summary>
+    levitate
+}

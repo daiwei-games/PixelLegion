@@ -18738,7 +18738,7 @@ Transform:
   m_GameObject: {fileID: 559692597}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 55, y: -1, z: 0}
+  m_LocalPosition: {x: 59.01, y: -1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -53960,8 +53960,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Tf: {fileID: 0}
   _Go: {fileID: 0}
+  _pod: 0
   _Sp: 1
+  _gameManager: {fileID: 0}
   SoldierPrefab: {fileID: 3923186992172568239, guid: 6b34f0474a2b6ea42bf454b9614001af, type: 3}
+  _Ss: {fileID: 0}
 --- !u!4 &1387551290
 Transform:
   m_ObjectHideFlags: 0

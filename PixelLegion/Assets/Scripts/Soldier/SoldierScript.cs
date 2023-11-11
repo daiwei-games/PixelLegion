@@ -261,6 +261,11 @@ public class SoldierScript : LeadToSurviveGameBaseClass
     /// </summary>
     [HideInInspector]
     public Transform _ammunitionTf;
+    /// <summary>
+    /// 控制點
+    /// </summary>
+    [HideInInspector]
+    public Transform controlPoint;
     #endregion
 
     #region 型態資料
@@ -275,6 +280,9 @@ public class SoldierScript : LeadToSurviveGameBaseClass
     [Header("攻擊型態")]
     public AttackType _At;
     #endregion
+    /// <summary>
+    /// 資料初始化
+    /// </summary>
     public virtual void SoldierDataInitializ()
     {
         _body2D = GetComponent<Rigidbody2D>(); // 取得物件rigidbody2D
@@ -288,6 +296,16 @@ public class SoldierScript : LeadToSurviveGameBaseClass
 
         isNowHitTimeMax = .5f;
         AttackingTimeMax = .6f;
+
+        switch (_At)
+        {
+            case AttackType.RemoteAttack:
+                break;
+            case AttackType.MeleeAttack:
+                break;
+            case AttackType.RemoteAndMelee:
+                break;
+        }
     }
     public virtual void GetAllAnimationClipName()
     {
@@ -418,10 +436,25 @@ public class SoldierScript : LeadToSurviveGameBaseClass
     /// </summary>
     public void RemoteAttacking(string RemoteObjectName)
     {
-        if (_ammunitionScript == null) return; // 當沒有彈藥庫時將會return
+        if (_ammunitionScript == null ||
+            _collider2D.Length == 0) return; // 當沒有彈藥庫或沒有敵人時將會return
         if(string.IsNullOrWhiteSpace(RemoteObjectName)) return;
         Transform _tf = Instantiate(_ammunitionScript.PrefabNameGetPrefab(RemoteObjectName), _ammunitionTf.position,Quaternion.identity,_Tf);
-        
+        ParabolaScript _ps = _tf.GetComponent<ParabolaScript>();
+        if (controlPoint == null)
+        {
+            GameObject _cPoint = new GameObject("controlPoint");
+            _cPoint.transform.parent = _Tf;
+            controlPoint = _cPoint.transform;
+        }
+        Vector3 _pos = (_Tf.position + _collider2D[0].transform.position) / 2;
+        _pos.y = _Tf.position.y + 1;
+        controlPoint.position = _pos;
+        _ps.startPoint = _Tf;
+        _ps.controlPoint = controlPoint;
+        _ps.endPoint = _collider2D[0].transform;
+        _ps._gameManager = _gameManagerScript;
+        _gameManagerScript.ParabolaListAdd(_ps);
     }
     /// <summary>
     /// 近戰攻擊

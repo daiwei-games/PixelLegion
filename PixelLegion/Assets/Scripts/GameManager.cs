@@ -49,6 +49,11 @@ public class GameManager : MonoBehaviour
     /// </summary>
     [Header("怪物產生節點")]
     public List<MonsterNodeScript> _monsterNodesList;
+    /// <summary>
+    /// 投擲武器、道具物件清單
+    /// </summary>
+    [Header("投擲武器、道具物件清單"),HideInInspector]
+    public List<ParabolaScript> _PsList;
     #endregion
 
     #region 計算時間
@@ -83,6 +88,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// 是否再次執行士兵動作迴圈
     /// </summary>
+    [HideInInspector]
     bool isSoldierStateForAction;
     /// <summary>
     /// 是否再次執行英雄動作迴圈的判斷
@@ -92,15 +98,23 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// 是否執行生產士兵的函數，還是正在執行
     /// </summary>
+    [HideInInspector]
     public bool isProduce;
     /// <summary>
     /// 是否遊戲結束
     /// </summary>
+    [HideInInspector]
     public bool isGameOver;
     /// <summary>
     /// 怪物節可不可以運行
     /// </summary>
+    [HideInInspector]
     public bool isMonsterNodes;
+    /// <summary>
+    /// 是否再次執行投擲回圈
+    /// </summary>
+    [HideInInspector]
+    public bool isParabolaGoto;
     #endregion
 
     #region 操控類、指標類
@@ -185,7 +199,7 @@ public class GameManager : MonoBehaviour
         isSoldierStateForAction = true;
         isHeroStateForAction = true;
         isProduce = true;
-        
+        isParabolaGoto = true;
 
         _LayerMask = LayerMask.GetMask(staticPublicObjectsStaticName.PlayerSoldierLayer, staticPublicObjectsStaticName.HeroLayer, staticPublicObjectsStaticName.MainFortressLayer);
         _DarkLayerMask = LayerMask.GetMask(staticPublicObjectsStaticName.DarkSoldierLayer, staticPublicObjectsStaticName.DarkHeroLayer, staticPublicObjectsStaticName.DarkMainFortressLayer, staticPublicObjectsStaticName.WildSoldierLayer);
@@ -240,6 +254,9 @@ public class GameManager : MonoBehaviour
             case ScenesType.dark:
                 ProduceWildSoldier(time);
                 SoldierState(time, NowScenes);
+                
+                // 投擲武器、道具
+                ParabolaGoto();
                 break;
             case ScenesType.practise:
             case ScenesType.battlefield:
@@ -248,9 +265,12 @@ public class GameManager : MonoBehaviour
                     //生產區塊
                     ProduceOrStateFunc(time, Time.time);
 
-                    //管理器區塊
+                    //士兵動作
                     SoldierState(time, NowScenes);
                     HeroAI(time);
+
+                    // 投擲武器、道具
+                    ParabolaGoto();
                 }
                 break;
         }
@@ -1074,8 +1094,38 @@ public class GameManager : MonoBehaviour
             _monsterNodesList[i].ProduceWildSoldier(_LayerMask);
         }
     }
-    
+
 
     #endregion
+
+    /// <summary>
+    /// 執行投擲武器、道具清單
+    /// </summary>
+    public void ParabolaGoto() {
+        if (_PsList.Count == 0 ||
+            !isParabolaGoto) return;
+        ParabolaScript _ps;
+        for (int i = 0; i < _PsList.Count; i++)
+        {
+            isParabolaGoto = false;
+            _ps = _PsList[i];
+            if (_ps == null)
+            {
+                _PsList.RemoveAt(i);
+                continue;
+            }
+            _ps.Goto();
+        }
+        isParabolaGoto = true;
+    }
+    /// <summary>
+    /// 新增物件到投擲武器、道具清單
+    /// </summary>
+    /// <param name="_ps">投擲武器、道具</param>
+    public void ParabolaListAdd(ParabolaScript? _ps)
+    {
+        if (_ps == null) return;
+        _PsList.Add(_ps);
+    }
 }
 

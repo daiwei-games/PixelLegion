@@ -63,7 +63,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.046496153, y: -0.004226923}
@@ -91,11 +91,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be462b532e2c5b0458d9016ba528a6f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movePoint: {fileID: 0}
+  _Tf: {fileID: 0}
+  _Go: {fileID: 0}
+  _Pt: 0
+  _gameManager: {fileID: 0}
   startPoint: {fileID: 0}
   controlPoint: {fileID: 0}
   endPoint: {fileID: 0}
-  speed: 0
 --- !u!1 &7834400984505737914
 GameObject:
   m_ObjectHideFlags: 0
