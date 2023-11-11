@@ -421,6 +421,7 @@ public class SoldierScript : LeadToSurviveGameBaseClass
         if (_ammunitionScript == null) return; // 當沒有彈藥庫時將會return
         if(string.IsNullOrWhiteSpace(RemoteObjectName)) return;
         Transform _tf = Instantiate(_ammunitionScript.PrefabNameGetPrefab(RemoteObjectName), _ammunitionTf.position,Quaternion.identity,_Tf);
+        
     }
     /// <summary>
     /// 近戰攻擊
