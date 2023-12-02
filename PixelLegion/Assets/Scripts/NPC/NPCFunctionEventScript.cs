@@ -5,6 +5,19 @@ using UnityEngine;
 /// </summary>
 public class NPCFunctionEventScript : LeadToSurviveGameBaseClass
 {
+    #region NPC資料
+    /// <summary>
+    /// NPC ID
+    /// </summary>
+    [Header("NPC ID")]
+    public string NpcID;
+    /// <summary>
+    /// NPC名稱
+    /// </summary>
+    [Header("NPC名稱")]
+    public string NpcName;
+    #endregion
+
     #region 可對話物件
     /// <summary>
     /// 可是對話物件預製物
@@ -61,6 +74,9 @@ public class NPCFunctionEventScript : LeadToSurviveGameBaseClass
     /// </summary>
     [Header("要開啟的介面名稱"), SerializeField]
     string OpenUIName;
+    #endregion
+
+    #region 可調整式內容
     #endregion
     private void Awake()
     {

@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 8
+  spritePixelsToUnits: 16
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -139,19 +139,19 @@ TextureImporter:
       name: UI - 16x16 UI Tileset_0
       rect:
         serializedVersion: 2
-        x: 23
-        y: 248
-        width: 50
-        height: 13
+        x: 212
+        y: 163
+        width: 40
+        height: 42
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 3, y: 3, z: 3, w: 3}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 91e68b9736f774645a50bd8a49d9e376
-      internalID: 1227349595
+      spriteID: 80dd0d1ab31807c44acc7869e7e0c28a
+      internalID: 1710947081
       vertices: []
       indices: 
       edges: []
@@ -160,19 +160,19 @@ TextureImporter:
       name: UI - 16x16 UI Tileset_1
       rect:
         serializedVersion: 2
-        x: 121
-        y: 249
-        width: 46
-        height: 9
+        x: 19
+        y: 163
+        width: 42
+        height: 42
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 5, y: 5, z: 5, w: 5}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f3c9b88d605f5a0479650ebc5f94909a
-      internalID: -1439932133
+      spriteID: 7aed1c60ca9dba94b9109eb2a97950d9
+      internalID: -1499844566
       vertices: []
       indices: 
       edges: []
@@ -181,18 +181,18 @@ TextureImporter:
       name: UI - 16x16 UI Tileset_2
       rect:
         serializedVersion: 2
-        x: 215
-        y: 248
-        width: 50
-        height: 12
+        x: 259
+        y: 163
+        width: 42
+        height: 42
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 14, y: 18, z: 14, w: 18}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7e4737cb5d3461046846e7454801c779
+      spriteID: e9c9698d0f5ec60468632a7509c3736e
       internalID: 610986452
       vertices: []
       indices: 
@@ -202,187 +202,19 @@ TextureImporter:
       name: UI - 16x16 UI Tileset_3
       rect:
         serializedVersion: 2
-        x: 14
-        y: 219
-        width: 68
-        height: 13
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 3bd4632065e256c46a36c778b3a91a8e
-      internalID: 345013844
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: UI - 16x16 UI Tileset_4
-      rect:
-        serializedVersion: 2
-        x: 116
-        y: 222
-        width: 56
-        height: 9
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 0077ed0b2fd9af94a871a70988a3ac0b
-      internalID: 1566177608
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: UI - 16x16 UI Tileset_5
-      rect:
-        serializedVersion: 2
-        x: 207
-        y: 220
-        width: 66
-        height: 12
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 416b101d32e4ab34198a0215baa4ff30
-      internalID: 940966729
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: UI - 16x16 UI Tileset_8
-      rect:
-        serializedVersion: 2
-        x: 19
-        y: 163
-        width: 42
-        height: 42
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 19b8e2c621de12048b028bc9b5e24c13
-      internalID: 468930212
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: UI - 16x16 UI Tileset_9
-      rect:
-        serializedVersion: 2
-        x: 67
-        y: 163
-        width: 42
-        height: 42
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 226a44ea2bc988e4ab0c2e21eac909db
-      internalID: 1996952324
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: UI - 16x16 UI Tileset_10
-      rect:
-        serializedVersion: 2
-        x: 114
-        y: 162
-        width: 44
-        height: 44
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 722440c33739b0a4db75657c0862a686
-      internalID: -812631343
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: UI - 16x16 UI Tileset_11
-      rect:
-        serializedVersion: 2
         x: 162
         y: 161
         width: 44
         height: 46
       alignment: 0
       pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 13, y: 15, z: 13, w: 15}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e31ffb92fee739c49814ffd3063e5e55
-      internalID: -1392037012
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: UI - 16x16 UI Tileset_12
-      rect:
-        serializedVersion: 2
-        x: 212
-        y: 163
-        width: 40
-        height: 42
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 821d258dfd676c44997e424b3726b9a5
-      internalID: -1686284743
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: UI - 16x16 UI Tileset_13
-      rect:
-        serializedVersion: 2
-        x: 259
-        y: 163
-        width: 42
-        height: 42
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f852f844b03c33c458a8f393d9e4a092
-      internalID: 12747732
+      spriteID: 6de7a7d06d3dad549bedf5fac71ba494
+      internalID: 345013844
       vertices: []
       indices: 
       edges: []
@@ -398,15 +230,19 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      UI - 16x16 UI Tileset_0: 1227349595
-      UI - 16x16 UI Tileset_1: -1439932133
+      0-Left-bottom: 543962943
+      0-Left-top: 1831348393
+      0-Right-bottom: -973455199
+      0-Right-top: -1325702903
+      1-Bottom: -1439932133
+      1-Top: -1686284743
+      2-Left: 1237159598
+      2-Right: 1227349595
+      UI - 16x16 UI Tileset_0: 1710947081
+      UI - 16x16 UI Tileset_1: -1499844566
       UI - 16x16 UI Tileset_10: -812631343
       UI - 16x16 UI Tileset_11: -1392037012
-      UI - 16x16 UI Tileset_12: -1686284743
       UI - 16x16 UI Tileset_13: 12747732
-      UI - 16x16 UI Tileset_14: -1325702903
-      UI - 16x16 UI Tileset_15: -973455199
-      UI - 16x16 UI Tileset_16: 543962943
       UI - 16x16 UI Tileset_17: 871389243
       UI - 16x16 UI Tileset_18: -57061145
       UI - 16x16 UI Tileset_19: -1283645727
@@ -446,8 +282,6 @@ TextureImporter:
       UI - 16x16 UI Tileset_5: 940966729
       UI - 16x16 UI Tileset_50: -426273459
       UI - 16x16 UI Tileset_51: -561345371
-      UI - 16x16 UI Tileset_6: 1237159598
-      UI - 16x16 UI Tileset_7: 1831348393
       UI - 16x16 UI Tileset_8: 468930212
       UI - 16x16 UI Tileset_9: 1996952324
   mipmapLimitGroupName: 

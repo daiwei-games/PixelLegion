@@ -35,6 +35,7 @@ public class GuardProduceNodeScript : LeadToSurviveGameBaseClass
 
         GameObject _go = Instantiate(SoldierPrefab,transform.position,Quaternion.identity);
         _Ss = _go.GetComponent<SoldierScript>();
+        _Ss._Sp = _Sp;
 
         _gameManager = FindObjectOfType<GameManager>();
         _gameManager.SoldierDataFormat(_Ss);

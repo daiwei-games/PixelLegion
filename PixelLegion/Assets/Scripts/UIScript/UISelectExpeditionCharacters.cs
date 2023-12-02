@@ -142,9 +142,6 @@ public class UISelectExpeditionCharacters : LeadToSurviveGameBaseClass
             {
                 SelectedHeroList.Remove(_UISh);
                 Destroy(_UISh.gameObject);
-
-                //如果產生頭像的物件已經被刪除，就重新指定
-                //if (SelectedHeroItem == null) SelectedHeroItem = SelectedHeroList[0];
             }
         }
 

@@ -81,6 +81,12 @@ public class GameLevelManager : MonoBehaviour
     /// </summary>
     [Header("士兵防禦力"), Range(.02f, .02f * soldierLvMax)]
     public float soldierDefense;
+    /// <summary>
+    /// 範圍百分比 當等級越高，這個數值越小，代表範圍越精準
+    /// [計算方式為，每增加一等範圍百分比減少0.005]
+    /// </summary>
+    [Header("影響攻擊、防禦範圍值"), Range(0.505f, 0)]
+    public float soldierPercentage;
     #endregion
 
 

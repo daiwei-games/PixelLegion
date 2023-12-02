@@ -38,9 +38,10 @@ public class UIHeroController : LeadToSurviveGameBaseClass
         GameManagerScript = FindFirstObjectByType<GameManager>();
         GameManagerScript._UIHc = this;
         Transform _tfbutton = _Tf.Find("ButtonBackground/Attack");
-        if (_tfbutton != null)
+        Transform _tfAtkButton = _Tf.Find("ButtonBackground/Attack");
+        if (_tfAtkButton != null)
         {
-            Attakc = _tfbutton.GetComponent<Button>();
+            Attakc = _tfAtkButton.GetComponent<Button>();
             Attakc.onClick.AddListener(() =>
             {
                 if(_Hc == null) return;
@@ -48,7 +49,7 @@ public class UIHeroController : LeadToSurviveGameBaseClass
             });
         }
 
-        _tfbutton = _Tf.Find("ButtonBackground/Heavy_Attack");
+        _tfbutton = _Tf.Find("ButtonBackground/Bg_HAtk/Heavy_Attack");
         if (_tfbutton != null)
         {
             HeavyAttack = _tfbutton.GetComponent<Button>();
@@ -61,7 +62,7 @@ public class UIHeroController : LeadToSurviveGameBaseClass
                 });
             }
         }
-        _tfbutton = _Tf.Find("ButtonBackground/Dash");
+        _tfbutton = _Tf.Find("ButtonBackground/Bg_Dash/Dash");
         if (_tfbutton != null)
         {
             
@@ -78,7 +79,7 @@ public class UIHeroController : LeadToSurviveGameBaseClass
             }
         }
 
-        _tfbutton = _Tf.Find("ButtonBackground/Def");
+        _tfbutton = _Tf.Find("ButtonBackground/Bg_Def/Def");
         if (_tfbutton != null)
         {
             Def = _tfbutton.GetComponent<Button>();

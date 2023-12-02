@@ -32,6 +32,7 @@ MonoBehaviour:
   soldierHp: 0.02
   soldierAtk: 0.02
   soldierDefense: 0.02
+  soldierPercentage: 0.505
   maxhp: 2000
   soldierCount: 20
   soldierProduceTimeMax: 6

@@ -190,7 +190,7 @@ MonoBehaviour:
   _body2D: {fileID: 0}
   BasicQuality: 1
   BasicConstitution: 22
-  BasicHp: 224
+  BasicHp: 682
   soldierName: Archer
   soldierAtk: 0
   soldierDefense: 0
@@ -231,6 +231,8 @@ MonoBehaviour:
   CameraShakeParticle: {fileID: 0}
   _Hps: {fileID: 0}
   _ammunitionScript: {fileID: 0}
+  _ammunitionTf: {fileID: 0}
+  controlPoint: {fileID: 0}
   _Sp: 0
   _At: 0
 --- !u!1001 &3228185556564316087

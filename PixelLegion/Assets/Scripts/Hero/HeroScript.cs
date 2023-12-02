@@ -216,7 +216,7 @@ public class HeroScript : LeadToSurviveGameBaseClass
     /// 重擊
     /// </summary>
     [Header("重擊")]
-    [HideInInspector] public string heavyAttack;
+    [HideInInspector] public List<string> heavyAttack;
     [HideInInspector] public bool isHeavyAttack;
     /// <summary>
     /// 衝刺動畫
@@ -488,7 +488,7 @@ public class HeroScript : LeadToSurviveGameBaseClass
                 }
                 if (_acpNameLower.LastIndexOf("_heavy_attack") != -1)
                 {
-                    heavyAttack = _acpName;
+                    heavyAttack.Add(_acpName);
                     isHeavyAttack = true;
                     continue;
                 }
@@ -964,12 +964,6 @@ public class HeroScript : LeadToSurviveGameBaseClass
                     break;
             }
         }
-        //if (isPlayerControl)
-        //{
-        //    Debug.Log(s);
-        //    Debug.Log(heroNowState);
-        //    Debug.Log(PlayOkay);
-        //}
         return PlayOkay;
     }
     /// <summary>
@@ -992,7 +986,7 @@ public class HeroScript : LeadToSurviveGameBaseClass
     /// <param name="_Collider2D"></param>
     public void HeavyAttack()
     {
-        _animator.Play(heavyAttack);
+        _animator.Play(heavyAttack[0]);
     }
     /// <summary>
     /// 攻擊動畫
@@ -1409,7 +1403,7 @@ public class HeroScript : LeadToSurviveGameBaseClass
     /// <param name="_lv">目前等級</param>
     public virtual int OffsetValue(float _ov, int targetValue, int _lv)
     {
-        int hit = (int)Mathf.Ceil(targetValue * _ov - (0.005f * _lv));
+        int hit = Mathf.CeilToInt(targetValue * _ov - (0.005f * _lv));
         return Random.Range(targetValue - hit, targetValue + 1);
     }
 

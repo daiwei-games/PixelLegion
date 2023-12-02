@@ -537,82 +537,6 @@ public class GameManager : MonoBehaviour
         _mfbs.ProduceSoldier();
 
     }
-    /// <summary>
-    /// 士兵的動作資訊
-    /// </summary>
-    public void SoldierState(float _time)
-    {
-        if (_soldierList.Count == 0 || !isSoldierStateForAction) return;//如果士兵清單為0，或主堡清單為1，或執行迴圈狀態為false (上一輪還再執行)，則不執行
-
-
-        SoldierScript _soldierScript;
-        Transform _tf;
-        Vector2 Pos;
-        for (int i = 0; i < _soldierList.Count; i++)
-        {
-            isSoldierStateForAction = false;
-            _soldierScript = _soldierList[i];
-            if (_soldierScript == null) continue;
-            if (_MainFortressScriptList.Count == 1 || isGameOver)  //如果遊戲結束，則全體士兵都進入等待
-            {
-                _soldierScript.Idle();
-                continue;
-            }
-            if (_soldierScript.soldierHp <= 0)
-            {
-                _soldierScript.Die();
-                continue;
-            }
-            _soldierScript._Time = _time;
-            _tf = _soldierScript._Tf;
-            if (_tf == null) continue;
-            Pos = _tf.position;
-
-            _soldierScript._animator.speed = 1;
-
-            _soldierScript.GetEmenyMainFortress(_MainFortressScriptList);
-            _soldierScript.PhyOverlapBoxAll(Pos);
-            if (_soldierScript._collider2D.Length > 0)
-            {
-                if (_soldierScript.AttackingTime <= 0)
-                {
-                    _soldierScript.Atk();
-                }
-                else
-                {
-                    _soldierScript.Idle();
-                    _soldierScript.AttackingTime -= _time;
-                }
-                continue;
-            }
-            if (!_soldierScript.isNowHit) //如果沒有被攻擊
-            {
-                _soldierScript.Move();
-
-                Transform _targetTf = _soldierScript._enemyNowMainFortress;
-                if (_soldierScript._target != null) _targetTf = _soldierScript._target;
-                _tf.position = Vector3.MoveTowards(Pos, _targetTf.position, _soldierScript.speed * _time);
-            }
-            else
-            {
-                //被攻擊
-                _soldierScript.isNowHitTime += _time;
-                if (_soldierScript.isNowHitTimeMax <= _soldierScript.isNowHitTime)
-                {
-                    _soldierScript.isNowHit = false;
-                    _soldierScript.isNowHitTime = 0;
-                }
-                continue;
-            }
-
-        }
-        if (isGameOver)
-        {
-            isSoldierStateForAction = false; //遊戲結束，士兵不再執行
-            return;
-        }
-        isSoldierStateForAction = true;
-    }
 
 
     /// <summary>
@@ -645,6 +569,9 @@ public class GameManager : MonoBehaviour
                         continue;
                     }
                     _soldierScript.GetEmenyMainFortress(_MainFortressScriptList);
+                    break;
+                default:
+                    _soldierScript.Idle();
                     break;
             }
 
@@ -738,6 +665,8 @@ public class GameManager : MonoBehaviour
         float _soldierAtk = _soldierLv * _Pdo.soldierAtk;
         float _soldierDefense = _soldierLv * _Pdo.soldierDefense;
         int BasicInt = (int)Mathf.Ceil(_Ss.BasicConstitution * _Ss.BasicQuality);
+
+        float _percentage = _Pdo.soldierPercentage - (0.005f * _Pdo.soldierLv); //輸出偏移值
         LayerMask _Lm = _DarkLayerMask;
         if (!isDark) //如果是黑暗士兵
         {
@@ -746,21 +675,25 @@ public class GameManager : MonoBehaviour
             _soldierAtk = _soldierLv * _Glm.soldierAtk;
             _soldierDefense = _soldierLv * _Glm.soldierDefense;
             _Lm = _LayerMask;
+            _percentage = _Glm.soldierPercentage - (0.005f * _Glm.soldierLv);
         }
-
+        
         _Ss._Tf = _Ss.transform;
         _Ss._Go = _Ss.gameObject;
         if (_Ss._At != AttackType.MeleeAttack)
         {
             Transform _tf = _Ss._Tf.Find("遠程武器預製物集合");
             if (_tf != null)
+            {
                 _Ss._ammunitionScript = _tf.GetComponent<AmmunitionScript>();
                 _Ss._ammunitionTf = _Ss._ammunitionScript.transform;
+            }
         }
         _Ss.soldierHp = (int)Mathf.Ceil(500 * _soldierHp) + _Ss.BasicHp;
         _Ss.soldierHpMax = _Ss.soldierHp;
         _Ss.soldierAtk = (int)Mathf.Ceil(102 * _soldierAtk) + BasicInt;
         _Ss.soldierDefense = (int)Mathf.Ceil(51 * _soldierDefense) + BasicInt;
+        _Ss.Percentage = _percentage;
         Vector2 _pos = _Ss._Tf.position;
         _pos.y += 2;
         _Ss._Hps = Instantiate(_HpPrefabs, _pos, Quaternion.identity, _Ss._Tf).HpDataInitializ();
@@ -1122,7 +1055,7 @@ public class GameManager : MonoBehaviour
     /// 新增物件到投擲武器、道具清單
     /// </summary>
     /// <param name="_ps">投擲武器、道具</param>
-    public void ParabolaListAdd(ParabolaScript? _ps)
+    public void ParabolaListAdd(ParabolaScript _ps)
     {
         if (_ps == null) return;
         _PsList.Add(_ps);

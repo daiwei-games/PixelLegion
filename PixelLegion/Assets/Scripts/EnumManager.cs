@@ -1,4 +1,5 @@
-﻿/// <summary>
+﻿using System;
+/// <summary>
 /// 光明或者黑暗
 /// </summary>
 public enum PromisingOrDARK
@@ -175,10 +176,12 @@ public enum AttackType
 }
 #endregion
 
+#region 道具相關
+
 /// <summary>
 /// 投擲類武器、道具或魔法物件分類
 /// </summary>
-public enum ParabolaType
+public enum LinearType
 {
     /// <summary>
     /// 拋物線 需要控制拋物至高點
@@ -197,3 +200,21 @@ public enum ParabolaType
     /// </summary>
     levitate
 }
+
+[Flags]
+public enum PropsType
+{
+    /// <summary>
+    /// 可食用
+    /// </summary>
+    Eat = 1 << 0,
+    /// <summary>
+    /// 可刪除
+    /// </summary>
+    Delete = 1 << 1,
+    /// <summary>
+    /// 可交易
+    /// </summary>
+    Transaction = 1 << 2,
+}
+#endregion

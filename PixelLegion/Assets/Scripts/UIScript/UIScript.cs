@@ -49,6 +49,16 @@ public class UIScript : LeadToSurviveGameBaseClass
     [Header("傳送陣的介面"), SerializeField]
     private RectTransform TeleportationArrayUI;
     /// <summary>
+    /// 技能介面
+    /// </summary>
+    [Header("技能介面"), SerializeField]
+    private RectTransform SkillManagerUI;
+    /// <summary>
+    /// 選擇技能介面
+    /// </summary>
+    [Header("選擇技能介面"), SerializeField]
+    private RectTransform SkillOptionUI;
+    /// <summary>
     /// 需要集中管理的介面
     /// </summary>
     [Header("需要集中管理的介面"), SerializeField]
@@ -116,7 +126,27 @@ public class UIScript : LeadToSurviveGameBaseClass
 
         GetUI = _Tf.Find("TeleportationArrayUI");
         if (GetUI != null)
+        {
+            TeleportationArrayUI = GetUI.GetComponent<RectTransform>();
+            CentralizedManagementUI.Add(TeleportationArrayUI);
+        }
+        GetUI = _Tf.Find("背包");
+        if(GetUI != null)
             CentralizedManagementUI.Add(GetUI.GetComponent<RectTransform>());
+
+        GetUI = _Tf.Find("技能");
+        if(GetUI != null)
+        {
+            SkillManagerUI = GetUI.GetComponent<RectTransform>();
+            CentralizedManagementUI.Add(SkillManagerUI);
+        }
+
+        GetUI = _Tf.Find("技能選擇");
+        if(GetUI != null)
+        {
+            SkillOptionUI = GetUI.GetComponent<RectTransform>();
+            CentralizedManagementUI.Add(SkillOptionUI);
+        }
 
 
         _Gm = FindFirstObjectByType<GameManager>();
@@ -135,6 +165,10 @@ public class UIScript : LeadToSurviveGameBaseClass
                     break;
             }
         }
+
+        Canvas _cv = GetComponent<Canvas>();
+        if (_cv != null)
+            _cv.worldCamera = Camera.main;
         #region 介面初始化
         CloseGameOverUI();
         CloseCentralizedManagementUI();

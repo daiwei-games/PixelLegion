@@ -93,11 +93,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Tf: {fileID: 0}
   _Go: {fileID: 0}
+  _promisingOrDARK: 0
   _Pt: 0
   _gameManager: {fileID: 0}
+  Atk: 18
+  isCriticalHitRate: 0
+  isFlootDestroy: 1
   startPoint: {fileID: 0}
-  controlPoint: {fileID: 0}
-  endPoint: {fileID: 0}
+  controlPoint: {x: 0, y: 0, z: 0}
+  endPoint: {x: 0, y: 0, z: 0}
 --- !u!1 &7834400984505737914
 GameObject:
   m_ObjectHideFlags: 0

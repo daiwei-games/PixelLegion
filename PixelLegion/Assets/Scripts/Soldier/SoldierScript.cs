@@ -6,6 +6,7 @@ using UnityEngine;
 public class SoldierScript : LeadToSurviveGameBaseClass
 {
     #region 基本資料
+
     /// <summary>
     /// 剛體
     /// </summary>
@@ -62,6 +63,11 @@ public class SoldierScript : LeadToSurviveGameBaseClass
     /// </summary>
     [HideInInspector]
     public Vector3 _SoldierScale;
+    /// <summary>
+    /// 輸出偏移值
+    /// </summary>
+    [HideInInspector]
+    public float Percentage;
     #endregion
 
     #region 射線
@@ -297,6 +303,13 @@ public class SoldierScript : LeadToSurviveGameBaseClass
         isNowHitTimeMax = .5f;
         AttackingTimeMax = .6f;
 
+
+        soldierAtk *= _Sp switch
+        {
+            SoldierPost.MeleeAttackGuard or SoldierPost.RemoteAttackGuard => 2,
+            _ => 1
+        };
+
         switch (_At)
         {
             case AttackType.RemoteAttack:
@@ -306,6 +319,8 @@ public class SoldierScript : LeadToSurviveGameBaseClass
             case AttackType.RemoteAndMelee:
                 break;
         }
+
+        
     }
     public virtual void GetAllAnimationClipName()
     {
@@ -441,6 +456,22 @@ public class SoldierScript : LeadToSurviveGameBaseClass
         if(string.IsNullOrWhiteSpace(RemoteObjectName)) return;
         Transform _tf = Instantiate(_ammunitionScript.PrefabNameGetPrefab(RemoteObjectName), _ammunitionTf.position,Quaternion.identity,_Tf);
         ParabolaScript _ps = _tf.GetComponent<ParabolaScript>();
+         //計算加乘後的攻擊力
+        int _atk = OffsetValue(Percentage, soldierAtk);
+        int _remoteatk = _ps.Atk;
+        _ps.Atk = _atk + Mathf.CeilToInt((_atk + _remoteatk) * Mathf.InverseLerp(0, _atk, _remoteatk));
+
+        //判斷是光明還是黑暗發出的投擲武器
+        _ps._promisingOrDARK = gameObject.tag switch
+        {
+            staticPublicObjectsStaticName.DarkHeroTag or
+            staticPublicObjectsStaticName.DARKSoldierTag or
+            staticPublicObjectsStaticName.DarkMainFortressTag or
+            staticPublicObjectsStaticName.WildSoldierTag => PromisingOrDARK.Dark,
+            _ => PromisingOrDARK.Promising,
+        };
+
+        //控制點
         if (controlPoint == null)
         {
             GameObject _cPoint = new GameObject("controlPoint");
@@ -450,9 +481,14 @@ public class SoldierScript : LeadToSurviveGameBaseClass
         Vector3 _pos = (_Tf.position + _collider2D[0].transform.position) / 2;
         _pos.y = _Tf.position.y + 1;
         controlPoint.position = _pos;
+        _ps.controlPoint = controlPoint.position;
+
+        //起始點
         _ps.startPoint = _Tf;
-        _ps.controlPoint = controlPoint;
-        _ps.endPoint = _collider2D[0].transform;
+
+        //終點
+        _ps.endPoint = _collider2D[0].transform.position;
+        _ps.endPoint.y -= 2;
         _ps._gameManager = _gameManagerScript;
         _gameManagerScript.ParabolaListAdd(_ps);
     }
@@ -467,8 +503,11 @@ public class SoldierScript : LeadToSurviveGameBaseClass
         List<Collider2D> _ColList = new List<Collider2D>();
         _ColList.AddRange(_collider2D.ToList());
         AttackingTime = AttackingTimeMax;
+
+        int _atk = OffsetValue(Percentage, soldierAtk);
         for (int i = 0; i < _ColList.Count; i++) // 尋找敵人
         {
+
             _col = _ColList[i];
             if (_col == null) continue;
             _enemyNowMainFortress = _col.transform;
@@ -509,7 +548,7 @@ public class SoldierScript : LeadToSurviveGameBaseClass
     public virtual void MustBeInjured(int hp, bool isCriticalStrike = false)
     {
         if (soldierHp <= 0) return;
-        if (_soldierChangeState == SoldierState.SoupHit) return;
+        //if (_soldierChangeState == SoldierState.SoupHit) return;
         //Vector2 DieOffset;
         int _hit = hp - soldierDefense;
         if (_hit <= 0) _hit = 1;
@@ -520,11 +559,6 @@ public class SoldierScript : LeadToSurviveGameBaseClass
         if (soldierHp <= 0)
         {
             _soldierChangeState = SoldierState.Die;
-            //DieOffset = Vector2.left;
-            //if (_Tf.localScale.x > 0)
-            //    DieOffset = Vector3.right;
-
-            //_body2D.velocity = DieOffset * 5;
         }
         else
         {
@@ -589,6 +623,7 @@ public class SoldierScript : LeadToSurviveGameBaseClass
         int _hit = hitAmount - soldierDefense;
         if (_hit <= 0) _hit = 1;
         soldierHp -= _hit;
+        HitPlaySFX(1);
         _Hps.GetHit(soldierHpMax, _hit);
         if (soldierHp <= 0) Die();
     }
@@ -728,7 +763,16 @@ public class SoldierScript : LeadToSurviveGameBaseClass
             _AudioSourceHit.Play();
         }
     }
-
+    /// <summary>
+    /// 計算本身輸出數值偏移值
+    /// </summary>
+    /// <param name="_ov">偏移值</param>
+    /// <param name="targetValue">要輸出的數值</param>
+    public virtual int OffsetValue(float _ov, int targetValue)
+    {
+        int hit = Mathf.CeilToInt(targetValue * _ov);
+        return Random.Range(targetValue - hit, targetValue + 1);
+    }
     /// <summary>
     /// 計算射線偏移量
     /// </summary>
@@ -768,5 +812,14 @@ public class SoldierScript : LeadToSurviveGameBaseClass
         Gizmos.DrawWireCube(Physics2DOffset(_Tf, PhyOffset, Pos), PhySize);
     }
     #endregion
+
+    private void OnParticleCollision(GameObject other)
+    {
+        ParabolaScript _ps = other.GetComponent<ParabolaScript>();
+        if(_ps != null)
+        {
+            Debug.Log(_ps.Atk);
+        }
+    }
 }
 
