@@ -1224,7 +1224,7 @@ public class HeroScript : LeadToSurviveGameBaseClass
         if (MissOrDashDirection == Vector2.left) Scale.x *= -1;
         _Tf.localScale = Scale; // 設定人物方向
 
-        if (DashTimeStart > time) _Tf.Translate(MissOrDashDirection * .5f); // 衝刺中
+        if (DashTimeStart > time) _Tf.Translate(MissOrDashDirection * .8f); // 衝刺中
 
         if (DashTimeStart + 0.1f <= time)
         {

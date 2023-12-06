@@ -19,21 +19,10 @@ public class playerDataObject : ScriptableObject
     [Header("玩家名稱")]
     public string PlayerName;
     ///<summary>
-    ///玩家金幣
-    ///</summary>
-    [Header("玩家金幣")]
-    public int PlayerCoin;
-    ///<summary>
     ///玩家鑽石
     ///</summary>
     [Header("玩家鑽石")]
     public int PlayerDiamond;
-    ///<summary>
-    ///玩家體力
-    ///</summary>
-    [Header("玩家體力")]
-    public int PlayerEnergy;
-
 
     #region 英雄
     /// <summary>

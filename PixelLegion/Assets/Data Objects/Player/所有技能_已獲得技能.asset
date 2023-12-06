@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13893672d8f3b0d41b8ba029b5e59a74, type: 3}
+  m_Name: "\u6240\u6709\u6280\u80FD_\u5DF2\u7372\u5F97\u6280\u80FD"
+  m_EditorClassIdentifier: 
+  SkillList:
+  - SkillID: sk00001
+    SkillIcon: {fileID: 311687594, guid: 89d6dee103b9ef945a418a09bd14ff20, type: 3}
+    SkillName: "\u6C23\u6D41\u65AC"
+    SkillExp: 1000
+    SkillGameObject: {fileID: 2302403986501915872, guid: 6f3945715397ca94aa2889a546782b8d, type: 3}
+    SkillDescription: "\u63EE\u51FA\u4E00\u9053\u70BA\u81EA\u5DF1\u653B\u64CA\u529B\u5169\u500D\u7684\u528D\u6C23\u3002"
+    SkillProps:
+    - {fileID: 6767640244171247608, guid: 49379fadbfab5bd419681bef1ccbd1f5, type: 3}
+    - {fileID: 3795164600929608470, guid: acac583e8914b9043bc59c67a59ded06, type: 3}
+  AlreadyHaveSkillList: []

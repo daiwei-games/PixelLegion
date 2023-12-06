@@ -48,4 +48,10 @@ public class SkillData
     [Header("學習技能所需道具")]
     public List<GameObject> SkillProps;
     #endregion
+
+    /// <summary>
+    /// 是否已經獲得技能
+    /// </summary>
+    [Header("是否已經獲得技能")]
+    public bool IsGetSkill;
 }

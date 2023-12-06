@@ -1,5 +1,4 @@
 ﻿using Assets.Scripts;
-using Unity.Burst.CompilerServices;
 using UnityEngine;
 /// <summary>
 /// 投擲類武器、道具或魔法物件的腳本

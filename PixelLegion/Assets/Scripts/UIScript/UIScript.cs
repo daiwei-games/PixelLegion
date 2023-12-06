@@ -131,18 +131,18 @@ public class UIScript : LeadToSurviveGameBaseClass
             CentralizedManagementUI.Add(TeleportationArrayUI);
         }
         GetUI = _Tf.Find("背包");
-        if(GetUI != null)
+        if (GetUI != null)
             CentralizedManagementUI.Add(GetUI.GetComponent<RectTransform>());
 
         GetUI = _Tf.Find("技能");
-        if(GetUI != null)
+        if (GetUI != null)
         {
             SkillManagerUI = GetUI.GetComponent<RectTransform>();
             CentralizedManagementUI.Add(SkillManagerUI);
         }
 
         GetUI = _Tf.Find("技能選擇");
-        if(GetUI != null)
+        if (GetUI != null)
         {
             SkillOptionUI = GetUI.GetComponent<RectTransform>();
             CentralizedManagementUI.Add(SkillOptionUI);
@@ -157,6 +157,7 @@ public class UIScript : LeadToSurviveGameBaseClass
             {
                 case ScenesType.practise:
                 case ScenesType.battlefield:
+                case ScenesType.prairie:
                     CloseFuncUI();
                     break;
                 case ScenesType.village:
@@ -182,7 +183,7 @@ public class UIScript : LeadToSurviveGameBaseClass
     {
         if (_GameOverUI == null) return;
         Vector2 pos = DuelUI.anchoredPosition;
-        pos.y = 720;
+        pos.y = 720 * 2;
         _GameOverUI.anchoredPosition = pos;
     }
     public void GameOverUI()
@@ -212,7 +213,7 @@ public class UIScript : LeadToSurviveGameBaseClass
     {
         if (PlayerMoveUI == null) return;
         Vector2 pos = PlayerMoveUI.anchoredPosition;
-        pos.x = 1280;
+        pos.x = 1280 * 2;
         PlayerMoveUI.anchoredPosition = pos;
     }
     /// <summary>
@@ -233,7 +234,7 @@ public class UIScript : LeadToSurviveGameBaseClass
     {
         if (HeroOptionsUI == null) return;
         Vector2 pos = HeroOptionsUI.anchoredPosition;
-        pos.y = -720;
+        pos.y = -720 * 2;
         HeroOptionsUI.anchoredPosition = pos;
     }
     /// <summary>
@@ -256,7 +257,7 @@ public class UIScript : LeadToSurviveGameBaseClass
     {
         if (JoystickUI == null) return;
         Vector2 pos = JoystickUI.anchoredPosition;
-        pos.x = -1280;
+        pos.x = -1280 * 2;
         JoystickUI.anchoredPosition = pos;
     }
     /// <summary>
@@ -277,7 +278,7 @@ public class UIScript : LeadToSurviveGameBaseClass
     {
         if (DuelUI == null) return;
         Vector2 pos = DuelUI.anchoredPosition;
-        pos.y = 720;
+        pos.y = 720 * 2;
         DuelUI.anchoredPosition = pos;
     }
     /// <summary>
@@ -298,7 +299,7 @@ public class UIScript : LeadToSurviveGameBaseClass
     {
         if (FuncUI == null) return;
         Vector2 pos = FuncUI.anchoredPosition;
-        pos.y = 720;
+        pos.y = 720*2;
         FuncUI.anchoredPosition = pos;
     }
     /// <summary>
@@ -323,7 +324,7 @@ public class UIScript : LeadToSurviveGameBaseClass
         foreach (RectTransform item in CentralizedManagementUI)
         {
             pos = item.anchoredPosition;
-            pos.y = 720;
+            pos.y = 720 * 2;
             item.anchoredPosition = pos;
         }
     }
@@ -338,13 +339,13 @@ public class UIScript : LeadToSurviveGameBaseClass
         Vector2 pos;
         foreach (RectTransform item in CentralizedManagementUI)
         {
-            if(item.name == _name)
+            if (item.name == _name)
             {
                 item.anchoredPosition = Vector2.zero;
                 continue;
             }
             pos = item.anchoredPosition;
-            pos.y = 720;
+            pos.y = 720 * 2;
             item.anchoredPosition = pos;
         }
     }
@@ -368,7 +369,7 @@ public class UIScript : LeadToSurviveGameBaseClass
                 continue;
             }
             pos = item.anchoredPosition;
-            pos.y = 720;
+            pos.y = 720 * 2;
             item.anchoredPosition = pos;
         }
         Time.timeScale = 1f;

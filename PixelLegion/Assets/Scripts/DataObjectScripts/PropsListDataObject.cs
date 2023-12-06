@@ -20,5 +20,16 @@ public class PropsListDataObject : ScriptableObject
     /// </summary>
     [Header("已知的道具圖鑑")]
     public List<PropsDataScript> AlreadyKnowProps;
+
+    /// <summary>
+    /// 金錢
+    /// </summary>
+    [Header("金錢")]
+    public int Money;
+    /// <summary>
+    /// 技能經驗值
+    /// </summary>
+    [Header("已經獲得的技能經驗值")]
+    public int AlreadyHaveSkillExp;
     #endregion
 }

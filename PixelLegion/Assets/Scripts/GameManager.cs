@@ -249,7 +249,6 @@ public class GameManager : MonoBehaviour
         switch (NowScenes)
         {
             case ScenesType.village:
-            case ScenesType.prairie:
             case ScenesType.mine:
             case ScenesType.dark:
                 ProduceWildSoldier(time);
@@ -257,6 +256,9 @@ public class GameManager : MonoBehaviour
                 
                 // 投擲武器、道具
                 ParabolaGoto();
+                break;
+            case ScenesType.prairie:
+                ProduceWildSoldier(time);
                 break;
             case ScenesType.practise:
             case ScenesType.battlefield:
@@ -312,20 +314,6 @@ public class GameManager : MonoBehaviour
     public void CloseDuelUI()
     {
         uiScript.CloseDuelUI();
-    }
-    /// <summary>
-    /// 開啟英雄移動介面
-    /// </summary>
-    public void OpenPlayerMoveUI()
-    {
-        uiScript.OpenPlayerMoveUI();
-    }
-    /// <summary>
-    /// 關閉英雄移動介面
-    /// </summary>
-    public void ClosePlayerMoveUI()
-    {
-        uiScript.ClosePlayerMoveUI();
     }
     #endregion
 
@@ -967,9 +955,21 @@ public class GameManager : MonoBehaviour
         _mfb.MainFortressHpTextMeshPro(); // 更新主堡血量文字
         _mfb.MainForTressSoldierCountTextMeshPro(); // 更新主堡兵數文字
 
-        if (NowScenes == ScenesType.village && SelectedHero == null)
+        switch (NowScenes)
         {
-            VillageScenesProduceHero(_mfb.GetHeroList[Random.Range(0, _mfb.GetHeroList.Count)], _mfb._Tf);
+            case ScenesType.village:
+                if (SelectedHero == null)
+                {
+                    VillageScenesProduceHero(_mfb.GetHeroList[Random.Range(0, _mfb.GetHeroList.Count)], _mfb._Tf);
+                }
+                break;
+            case ScenesType.practise:
+            case ScenesType.battlefield:
+            case ScenesType.prairie:
+            case ScenesType.mine:
+            case ScenesType.dark:
+                break;
+
         }
     }
     /// <summary>
